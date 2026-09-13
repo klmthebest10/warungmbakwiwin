@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Warung Mbak Wiwin</title>
+    <title>Warung Indonesia - PWA & POS</title>
     
     <!-- PWA Settings & Standalone Mode -->
     <meta name="theme-color" content="#FFD500">
@@ -13,9 +13,10 @@
     <meta name="apple-mobile-web-app-title" content="Warung Indonesia">
     
     <!-- Inline Dynamic PWA Manifest (100% Bebas Error 404 di Blogger) -->
-    <link rel="manifest" id="dynamicManifestLink">
-    <link rel="apple-touch-icon" id="dynamicAppleIcon">
-    <link rel="icon" type="image/svg+xml" id="dynamicFavicon">
+    <link rel="manifest" href="./manifest.json">
+<link rel="apple-touch-icon" href="./icon-192.png">
+<link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
+<link rel="icon" type="image/x-icon" href="./favicon.ico">
 
     <!-- Tailwind CSS & Fonts -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -989,22 +990,7 @@
     // PWA Service Worker via Blob (Bebas 404 pada Blogger)
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
-            try {
-                const swCode = `
-                    const CACHE_NAME = 'wi-pwa-v1';
-                    self.addEventListener('install', e => { self.skipWaiting(); });
-                    self.addEventListener('activate', e => { e.waitUntil(clients.claim()); });
-                    self.addEventListener('fetch', e => { /* Network-first cache fallback */ });
-                `;
-                const swBlob = new Blob([swCode], { type: 'text/javascript' });
-                const swUrl = URL.createObjectURL(swBlob);
-                navigator.serviceWorker.register(swUrl)
-                    .then(() => console.log('PWA ServiceWorker Aktif via Dynamic Blob'))
-                    .catch(() => {
-                        // Fallback jika browser mensyaratkan origin file sw.js
-                        navigator.serviceWorker.register('sw.js').catch(()=>{});
-                    });
-            } catch(err) {}
+            navigator.serviceWorker.register('./sw.js').catch(() => {});
         });
     }
 
