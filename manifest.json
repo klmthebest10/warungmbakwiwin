@@ -1,7 +1,7 @@
 {
-  "name": "Warung Indonesia",
-  "short_name": "WarungID",
-  "description": "Aplikasi Kasir POS & Menu Warung Indonesia",
+  "name": "Warung Mbak Wiwin",
+  "short_name": "Warung Mbak Wiwin",
+  "description": "Aplikasi Kasir POS & Menu Warung Mbak Wiwin",
   "id": "/",
   "start_url": "./index.html",
   "scope": "./",
