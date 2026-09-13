@@ -1,6 +1,6 @@
 // sw.js — Service Worker untuk Warung Indonesia PWA
 // Naikkan versi ini setiap kali index.html/aset diupdate, agar cache lama dibuang.
-const CACHE_NAME = 'warung-indonesia-v1';
+const CACHE_NAME = 'Warung Mbak Wiwin';
 
 // File inti yang perlu tersedia offline / dipakai saat install.
 // Sesuaikan daftar ini dengan nama file aslimu di server (mis. "index.html").
