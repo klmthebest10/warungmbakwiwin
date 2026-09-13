@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Warung Indonesia - PWA & POS</title>
+    <title>Warung Mbak Wiwin</title>
     
     <!-- PWA Settings & Standalone Mode -->
     <meta name="theme-color" content="#FFD500">
@@ -207,7 +207,7 @@
                     <div class="brutal-box bg-danger text-white p-3 w-full md:w-auto flex items-center gap-4">
                         <div>
                             <p class="text-sm font-bold uppercase">Total Hutang</p>
-                            <p class="text-2xl font-bold" id="custDebtDisplay">Rp 0</p>
+                            <p class="text-2xl font-bold" id="custDebtDisplay">₩0</p>
                         </div>
                     </div>
                 </div>
@@ -425,7 +425,7 @@
                             <span class="font-bold uppercase text-sm md:text-base">Total Pendapatan:</span>
                             <div class="text-xs max-w-[200px] md:max-w-none">(Transaksi hutang belum lunas tidak dihitung)</div>
                         </div>
-                        <span class="text-xl md:text-2xl font-bold" id="adminIncomeTotal">Rp 0</span>
+                        <span class="text-xl md:text-2xl font-bold" id="adminIncomeTotal">₩0</span>
                     </div>
 
                     <div class="brutal-box bg-white overflow-x-auto">
@@ -587,7 +587,7 @@
             <div class="p-4 border-b-4 border-black bg-accent shrink-0"><h2 class="text-xl md:text-2xl font-bold uppercase">Keranjang Anda</h2></div>
             <div class="p-4 overflow-y-auto flex-1 bg-white">
                 <div id="custCartItemsList" class="mb-4 border-b-2 border-black pb-4"></div>
-                <div class="flex justify-between items-center font-bold mb-4"><span>Subtotal:</span><span id="custCartTotal">Rp 0</span></div>
+                <div class="flex justify-between items-center font-bold mb-4"><span>Subtotal:</span><span id="custCartTotal">₩0</span></div>
                 
                 <div id="custCartTableWrap" class="mb-3 d-none">
                     <label class="block font-bold mb-1 text-sm">Pilih Meja <span class="text-danger">*</span></label>
@@ -623,7 +623,7 @@
                     <select id="selectWaitProduct" class="brutal-input bg-white text-sm w-full mb-2"></select>
                 </div>
                 <button onclick="window.addWaitItem()" class="brutal-btn bg-main px-4 py-2 text-sm w-full font-bold mb-4">+ Tambahkan Produk</button>
-                <div class="flex justify-between items-center font-bold text-lg border-t-2 border-black pt-2 bg-yellow-100 p-2"><span>Total Baru:</span><span id="editWaitTotal">Rp 0</span></div>
+                <div class="flex justify-between items-center font-bold text-lg border-t-2 border-black pt-2 bg-yellow-100 p-2"><span>Total Baru:</span><span id="editWaitTotal">₩0</span></div>
             </div>
             <div class="p-4 border-t-4 border-black bg-gray-100 flex gap-2 shrink-0">
                 <button onclick="window.saveEditWait()" class="brutal-btn w-full bg-success text-black py-2 text-sm md:text-lg uppercase">Simpan Perubahan</button>
@@ -658,7 +658,7 @@
                 </div>
                 
                 <div class="flex justify-between items-center font-bold mb-4">
-                    <span>Subtotal:</span><span id="cartSubtotal">Rp 0</span>
+                    <span>Subtotal:</span><span id="cartSubtotal">₩0</span>
                 </div>
 
                 <!-- Tipe Pesanan -->
@@ -694,7 +694,7 @@
                 </div>
 
                 <div class="flex justify-between items-center font-bold text-xl md:text-2xl mb-6 bg-yellow-200 p-2 border-2 border-black mt-4">
-                    <span>TOTAL:</span><span id="cartTotal">Rp 0</span>
+                    <span>TOTAL:</span><span id="cartTotal">₩0</span>
                 </div>
 
                 <!-- Pembayaran -->
@@ -719,7 +719,7 @@
                 <div id="payDetailCash" class="p-4 bg-gray-100 border-2 border-black mb-4">
                     <div class="flex justify-between items-center">
                         <label class="font-bold text-sm md:text-base">Nominal Bayar:</label>
-                        <input type="number" id="inputBayar" class="brutal-input w-1/2 text-right text-lg bg-white" placeholder="Rp 0" onkeyup="window.calculateTotal()">
+                        <input type="number" id="inputBayar" class="brutal-input w-1/2 text-right text-lg bg-white" placeholder="₩0" onkeyup="window.calculateTotal()">
                     </div>
                     <div class="flex gap-2 justify-end mt-2 flex-wrap">
                         <button type="button" class="brutal-btn bg-white px-3 py-2 text-xs flex-1 md:flex-none" onclick="window.setCashNominal('pas')">Pas</button>
@@ -729,7 +729,7 @@
                         <button type="button" class="brutal-btn bg-white px-3 py-2 text-xs flex-1 md:flex-none" onclick="window.setCashNominal(100000)">100k</button>
                     </div>
                     <div class="flex justify-between items-center mt-3 text-danger font-bold text-lg">
-                        <span>Kembalian:</span><span id="labelKembalian">Rp 0</span>
+                        <span>Kembalian:</span><span id="labelKembalian">₩0</span>
                     </div>
                 </div>
                 <div id="payDetailTransfer" class="mb-4 text-center d-none">
@@ -772,7 +772,7 @@
                     <select id="prodCat" class="brutal-input bg-white" required></select>
                 </div>
                 <div class="mb-3">
-                    <label class="block font-bold mb-1">Harga (Rp)</label>
+                    <label class="block font-bold mb-1">Harga (Won)</label>
                     <input type="number" id="prodPrice" class="brutal-input bg-white" required>
                 </div>
                 <div class="mb-3">
@@ -812,7 +812,7 @@
                         <input type="number" id="editTrxSubtotal" class="brutal-input text-sm bg-gray-200" readonly>
                     </div>
                     <div>
-                        <label class="block font-bold mb-1 text-xs">Total Transaksi Akhir (Rp)</label>
+                        <label class="block font-bold mb-1 text-xs">Total Transaksi Akhir (Won)</label>
                         <input type="number" id="editTrxTotal" class="brutal-input bg-white text-sm font-bold bg-yellow-100" required>
                     </div>
                 </div>
@@ -1104,7 +1104,7 @@
     const showLoad = () => document.getElementById('globalLoader').classList.remove('d-none');
     const hideLoad = () => document.getElementById('globalLoader').classList.add('d-none');
     const escapeHTML = str => !str ? '' : String(str).replace(/[&<>'"]/g, tag => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;'}[tag]));
-    const formatWon = num => 'Rp ' + parseInt(num || 0).toLocaleString('id-ID');
+    const formatWon = num => '₩' + parseInt(num || 0).toLocaleString('ko-KR');
 
     // Suara Bel Panggilan Pelayan (Chime Controller)
     let activeCallAudioSource = null;
