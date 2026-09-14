@@ -66,7 +66,12 @@
 
         @media (max-width: 639px) {
             .product-grid-mobile-2 { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
-            .product-grid-mobile-3 { grid-template-columns: repeat(3, minmax(0, 1fr)) !important; }
+            .product-grid-mobile-3 { grid-template-columns: repeat(3, minmax(0, 1fr)) !important; gap: 0.5rem !important; }
+            .product-grid-mobile-3 .product-card-img { height: 4.5rem !important; }
+            .product-grid-mobile-3 .product-card-price { font-size: 9px !important; padding: 1px 4px !important; border-width: 1px !important; }
+            .product-grid-mobile-3 .product-card-body { padding: 0.35rem !important; }
+            .product-grid-mobile-3 .product-card-name { font-size: 10px !important; margin-bottom: 0.35rem !important; }
+            .product-grid-mobile-3 .product-card-btn { font-size: 9px !important; padding-top: 4px !important; padding-bottom: 4px !important; margin-top: 0.35rem !important; }
         }
 
         @media print {
@@ -1776,7 +1781,8 @@
     }
 
     function buildProductCard(p, mode) {
-        const imgHtml = p.img ? `<img src="${p.img}" class="w-full h-24 md:h-32 object-cover border-b-2 border-black pointer-events-none">` : `<div class="w-full h-24 md:h-32 bg-gray-200 border-b-2 border-black flex items-center justify-center text-gray-500 font-bold pointer-events-none text-xs">NO IMAGE</div>`;
+        const imgFillHtml = p.img ? `<img src="${p.img}" class="absolute inset-0 w-full h-full object-cover pointer-events-none">` : `<div class="absolute inset-0 w-full h-full bg-gray-200 flex items-center justify-center text-gray-500 font-bold pointer-events-none text-xs">NO IMAGE</div>`;
+        const imgBlock = `<div class="product-card-img relative w-full h-32 md:h-40 border-b-2 border-black overflow-hidden pointer-events-none">${imgFillHtml}<div class="absolute bottom-0 left-0 right-0 flex justify-end items-end p-1.5"><span class="product-card-price text-[10px] md:text-sm font-bold bg-main border-2 border-black px-1.5 py-0.5 whitespace-nowrap">${formatWon(p.price)}</span></div></div>`;
         let opacity = p.available ? 'opacity-100' : 'opacity-50';
         const isCustOn = Boolean(STATE.data.settings.customerEnabled);
         const isPosOn = Boolean(STATE.data.settings.posEnabled);
@@ -1784,11 +1790,11 @@
         if(mode === 'pos' || (isPosOn && isCustOn)) {
             const actionClass = p.available ? 'cursor-pointer hover:bg-yellow-100 active:scale-95' : 'cursor-not-allowed'; 
             const clickAttr = p.available ? `onclick="${mode === 'pos' ? `window.addToCart('${p.id}')` : `window.addCustCart('${p.id}')`}"` : '';
-            const btnHTML = p.available ? `<div class="w-full text-center border-2 border-black bg-main py-1 md:py-2 mt-2 text-xs md:text-sm uppercase font-bold">Tambah</div>` : `<div class="w-full text-center border-2 border-black bg-gray-300 py-1 md:py-2 mt-2 text-xs md:text-sm uppercase font-bold text-gray-500">Kosong</div>`;
-            return `<div ${clickAttr} class="brutal-box flex flex-col h-full transition-transform ${opacity} ${actionClass}">${imgHtml}<div class="p-2 flex-1 flex flex-col pointer-events-none"><span class="text-[10px] md:text-xs font-bold text-gray-600 uppercase mb-1">${escapeHTML(p.cat)}</span><h3 class="font-bold text-xs md:text-sm leading-tight mb-2 flex-1">${escapeHTML(p.name)}</h3><div class="font-bold text-sm md:text-lg bg-black text-white px-2 py-1 inline-block self-start">${formatWon(p.price)}</div>${btnHTML}</div></div>`;
+            const btnHTML = p.available ? `<div class="product-card-btn w-full text-center border-2 border-black bg-main py-1 md:py-2 mt-2 text-xs md:text-sm uppercase font-bold">Tambah</div>` : `<div class="product-card-btn w-full text-center border-2 border-black bg-gray-300 py-1 md:py-2 mt-2 text-xs md:text-sm uppercase font-bold text-gray-500">Kosong</div>`;
+            return `<div ${clickAttr} class="brutal-box flex flex-col h-full transition-transform ${opacity} ${actionClass}">${imgBlock}<div class="product-card-body p-2 flex-1 flex flex-col pointer-events-none"><h3 class="product-card-name font-bold text-xs md:text-sm leading-tight mb-2 flex-1">${escapeHTML(p.name)}</h3>${btnHTML}</div></div>`;
         }
         if(!p.available) return ''; 
-        return `<div class="brutal-box flex flex-col h-full ${opacity}">${imgHtml}<div class="p-2 flex-1 flex flex-col"><span class="text-[10px] md:text-xs font-bold text-gray-600 uppercase mb-1">${escapeHTML(p.cat)}</span><h3 class="font-bold text-xs md:text-sm leading-tight mb-2 flex-1">${escapeHTML(p.name)}</h3><div class="font-bold text-sm md:text-lg bg-black text-white px-2 py-1 inline-block self-start">${formatWon(p.price)}</div></div></div>`;
+        return `<div class="brutal-box flex flex-col h-full ${opacity}">${imgBlock}<div class="product-card-body p-2 flex-1 flex flex-col"><h3 class="product-card-name font-bold text-xs md:text-sm leading-tight mb-2 flex-1">${escapeHTML(p.name)}</h3></div></div>`;
     }
 
     function buildCategoryFilter(containerId, activeStateKey, onSelectCallback) {
