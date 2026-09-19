@@ -73,6 +73,16 @@
         .spinner { border: 5px solid #000; border-top-color: #FFD500; border-radius: 50%; width: 50px; height: 50px; animation: spin 0.8s linear infinite; }
         @keyframes spin { to { transform: rotate(360deg); } }
 
+        @media (max-width: 639px) {
+            .product-grid-mobile-2 { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
+            .product-grid-mobile-3 { grid-template-columns: repeat(3, minmax(0, 1fr)) !important; gap: 0.5rem !important; }
+            .product-grid-mobile-3 .product-card-img { height: 4.5rem !important; }
+            .product-grid-mobile-3 .product-card-price { font-size: 9px !important; padding: 1px 4px !important; border-width: 1px !important; }
+            .product-grid-mobile-3 .product-card-body { padding: 0.35rem !important; }
+            .product-grid-mobile-3 .product-card-name { font-size: 10px !important; margin-bottom: 0.35rem !important; }
+            .product-grid-mobile-3 .product-card-btn { font-size: 9px !important; padding-top: 4px !important; padding-bottom: 4px !important; margin-top: 0.35rem !important; }
+        }
+
         /* ===== POS layout lebar (tablet landscape / PC): keranjang menempel di 1/4 kanan ===== */
         #posCartDock { display: none; }
         @media (min-width: 1024px) {
@@ -135,7 +145,7 @@
                     <input type="text" id="publicInlineSearch" autocomplete="off" onkeyup="window.doPublicInlineSearch()" placeholder="Cari produk..." class="d-none brutal-input flex-1 bg-white py-2 text-sm">
                     <button onclick="window.togglePublicSearch()" class="brutal-btn bg-white w-10 h-10 flex-shrink-0 flex items-center justify-center text-lg shadow-sm border-2 border-black">🔍</button>
                 </div>
-                <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 md:gap-4" id="publicProductGrid"></div>
+                <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 md:gap-4 product-grid-mobile-2" id="publicProductGrid"></div>
             </section>
 
             <!-- PAGE: LOGIN -->
@@ -249,7 +259,7 @@
                         <input type="text" id="custInlineSearch" autocomplete="off" onkeyup="window.doCustInlineSearch()" placeholder="Cari produk..." class="d-none brutal-input flex-1 bg-white py-2 text-sm">
                         <button onclick="window.toggleCustSearch()" class="brutal-btn bg-white w-10 h-10 flex-shrink-0 flex items-center justify-center text-lg shadow-sm border-2 border-black">🔍</button>
                     </div>
-                    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 md:gap-4" id="custProductGrid"></div>
+                    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 md:gap-4 product-grid-mobile-2" id="custProductGrid"></div>
                 </div>
                 
                 <div id="custHistoryArea" class="d-none brutal-box bg-white p-4 overflow-x-auto">
@@ -317,7 +327,7 @@
                     <input type="text" id="posInlineSearch" autocomplete="off" onkeyup="window.doPosInlineSearch()" placeholder="Cari produk..." class="d-none brutal-input flex-1 bg-white py-2 text-sm">
                     <button onclick="window.togglePosSearch()" class="brutal-btn bg-white w-10 h-10 flex-shrink-0 flex items-center justify-center text-lg shadow-sm border-2 border-black">🔍</button>
                 </div>
-                <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-3 md:gap-4" id="adminPosProductGrid"></div>
+                <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-3 md:gap-4 product-grid-mobile-2" id="adminPosProductGrid"></div>
                 </div>
                 <aside id="posCartDock"></aside>
               </div>
@@ -518,6 +528,16 @@
                                 <p class="text-[10px] md:text-xs text-gray-600 italic leading-tight mt-1">
                                     *Status Default: <b>OFF</b>. Pengunjung hanya melihat katalog menu.
                                 </p>
+                            </div>
+
+                            <!-- Tampilan Grid Produk -->
+                            <div class="mb-4 mt-6 border-t-2 border-black pt-4">
+                                <h4 class="font-bold mb-2">Tampilan Produk di HP</h4>
+                                <p class="text-[10px] md:text-xs text-gray-600 italic leading-tight mb-2">Pilih jumlah kolom produk pada tampilan POS Admin, Umum, dan Pelanggan. Hanya berlaku di HP.</p>
+                                <div class="grid grid-cols-2 gap-2">
+                                    <label class="brutal-btn bg-white text-center py-3 cursor-pointer has-[:checked]:bg-main"><input type="radio" name="productGridMobile" value="2" id="setProductGrid2" class="hidden"><span class="font-bold">2 Kolom</span></label>
+                                    <label class="brutal-btn bg-white text-center py-3 cursor-pointer has-[:checked]:bg-accent"><input type="radio" name="productGridMobile" value="3" id="setProductGrid3" class="hidden"><span class="font-bold">3 Kolom</span></label>
+                                </div>
                             </div>
 
                             <!-- Fitur Metode Pembayaran Kartu -->
@@ -1069,7 +1089,8 @@
                 callEnabled: false,
                 customCallAudio: '',
                 autoReset: false,
-                resetPeriod: "12"
+                resetPeriod: "12",
+                productGridMobile: "2"
             }, 
             categories: ["Makanan", "Minuman"], 
             products: [
@@ -1323,6 +1344,7 @@
                     custom_call_audio: '',
                     auto_reset: false,
                     reset_period: "12",
+                    product_grid_mobile: "2",
                     category_order: ["Makanan", "Minuman"]
                 });
                 batch.set(db.collection('categories').doc('Makanan'), { id: "Makanan", name: "Makanan" });
@@ -1357,6 +1379,7 @@
                     customCallAudio: s.custom_call_audio || '',
                     autoReset: Boolean(s.auto_reset),
                     resetPeriod: s.reset_period || "12",
+                    productGridMobile: s.product_grid_mobile === "3" ? "3" : "2",
                     categoryOrder: s.category_order || []
                 };
             }
@@ -1776,7 +1799,8 @@
     }
 
     function buildProductCard(p, mode) {
-        const imgHtml = p.img ? `<img src="${p.img}" class="w-full h-24 md:h-32 object-cover border-b-2 border-black pointer-events-none">` : `<div class="w-full h-24 md:h-32 bg-gray-200 border-b-2 border-black flex items-center justify-center text-gray-500 font-bold pointer-events-none text-xs">NO IMAGE</div>`;
+        const imgFillHtml = p.img ? `<img src="${p.img}" class="absolute inset-0 w-full h-full object-cover pointer-events-none">` : `<div class="absolute inset-0 w-full h-full bg-gray-200 flex items-center justify-center text-gray-500 font-bold pointer-events-none text-xs">NO IMAGE</div>`;
+        const imgBlock = `<div class="product-card-img relative w-full h-32 md:h-40 border-b-2 border-black overflow-hidden pointer-events-none">${imgFillHtml}<div class="absolute bottom-0 left-0 right-0 flex justify-end items-end p-1.5"><span class="product-card-price text-[10px] md:text-sm font-bold bg-main border-2 border-black px-1.5 py-0.5 whitespace-nowrap">${formatWon(p.price)}</span></div></div>`;
         let opacity = p.available ? 'opacity-100' : 'opacity-50';
         const isCustOn = Boolean(STATE.data.settings.customerEnabled);
         const isPosOn = Boolean(STATE.data.settings.posEnabled);
@@ -1784,11 +1808,11 @@
         if(mode === 'pos' || (isPosOn && isCustOn)) {
             const actionClass = p.available ? 'cursor-pointer hover:bg-yellow-100 active:scale-95' : 'cursor-not-allowed'; 
             const clickAttr = p.available ? `onclick="${mode === 'pos' ? `window.addToCart('${p.id}')` : `window.addCustCart('${p.id}')`}"` : '';
-            const btnHTML = p.available ? `<div class="w-full text-center border-2 border-black bg-main py-1 md:py-2 mt-2 text-xs md:text-sm uppercase font-bold">Tambah</div>` : `<div class="w-full text-center border-2 border-black bg-gray-300 py-1 md:py-2 mt-2 text-xs md:text-sm uppercase font-bold text-gray-500">Kosong</div>`;
-            return `<div ${clickAttr} class="brutal-box flex flex-col h-full transition-transform ${opacity} ${actionClass}">${imgHtml}<div class="p-2 flex-1 flex flex-col pointer-events-none"><span class="text-[10px] md:text-xs font-bold text-gray-600 uppercase mb-1">${escapeHTML(p.cat)}</span><h3 class="font-bold text-xs md:text-sm leading-tight mb-2 flex-1">${escapeHTML(p.name)}</h3><div class="font-bold text-sm md:text-lg bg-black text-white px-2 py-1 inline-block self-start">${formatWon(p.price)}</div>${btnHTML}</div></div>`;
+            const btnHTML = p.available ? `<div class="product-card-btn w-full text-center border-2 border-black bg-main py-1 md:py-2 mt-2 text-xs md:text-sm uppercase font-bold">Tambah</div>` : `<div class="product-card-btn w-full text-center border-2 border-black bg-gray-300 py-1 md:py-2 mt-2 text-xs md:text-sm uppercase font-bold text-gray-500">Kosong</div>`;
+            return `<div ${clickAttr} class="brutal-box flex flex-col h-full transition-transform ${opacity} ${actionClass}">${imgBlock}<div class="product-card-body p-2 flex-1 flex flex-col pointer-events-none"><h3 class="product-card-name font-bold text-xs md:text-sm leading-tight mb-2 flex-1">${escapeHTML(p.name)}</h3>${btnHTML}</div></div>`;
         }
         if(!p.available) return ''; 
-        return `<div class="brutal-box flex flex-col h-full ${opacity}">${imgHtml}<div class="p-2 flex-1 flex flex-col"><span class="text-[10px] md:text-xs font-bold text-gray-600 uppercase mb-1">${escapeHTML(p.cat)}</span><h3 class="font-bold text-xs md:text-sm leading-tight mb-2 flex-1">${escapeHTML(p.name)}</h3><div class="font-bold text-sm md:text-lg bg-black text-white px-2 py-1 inline-block self-start">${formatWon(p.price)}</div></div></div>`;
+        return `<div class="brutal-box flex flex-col h-full ${opacity}">${imgBlock}<div class="product-card-body p-2 flex-1 flex flex-col"><h3 class="product-card-name font-bold text-xs md:text-sm leading-tight mb-2 flex-1">${escapeHTML(p.name)}</h3></div></div>`;
     }
 
     function buildCategoryFilter(containerId, activeStateKey, onSelectCallback) {
@@ -1800,6 +1824,7 @@
     }
 
     window.renderPublicCatalog = () => { 
+        window.applyProductGridMobile(); 
         buildCategoryFilter('publicCategoryFilter', 'activeCategoryPub', 'selectCatPublic'); 
         document.getElementById('publicProductGrid').innerHTML = STATE.data.products.filter(p => p.cat === STATE.activeCategoryPub && p.available).map(p => buildProductCard(p, 'public')).join('') || '<p class="col-span-2 font-bold">Tidak ada produk.</p>'; 
     };
@@ -1822,6 +1847,7 @@
     }
     
     window.renderCustomerCatalog = () => { 
+        window.applyProductGridMobile(); 
         document.getElementById('custHistoryArea').classList.add('d-none'); 
         document.getElementById('custSettingsArea').classList.add('d-none'); 
         document.getElementById('custCatalogArea').classList.remove('d-none'); 
@@ -1926,6 +1952,7 @@
     };
 
     window.renderAdminPOS = () => { 
+        window.applyProductGridMobile(); 
         buildCategoryFilter('adminPosCategoryFilter', 'activeCategoryPOS', 'selectCatPOS'); 
         renderPosGrid();
         window.updateCartUI(); 
@@ -3108,6 +3135,16 @@
         }
     };
 
+    window.applyProductGridMobile = () => {
+        const cols = STATE.data.settings.productGridMobile === '3' ? '3' : '2';
+        ['adminPosProductGrid', 'publicProductGrid', 'custProductGrid'].forEach(id => {
+            const grid = document.getElementById(id);
+            if (!grid) return;
+            grid.classList.toggle('product-grid-mobile-2', cols === '2');
+            grid.classList.toggle('product-grid-mobile-3', cols === '3');
+        });
+    };
+
     window.renderAdminSettings = () => {
         document.getElementById('setStoreName').value = STATE.data.settings.storeName || 'Warung Indonesia'; 
         document.getElementById('setBankName').value = STATE.data.settings.bankName || '';
@@ -3139,6 +3176,10 @@
 
         document.getElementById('setAutoReset').checked = Boolean(STATE.data.settings.autoReset);
         document.getElementById('setResetPeriod').value = STATE.data.settings.resetPeriod || '12';
+        const gridMobile = STATE.data.settings.productGridMobile === '3' ? '3' : '2';
+        const gridRadio = document.querySelector(`input[name="productGridMobile"][value="${gridMobile}"]`);
+        if (gridRadio) gridRadio.checked = true;
+        window.applyProductGridMobile();
         window.toggleAutoResetConfig();
 
         STATE.tempLogoBase64 = STATE.data.settings.logoUrl || ''; 
@@ -3174,7 +3215,8 @@
             call_enabled: isCallEnabled,
             custom_call_audio: STATE.tempCallAudioBase64,
             auto_reset: document.getElementById('setAutoReset').checked, 
-            reset_period: document.getElementById('setResetPeriod').value 
+            reset_period: document.getElementById('setResetPeriod').value,
+            product_grid_mobile: document.querySelector('input[name="productGridMobile"]:checked')?.value === '3' ? '3' : '2'
         };
 
         try { 
@@ -3194,7 +3236,8 @@
                 callEnabled: payload.call_enabled, 
                 customCallAudio: payload.custom_call_audio,
                 autoReset: payload.auto_reset, 
-                resetPeriod: payload.reset_period
+                resetPeriod: payload.reset_period,
+                productGridMobile: payload.product_grid_mobile
             };
 
             if(!IS_PREVIEW && db) { 
@@ -3207,6 +3250,10 @@
             updateNavMenu();
             window.updateCallButtonsVisibility();
             window.switchAdminTab('settings');
+            window.applyProductGridMobile();
+            window.renderAdminPOS();
+            window.renderPublicCatalog();
+            if (STATE.user && STATE.user.role === 'customer') window.renderCustomerCatalog();
             window.renderAdminPOS();
             window.renderPublicCatalog();
 
