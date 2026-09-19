@@ -58,6 +58,23 @@
         .receipt-88mm { width: 332px; max-width: 100%; margin: 0 auto; background: white; color: black; padding: 16px; border: 1px solid #ccc; box-sizing: border-box; }
         .d-none { display: none !important; }
 
+        /* Keterangan buka/tutup warung di header (tampilan HP): lebih kecil, tutup di bawah buka & saling menempel */
+        @media (max-width: 767px) {
+            .store-status-wrap:not(:has(> div:not(.hidden))) { display: none; }
+            #storeStatusBadge, #storeCloseStatusBadge {
+                font-size: 10px;
+                line-height: 1.15;
+                padding: 1px 6px;
+                box-shadow: 1px 1px 0 #000;
+            }
+            #storeCloseStatusBadge {
+                margin-left: 0 !important;
+                margin-top: -2px;
+                transform: none !important;
+                translate: none !important;
+            }
+        }
+
         @media print {
             @page { margin: 0; size: 88mm auto; }
             body, html { margin: 0; padding: 0; background: white; height: max-content !important; min-height: 0 !important; }
@@ -140,8 +157,10 @@
                 <div class="flex items-center gap-2 md:gap-4 cursor-pointer" onclick="window.goHome()">
                     <img id="headerLogo" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='60' height='60'><rect width='60' height='60' fill='%23FFD500'/><text x='50%' y='60%' font-size='22' font-weight='bold' text-anchor='middle' fill='black'>WI</text></svg>" class="w-10 h-10 md:w-14 md:h-14 border-2 border-black object-cover shrink-0 shadow-brutal-sm" alt="Logo">
                     <h1 id="headerTitle" class="text-sm md:text-2xl font-bold uppercase tracking-tight leading-tight">WARUNG<br><span class="text-[10px] md:text-xs text-gray-600 leading-none">INDONESIA</span></h1>
-                    <div id="storeStatusBadge" class="hidden italic font-bold text-xs md:text-sm px-2 py-1 border-2 border-black tracking-tight whitespace-nowrap shadow-brutal-sm"></div>
-                    <div id="storeCloseStatusBadge" class="hidden italic font-bold text-xs md:text-sm px-2 py-1 border-2 border-black tracking-tight whitespace-nowrap shadow-brutal-sm"></div>
+                    <div id="storeStatusWrap" class="store-status-wrap flex flex-col items-start md:contents">
+                        <div id="storeStatusBadge" class="hidden italic font-bold text-xs md:text-sm px-2 py-1 border-2 border-black tracking-tight whitespace-nowrap shadow-brutal-sm"></div>
+                        <div id="storeCloseStatusBadge" class="hidden italic font-bold text-xs md:text-sm px-2 py-1 border-2 border-black tracking-tight whitespace-nowrap shadow-brutal-sm"></div>
+                    </div>
                 </div>
                 <nav class="flex items-center flex-wrap justify-end gap-2 md:gap-3" id="navMenu"></nav>
             </div>
@@ -577,11 +596,13 @@
                                     <input type="checkbox" id="setHideStoreStatusBadge" class="w-5 h-5 accent-black"> Sembunyikan (Hide) Keterangan Buka/Tutup di Header
                                 </label>
                                 
-                                <div class="flex gap-2 mb-3">
-                                    <button type="button" onclick="window.triggerInstantStoreStatus('open')" class="brutal-btn flex-1 bg-success text-black py-2 text-xs md:text-sm font-bold">Buka Sekarang</button>
-                                    <button type="button" onclick="window.triggerInstantStoreStatus('closed')" class="brutal-btn flex-1 bg-danger text-white py-2 text-xs md:text-sm font-bold">Tutup Sekarang</button>
+                                <div id="instantStatusControls">
+                                    <div class="flex gap-2 mb-3">
+                                        <button type="button" onclick="window.triggerInstantStoreStatus('open')" class="brutal-btn flex-1 bg-success text-black py-2 text-xs md:text-sm font-bold">Buka Sekarang</button>
+                                        <button type="button" onclick="window.triggerInstantStoreStatus('closed')" class="brutal-btn flex-1 bg-danger text-white py-2 text-xs md:text-sm font-bold">Tutup Sekarang</button>
+                                    </div>
+                                    <div id="instantStatusAlert" class="text-xs italic font-bold mb-3 d-none"></div>
                                 </div>
-                                <div id="instantStatusAlert" class="text-xs italic font-bold mb-3 d-none"></div>
 
                                 <label class="flex items-center gap-2 font-bold cursor-pointer bg-yellow-50 p-3 border-2 border-black w-full mb-2">
                                     <input type="checkbox" id="setScheduleOpenEnabled" class="w-5 h-5 accent-black" onchange="window.handleStoreScheduleToggles()"> Aktifkan Jadwal Waktu Buka Warung
@@ -590,7 +611,7 @@
                                 <div id="scheduleOpenContainer" class="d-none pl-3 border-l-4 border-black space-y-3 mt-2 mb-4 bg-gray-50 p-3 border-2 border-black">
                                     <div>
                                         <label class="block font-bold mb-1 text-xs md:text-sm">Pilih Tanggal & Waktu/Jam Buka:</label>
-                                        <input type="datetime-local" id="setScheduleOpenDateTime" class="brutal-input bg-white text-xs md:text-sm">
+                                        <input type="datetime-local" id="setScheduleOpenDateTime" class="brutal-input bg-white text-xs md:text-sm" oninput="window.handleStoreScheduleToggles()" onchange="window.handleStoreScheduleToggles()">
                                     </div>
 
                                     <div class="pt-2 border-t-2 border-black">
@@ -4359,7 +4380,15 @@
         const isDays = repOn && (document.querySelector('input[name="storeRepeatType"]:checked')?.value === 'days');
         const daysBox = document.getElementById('repeatDaysPickerContainer');
         if (daysBox) daysBox.classList.toggle('d-none', !isDays);
+
+        // Tombol instan Buka/Tutup Sekarang di-hide jika jadwal buka ON dan sudah diatur (tanggal/jam terisi)
+        const openVal = document.getElementById('setScheduleOpenDateTime')?.value;
+        const instantBox = document.getElementById('instantStatusControls');
+        if (instantBox) instantBox.classList.toggle('d-none', Boolean(openOn && openVal));
     };
+
+    // Jadwal dianggap aktif jika switch jadwal buka ON dan tanggal/jam buka sudah diatur
+    window.isStoreScheduleActive = (s) => Boolean(s && s.scheduleOpenEnabled && s.scheduleOpenDateTime);
 
     window.syncInstantAlertUI = () => {
         const el = document.getElementById('instantStatusAlert');
@@ -4426,7 +4455,8 @@
         const todayStr = now.toDateString();
 
         // Cek tombol instan manual (hanya berlaku 1 hari jika hide sedang OFF)
-        if (s.instantOverride && s.instantOverride.dateString === todayStr) {
+        // Jika jadwal ON dan diatur, tombol instan kalah (diabaikan) dan status mengikuti jadwal
+        if (!window.isStoreScheduleActive(s) && s.instantOverride && s.instantOverride.dateString === todayStr) {
             if (closeBadge) {
                 closeBadge.classList.add('hidden');
                 closeBadge.textContent = '';
