@@ -374,15 +374,15 @@
                         </div>
                     </div>
                     <div class="brutal-box bg-white overflow-x-auto">
-                        <table class="w-full text-left border-collapse min-w-[600px]">
+                        <table class="w-full text-left border-collapse md:min-w-[600px]">
                             <thead>
                                 <tr class="border-b-4 border-black bg-main">
                                     <th class="p-2 border-r-2 border-black w-16">Foto</th>
                                     <th class="p-2 border-r-2 border-black">Nama</th>
                                     <th class="p-2 border-r-2 border-black">Kategori</th>
                                     <th class="p-2 border-r-2 border-black">Harga</th>
-                                    <th class="p-2 border-r-2 border-black text-center">Status</th>
-                                    <th class="p-2 text-center">Aksi</th>
+                                    <th class="p-2 border-r-2 border-black text-center hidden md:table-cell">Status</th>
+                                    <th class="p-2 text-center hidden md:table-cell">Aksi</th>
                                 </tr>
                             </thead>
                             <tbody id="adminProductsTable"></tbody>
@@ -2458,13 +2458,22 @@
         tableBody.innerHTML = sortedProducts.map(p => `
             <tr class="border-b-2 border-black hover:bg-gray-100">
                 <td class="p-2 border-r-2 border-black"><img src="${p.img || 'https://placehold.co/40x40/e2e8f0/000000?text=No+Img'}" class="w-10 h-10 object-cover border border-black"></td>
-                <td class="p-2 border-r-2 border-black font-bold text-xs md:text-sm">${escapeHTML(p.name)}</td>
+                <td class="p-2 border-r-2 border-black font-bold text-xs md:text-sm whitespace-nowrap">
+                    <div class="flex items-center justify-between gap-2">
+                        <span class="whitespace-nowrap">${escapeHTML(p.name)}</span>
+                        <div class="flex items-center shrink-0 md:hidden">
+                            <button onclick="window.toggleProductAvail('${p.id}')" class="font-bold text-[10px] px-2 py-1 border-2 border-black mr-1 ${p.available ? 'bg-success text-black' : 'bg-gray-300 text-gray-600'}">${p.available ? 'ON' : 'OFF'}</button>
+                            <button onclick="window.editProduct('${p.id}')" class="bg-main border-2 border-black px-2 py-1 text-[10px] font-bold mr-1">Edit</button>
+                            <button onclick="window.deleteProduct('${p.id}')" class="bg-danger text-white border-2 border-black px-2 py-1 text-[10px] font-bold">X</button>
+                        </div>
+                    </div>
+                </td>
                 <td class="p-2 border-r-2 border-black text-xs">${escapeHTML(p.cat)}</td>
                 <td class="p-2 border-r-2 border-black text-sm">${formatWon(p.price)}</td>
-                <td class="p-2 border-r-2 border-black text-center">
+                <td class="p-2 border-r-2 border-black text-center hidden md:table-cell">
                     <button onclick="window.toggleProductAvail('${p.id}')" class="font-bold text-[10px] md:text-xs px-2 py-1 border-2 border-black ${p.available ? 'bg-success text-black' : 'bg-gray-300 text-gray-600'}">${p.available ? 'ON' : 'OFF'}</button>
                 </td>
-                <td class="p-2 text-center">
+                <td class="p-2 text-center hidden md:table-cell">
                     <button onclick="window.editProduct('${p.id}')" class="bg-main border-2 border-black px-2 py-1 text-[10px] font-bold mr-1">Edit</button>
                     <button onclick="window.deleteProduct('${p.id}')" class="bg-danger text-white border-2 border-black px-2 py-1 text-[10px] font-bold mt-1 md:mt-0">X</button>
                 </td>
