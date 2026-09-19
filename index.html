@@ -1953,7 +1953,14 @@
             window.showPage('pageCustomerDashboard'); 
         }
     }
-    window.goHome = () => route();
+    window.route = route;
+    window.goHome = function() {
+        if (typeof route === 'function') {
+            route();
+        } else if (typeof window.route === 'function') {
+            window.route();
+        }
+    };
 
     window.updateCallButtonsVisibility = () => {
         const isTableOn = Boolean(STATE.data.settings.tableEnabled);
@@ -4362,22 +4369,31 @@
 
     window.updateStoreStatusDisplay = () => {
         const badge = document.getElementById('storeStatusBadge');
+        const closeBadge = document.getElementById('storeCloseStatusBadge');
         if (!badge) return;
 
         const s = STATE.data.settings || {};
 
-        // 0. Prioritas Utama: Jika fitur Hide aktif, sembunyikan total
+        // Prioritas Mutlak: Jika fitur Hide ON, bersihkan dan sembunyikan semua badge (instan maupun jadwal)
         if (s.hideStoreStatusBadge) {
             badge.classList.add('hidden');
             badge.textContent = '';
+            if (closeBadge) {
+                closeBadge.classList.add('hidden');
+                closeBadge.textContent = '';
+            }
             return;
         }
 
         const now = new Date();
         const todayStr = now.toDateString();
 
-        // 1. Cek tombol instan manual (hanya berlaku 1 hari / hari ini)
+        // Cek tombol instan manual (hanya berlaku 1 hari jika hide sedang OFF)
         if (s.instantOverride && s.instantOverride.dateString === todayStr) {
+            if (closeBadge) {
+                closeBadge.classList.add('hidden');
+                closeBadge.textContent = '';
+            }
             badge.classList.remove('hidden');
             if (s.instantOverride.status === 'open') {
                 badge.className = 'italic font-bold text-xs md:text-sm px-2 py-1 border-2 border-black tracking-tight whitespace-nowrap shadow-brutal-sm bg-success text-black';
@@ -4393,6 +4409,10 @@
         if (!s.scheduleOpenEnabled || !s.scheduleOpenDateTime) {
             badge.classList.add('hidden');
             badge.textContent = '';
+            if (closeBadge) {
+                closeBadge.classList.add('hidden');
+                closeBadge.textContent = '';
+            }
             return;
         }
 
@@ -4417,6 +4437,10 @@
                 const currentDay = now.getDay();
                 const closedDays = Array.isArray(s.repeatClosedDays) ? s.repeatClosedDays : [];
                 if (closedDays.includes(currentDay)) {
+                    if (closeBadge) {
+                        closeBadge.classList.add('hidden');
+                        closeBadge.textContent = '';
+                    }
                     badge.classList.remove('hidden');
                     badge.className = 'italic font-bold text-xs md:text-sm px-2 py-1 border-2 border-black tracking-tight whitespace-nowrap shadow-brutal-sm bg-danger text-white';
                     badge.textContent = 'tutup';
@@ -4428,11 +4452,14 @@
             if (openRaw.toDateString() !== todayStr) {
                 badge.classList.add('hidden');
                 badge.textContent = '';
+                if (closeBadge) {
+                    closeBadge.classList.add('hidden');
+                    closeBadge.textContent = '';
+                }
                 return;
             }
         }
 
-        const closeBadge = document.getElementById('storeCloseStatusBadge');
         if (closeBadge) {
             closeBadge.classList.add('hidden');
             closeBadge.textContent = '';
