@@ -96,7 +96,27 @@
             #cartPanelCard.cart-docked .aspect-square { aspect-ratio: auto; padding-top: 0.6rem; padding-bottom: 0.6rem; }
             #cartPanelCard.cart-docked #payMethodGridContainer label { font-size: 11px; }
         }
-        
+        /* Layout responsif layar lebar (Tablet & PC) untuk Kelola Admin */
+        @media (min-width: 1024px) {
+            #mainAppWrapper.admin-wide > main { max-width: 100% !important; padding-left: 2rem; padding-right: 2rem; }
+            #pageAdminMgmt { width: 100%; }
+            #pageAdminMgmt .admin-grid-wide { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.5rem; align-items: start; }
+        }
+        /* Menu Tab Admin Melayang / Mengambang (Sticky saat scroll) */
+        #pageAdminMgmt > div:first-child {
+            position: sticky;
+            top: 59px;
+            z-index: 30;
+            background-color: rgba(244, 244, 240, 0.95);
+            backdrop-filter: blur(4px);
+            padding-top: 0.5rem;
+            padding-bottom: 0.75rem;
+        }
+        @media (min-width: 768px) {
+            #pageAdminMgmt > div:first-child {
+                top: 69px;
+            }
+        }
         .table-seat-dot { width: 8px; height: 8px; border-radius: 9999px; background-color: #000; }
         .pulse-call { animation: pulseWarning 1s infinite alternate; }
         @keyframes pulseWarning { from { transform: scale(1); } to { transform: scale(1.06); } }
@@ -117,9 +137,10 @@
         
         <header class="border-b-4 border-black bg-white/90 backdrop-blur-md sticky top-0 z-40 no-print shadow-sm">
             <div class="container mx-auto px-3 md:px-4 py-2 min-h-[60px] md:min-h-[70px] flex items-center justify-between">
-                <div class="flex items-center gap-2 md:gap-3 cursor-pointer" onclick="window.goHome()">
-                    <img id="headerLogo" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='60' height='60'><rect width='60' height='60' fill='%23FFD500'/><text x='50%' y='60%' font-size='22' font-weight='bold' text-anchor='middle' fill='black'>WI</text></svg>" class="w-10 h-10 md:w-12 md:h-12 border-2 border-black object-cover" alt="Logo">
-                    <h1 id="headerTitle" class="text-sm md:text-xl font-bold uppercase tracking-tighter leading-tight">WARUNG<br><span class="text-[10px] md:text-xs text-gray-600 leading-none">INDONESIA</span></h1>
+                <div class="flex items-center gap-2 md:gap-4 cursor-pointer" onclick="window.goHome()">
+                    <img id="headerLogo" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='60' height='60'><rect width='60' height='60' fill='%23FFD500'/><text x='50%' y='60%' font-size='22' font-weight='bold' text-anchor='middle' fill='black'>WI</text></svg>" class="w-10 h-10 md:w-14 md:h-14 border-2 border-black object-cover shrink-0 shadow-brutal-sm" alt="Logo">
+                    <h1 id="headerTitle" class="text-sm md:text-2xl font-bold uppercase tracking-tight leading-tight">WARUNG<br><span class="text-[10px] md:text-xs text-gray-600 leading-none">INDONESIA</span></h1>
+                    <div id="storeStatusBadge" class="hidden italic font-bold text-xs md:text-sm px-2 py-1 border-2 border-black tracking-tight whitespace-nowrap shadow-brutal-sm"></div>
                 </div>
                 <nav class="flex items-center flex-wrap justify-end gap-2 md:gap-3" id="navMenu"></nav>
             </div>
@@ -351,8 +372,8 @@
             </section>
 
             <!-- PAGE: ADMIN MANAGEMENT -->
-            <section id="pageAdminMgmt" class="app-page d-none">
-                <div class="flex overflow-x-auto gap-2 mb-6 border-b-4 border-black pb-2 no-scrollbar">
+            <section id="pageAdminMgmt" class="app-page d-none w-full">
+                <div class="flex overflow-x-auto lg:overflow-visible gap-2 md:gap-3 mb-6 border-b-4 border-black pb-3 no-scrollbar flex-nowrap lg:flex-wrap">
                     <button onclick="window.switchAdminTab('products')" id="tab_products" class="admin-tab brutal-btn bg-white px-4 py-2 whitespace-nowrap">Produk</button>
                     <button onclick="window.switchAdminTab('categories')" id="tab_categories" class="admin-tab brutal-btn bg-white px-4 py-2 whitespace-nowrap">Kategori</button>
                     <button onclick="window.switchAdminTab('tables')" id="tab_tables" class="admin-tab brutal-btn bg-white px-4 py-2 whitespace-nowrap d-none">Meja</button>
@@ -424,9 +445,10 @@
                                 <tr class="border-b-4 border-black bg-danger text-white">
                                     <th class="p-2 border-r-2 border-black w-1/4">Nama & Akses</th>
                                     <th class="p-2 border-r-2 border-black">Total Hutang</th>
-                                    <th class="p-2 border-r-2 border-black text-center w-24">Aksi</th>
+                                    <th class="p-2 border-r-2 border-black lg:hidden text-center w-24">Aksi</th>
                                     <th class="p-2 border-r-2 border-black w-1/5">Kontak</th>
-                                    <th class="p-2 w-1/3">Alamat</th>
+                                    <th class="p-2 border-r-0 lg:border-r-2 border-black w-1/3">Alamat</th>
+                                    <th class="p-2 text-center w-28 hidden lg:table-cell">Aksi</th>
                                 </tr>
                             </thead>
                             <tbody id="adminCustomersTable"></tbody>
@@ -488,29 +510,34 @@
                 </div>
 
                 <!-- Admin: Settings -->
-                <div id="admin_settings" class="admin-content d-none max-w-xl mx-auto">
-                    <div class="brutal-box p-6 bg-white">
-                        <h3 class="text-xl font-bold uppercase mb-4 border-b-4 border-black pb-2">Pengaturan Warung</h3>
+                <div id="admin_settings" class="admin-content d-none w-full">
+                    <div class="brutal-box p-4 md:p-8 bg-white w-full">
+                        <h3 class="text-xl md:text-2xl font-bold uppercase mb-6 border-b-4 border-black pb-3">Pengaturan Warung</h3>
                         <form id="formSettings" onsubmit="window.saveSettings(event)">
-                            <div class="mb-4">
-                                <label class="block font-bold mb-1">Nama Warung</label>
-                                <input type="text" id="setStoreName" class="brutal-input bg-white" required>
-                            </div>
-                            <div class="mb-4">
-                                <label class="block font-bold mb-1">Upload Logo Baru</label>
-                                <input type="file" id="setLogoFile" class="brutal-input bg-white" accept="image/*" onchange="window.handleLogoSelect(event)">
-                                <div id="logoPreview" class="mt-2 text-sm text-gray-500"></div>
-                            </div>
-                            <div class="grid grid-cols-2 gap-4 mb-4">
-                                <div>
-                                    <label class="block font-bold mb-1">Nama Bank</label>
-                                    <input type="text" id="setBankName" class="brutal-input bg-white">
+                            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
+                                <div class="bg-gray-50 p-4 border-2 border-black">
+                                    <h4 class="font-bold text-sm uppercase mb-3 border-b-2 border-black pb-1">Identitas Toko & Rekening</h4>
+                                    <div class="mb-4">
+                                        <label class="block font-bold mb-1">Nama Warung</label>
+                                        <input type="text" id="setStoreName" class="brutal-input bg-white" required>
+                                    </div>
+                                    <div class="mb-4">
+                                        <label class="block font-bold mb-1">Upload Logo Baru</label>
+                                        <input type="file" id="setLogoFile" class="brutal-input bg-white" accept="image/*" onchange="window.handleLogoSelect(event)">
+                                        <div id="logoPreview" class="mt-2 text-sm text-gray-500"></div>
+                                    </div>
+                                    <div class="grid grid-cols-2 gap-4 mb-2">
+                                        <div>
+                                            <label class="block font-bold mb-1">Nama Bank</label>
+                                            <input type="text" id="setBankName" class="brutal-input bg-white">
+                                        </div>
+                                        <div>
+                                            <label class="block font-bold mb-1">No Rekening</label>
+                                            <input type="text" id="setBankAcc" class="brutal-input bg-white">
+                                        </div>
+                                    </div>
                                 </div>
-                                <div>
-                                    <label class="block font-bold mb-1">No Rekening</label>
-                                    <input type="text" id="setBankAcc" class="brutal-input bg-white">
-                                </div>
-                            </div>
+                                <div class="space-y-4">
                             
                             <!-- Pengaturan Fitur Pelanggan & Delivery -->
                             <div class="mb-4 mt-6 border-t-2 border-black pt-4">
@@ -540,6 +567,72 @@
                                 <p class="text-[10px] md:text-xs text-gray-600 italic leading-tight mt-1">
                                     *Status Default: <b>OFF</b>. Jika ON, muncul tab 'Kasir' di Kelola Admin untuk mengatur akun login & profil staf kasir.
                                 </p>
+                            </div>
+                            <!-- Pengaturan Jadwal Operasional Toko -->
+                            <div class="mb-4 mt-6 border-t-2 border-black pt-4">
+                                <h4 class="font-bold mb-2 uppercase">Jadwal & Waktu Buka Warung</h4>
+                                
+                                <label class="flex items-center gap-2 font-bold cursor-pointer bg-red-100 p-3 border-2 border-black w-full mb-3">
+                                    <input type="checkbox" id="setHideStoreStatusBadge" class="w-5 h-5 accent-black"> Sembunyikan (Hide) Keterangan Buka/Tutup di Header
+                                </label>
+                                
+                                <div class="flex gap-2 mb-3">
+                                    <button type="button" onclick="window.triggerInstantStoreStatus('open')" class="brutal-btn flex-1 bg-success text-black py-2 text-xs md:text-sm font-bold">Buka Sekarang</button>
+                                    <button type="button" onclick="window.triggerInstantStoreStatus('closed')" class="brutal-btn flex-1 bg-danger text-white py-2 text-xs md:text-sm font-bold">Tutup Sekarang</button>
+                                </div>
+                                <div id="instantStatusAlert" class="text-xs italic font-bold mb-3 d-none"></div>
+
+                                <label class="flex items-center gap-2 font-bold cursor-pointer bg-yellow-50 p-3 border-2 border-black w-full mb-2">
+                                    <input type="checkbox" id="setScheduleOpenEnabled" class="w-5 h-5 accent-black" onchange="window.handleStoreScheduleToggles()"> Aktifkan Jadwal Waktu Buka Warung
+                                </label>
+
+                                <div id="scheduleOpenContainer" class="d-none pl-3 border-l-4 border-black space-y-3 mt-2 mb-4 bg-gray-50 p-3 border-2 border-black">
+                                    <div>
+                                        <label class="block font-bold mb-1 text-xs md:text-sm">Pilih Tanggal & Waktu/Jam Buka:</label>
+                                        <input type="datetime-local" id="setScheduleOpenDateTime" class="brutal-input bg-white text-xs md:text-sm">
+                                    </div>
+
+                                    <div class="pt-2 border-t-2 border-black">
+                                        <label class="flex items-center gap-2 font-bold cursor-pointer text-xs md:text-sm">
+                                            <input type="checkbox" id="setScheduleCloseEnabled" class="w-4 h-4 accent-black" onchange="window.handleStoreScheduleToggles()"> Aktifkan Jadwal Waktu Tutup Warung
+                                        </label>
+                                    </div>
+
+                                    <div id="scheduleCloseContainer" class="d-none pl-2 border-l-2 border-black">
+                                        <label class="block font-bold mb-1 text-xs">Pilih Tanggal & Waktu/Jam Tutup:</label>
+                                        <input type="datetime-local" id="setScheduleCloseDateTime" class="brutal-input bg-white text-xs md:text-sm">
+                                    </div>
+
+                                    <div class="pt-2 border-t-2 border-black">
+                                        <label class="flex items-center gap-2 font-bold cursor-pointer text-xs md:text-sm">
+                                            <input type="checkbox" id="setRepeatScheduleEnabled" class="w-4 h-4 accent-black" onchange="window.handleStoreScheduleToggles()"> Ulangi Jadwal
+                                        </label>
+                                    </div>
+
+                                    <div id="repeatScheduleContainer" class="d-none pl-2 border-l-2 border-black space-y-2">
+                                        <div class="flex gap-4 items-center text-xs md:text-sm font-bold">
+                                            <label class="flex items-center gap-1 cursor-pointer">
+                                                <input type="radio" name="storeRepeatType" value="daily" checked onchange="window.handleStoreScheduleToggles()"> Setiap Hari
+                                            </label>
+                                            <label class="flex items-center gap-1 cursor-pointer">
+                                                <input type="radio" name="storeRepeatType" value="days" onchange="window.handleStoreScheduleToggles()"> Pilih Hari Libur/Tutup
+                                            </label>
+                                        </div>
+
+                                        <div id="repeatDaysPickerContainer" class="d-none bg-white p-2 border-2 border-black">
+                                            <span class="block font-bold text-xs mb-1">Pilih Hari-Hari Jadwal Tutup:</span>
+                                            <div class="grid grid-cols-4 sm:grid-cols-7 gap-1 text-[11px] font-bold text-center">
+                                                <label class="p-1 border border-black cursor-pointer has-[:checked]:bg-danger has-[:checked]:text-white"><input type="checkbox" class="hidden repeat-day-cb" value="0">Min</label>
+                                                <label class="p-1 border border-black cursor-pointer has-[:checked]:bg-danger has-[:checked]:text-white"><input type="checkbox" class="hidden repeat-day-cb" value="1">Sen</label>
+                                                <label class="p-1 border border-black cursor-pointer has-[:checked]:bg-danger has-[:checked]:text-white"><input type="checkbox" class="hidden repeat-day-cb" value="2">Sel</label>
+                                                <label class="p-1 border border-black cursor-pointer has-[:checked]:bg-danger has-[:checked]:text-white"><input type="checkbox" class="hidden repeat-day-cb" value="3">Rab</label>
+                                                <label class="p-1 border border-black cursor-pointer has-[:checked]:bg-danger has-[:checked]:text-white"><input type="checkbox" class="hidden repeat-day-cb" value="4">Kam</label>
+                                                <label class="p-1 border border-black cursor-pointer has-[:checked]:bg-danger has-[:checked]:text-white"><input type="checkbox" class="hidden repeat-day-cb" value="5">Jum</label>
+                                                <label class="p-1 border border-black cursor-pointer has-[:checked]:bg-danger has-[:checked]:text-white"><input type="checkbox" class="hidden repeat-day-cb" value="6">Sab</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
 
                             <!-- Fitur POS Mandiri (Tamu/Pelanggan) -->
@@ -621,21 +714,25 @@
                                 <p class="text-[10px] md:text-xs text-gray-600 italic leading-tight">*Status Default: <b>OFF</b>.</p>
                             </div>
 
-                            <div class="mb-4 mt-6 border-t-2 border-black pt-4">
-                                <h4 class="font-bold mb-2">Akses Login Pemilik</h4>
-                                <label class="block font-bold mb-1">Username Owner</label>
-                                <input type="text" id="setOwnerName" class="brutal-input bg-white" required>
-                            </div>
-                            <div class="mb-6">
-                                <label class="block font-bold mb-1">Password (Sandi Login Owner)</label>
-                                <div class="relative">
-                                    <input type="password" id="setOwnerPass" class="brutal-input pr-10 bg-white" required>
-                                    <button type="button" class="absolute inset-y-0 right-0 flex items-center pr-3" onclick="window.togglePassword('setOwnerPass', 'iconSetOwnerPass')" id="iconSetOwnerPass">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12s3-7 10-7 10 7-3 7-10 7-10-7-10-7Z"></path><circle cx="12" cy="12" r="3"></circle></svg>
-                                    </button>
+                            <div class="p-4 border-2 border-black bg-blue-50">
+                                        <h4 class="font-bold mb-2">Akses Login Pemilik</h4>
+                                        <div class="mb-3">
+                                            <label class="block font-bold mb-1 text-sm">Username Owner</label>
+                                            <input type="text" id="setOwnerName" class="brutal-input bg-white" required>
+                                        </div>
+                                        <div>
+                                            <label class="block font-bold mb-1 text-sm">Password (Sandi Login Owner)</label>
+                                            <div class="relative">
+                                                <input type="password" id="setOwnerPass" class="brutal-input pr-10 bg-white" required>
+                                                <button type="button" class="absolute inset-y-0 right-0 flex items-center pr-3" onclick="window.togglePassword('setOwnerPass', 'iconSetOwnerPass')" id="iconSetOwnerPass">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12s3-7 10-7 10 7-3 7-10 7-10-7-10-7Z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                            <button type="submit" class="brutal-btn w-full bg-main text-black py-3 mt-4">Simpan Pengaturan</button>
+                            <button type="submit" class="brutal-btn w-full bg-main text-black py-3.5 text-base md:text-lg font-bold mt-6 shadow-brutal hover:bg-yellow-400">Simpan Pengaturan</button>
                         </form>
                     </div>
                 </div>
@@ -1144,7 +1241,16 @@
                 autoReset: false,
                 resetPeriod: "12",
                 productGridMobile: "2",
-                cashierEnabled: false
+                cashierEnabled: false,
+                hideStoreStatusBadge: false,
+                scheduleOpenEnabled: false,
+                scheduleOpenDateTime: "",
+                scheduleCloseEnabled: false,
+                scheduleCloseDateTime: "",
+                repeatScheduleEnabled: false,
+                repeatType: "daily",
+                repeatClosedDays: [],
+                instantOverride: null
             }, 
             cashier: null,
             categories: ["Makanan", "Minuman"], 
@@ -1437,8 +1543,18 @@
                     resetPeriod: s.reset_period || "12",
                     productGridMobile: s.product_grid_mobile === "3" ? "3" : "2",
                     cashierEnabled: Boolean(s.cashier_enabled),
+                    hideStoreStatusBadge: Boolean(s.hide_store_status_badge),
+                    scheduleOpenEnabled: Boolean(s.schedule_open_enabled),
+                    scheduleOpenDateTime: s.schedule_open_datetime || "",
+                    scheduleCloseEnabled: Boolean(s.schedule_close_enabled),
+                    scheduleCloseDateTime: s.schedule_close_datetime || "",
+                    repeatScheduleEnabled: Boolean(s.repeat_schedule_enabled),
+                    repeatType: s.repeat_type || "daily",
+                    repeatClosedDays: Array.isArray(s.repeat_closed_days) ? s.repeat_closed_days : [],
+                    instantOverride: s.instant_override || null,
                     categoryOrder: s.category_order || []
                 };
+                window.updateStoreStatusDisplay();
             }
 
             const cashDoc = await db.collection('settings').doc('cashier_config').get();
@@ -2924,14 +3040,19 @@
                     </div>
                 </td>
                 <td class="p-2 border-r-2 border-black font-bold text-sm ${c.debt > 0 ? 'text-danger' : 'text-success'}">${formatWon(c.debt)}</td>
-                <td class="p-2 border-r-2 border-black text-center flex flex-col gap-1 items-center">
+                <td class="p-2 border-r-2 border-black text-center flex flex-col gap-1 items-center lg:hidden">
                     <button onclick="window.viewDebtReceipt('${c.id}')" class="brutal-btn bg-main px-2 py-1 text-[10px] w-full">Nota Hutang</button>
                     <button onclick="window.payDebt('${c.id}')" class="brutal-btn bg-success px-2 py-1 text-[10px] w-full">Lunas</button>
                     ${!(STATE.user && STATE.user.role === 'cashier') ? `<button onclick="window.deleteCustomer('${c.id}')" class="brutal-btn bg-danger text-white px-2 py-1 text-[10px] w-full mt-1">Hapus</button>` : ''}
                 </td>
                 <td class="p-2 border-r-2 border-black text-xs md:text-sm w-1/5">${escapeHTML(c.wa)}</td>
-                <td class="p-2 text-[10px] md:text-xs w-1/3 cursor-pointer hover:bg-yellow-200" onclick="window.showAddressModal('${c.id}')">
-                    <div class="max-w-[100px] truncate">${escapeHTML(c.address)}</div>
+                <td class="p-2 text-xs md:text-sm w-1/3 border-r-0 lg:border-r-2 border-black whitespace-pre-wrap break-words leading-relaxed">${escapeHTML(c.address)}</td>
+                <td class="p-2 text-center hidden lg:table-cell">
+                    <div class="flex flex-col gap-1 items-center">
+                        <button onclick="window.viewDebtReceipt('${c.id}')" class="brutal-btn bg-main px-2 py-1 text-[10px] w-full">Nota Hutang</button>
+                        <button onclick="window.payDebt('${c.id}')" class="brutal-btn bg-success px-2 py-1 text-[10px] w-full">Lunas</button>
+                        ${!(STATE.user && STATE.user.role === 'cashier') ? `<button onclick="window.deleteCustomer('${c.id}')" class="brutal-btn bg-danger text-white px-2 py-1 text-[10px] w-full mt-1">Hapus</button>` : ''}
+                    </div>
                 </td>
             </tr>`).join('');
     };
@@ -3256,6 +3377,29 @@
         
         // Seluruh switch default OFF
         if(document.getElementById('setCashierEnabled')) document.getElementById('setCashierEnabled').checked = Boolean(STATE.data.settings.cashierEnabled);
+        if(document.getElementById('setHideStoreStatusBadge')) document.getElementById('setHideStoreStatusBadge').checked = Boolean(STATE.data.settings.hideStoreStatusBadge);
+
+        const sOpenCheck = document.getElementById('setScheduleOpenEnabled');
+        if (sOpenCheck) {
+            sOpenCheck.checked = Boolean(STATE.data.settings.scheduleOpenEnabled);
+            document.getElementById('setScheduleOpenDateTime').value = STATE.data.settings.scheduleOpenDateTime ? STATE.data.settings.scheduleOpenDateTime.slice(0, 16) : '';
+            document.getElementById('setScheduleCloseEnabled').checked = Boolean(STATE.data.settings.scheduleCloseEnabled);
+            document.getElementById('setScheduleCloseDateTime').value = STATE.data.settings.scheduleCloseDateTime ? STATE.data.settings.scheduleCloseDateTime.slice(0, 16) : '';
+            document.getElementById('setRepeatScheduleEnabled').checked = Boolean(STATE.data.settings.repeatScheduleEnabled);
+            
+            const rType = STATE.data.settings.repeatType || 'daily';
+            const rTypeInput = document.querySelector(`input[name="storeRepeatType"][value="${rType}"]`);
+            if (rTypeInput) rTypeInput.checked = true;
+
+            const cDays = STATE.data.settings.repeatClosedDays || [];
+            document.querySelectorAll('.repeat-day-cb').forEach(cb => {
+                cb.checked = cDays.includes(parseInt(cb.value));
+            });
+
+            window.handleStoreScheduleToggles();
+            window.syncInstantAlertUI();
+        }
+
         document.getElementById('setPosEnabled').checked = Boolean(STATE.data.settings.posEnabled);
         document.getElementById('setCardEnabled').checked = Boolean(STATE.data.settings.cardEnabled);
 
@@ -3319,7 +3463,15 @@
             custom_call_audio: STATE.tempCallAudioBase64,
             auto_reset: document.getElementById('setAutoReset').checked, 
             reset_period: document.getElementById('setResetPeriod').value,
-            cashier_enabled: document.getElementById('setCashierEnabled') ? document.getElementById('setCashierEnabled').checked : false,
+            hide_store_status_badge: document.getElementById('setHideStoreStatusBadge') ? document.getElementById('setHideStoreStatusBadge').checked : false,
+            schedule_open_enabled: document.getElementById('setScheduleOpenEnabled') ? document.getElementById('setScheduleOpenEnabled').checked : false,
+            schedule_open_datetime: document.getElementById('setScheduleOpenDateTime') ? document.getElementById('setScheduleOpenDateTime').value : '',
+            schedule_close_enabled: document.getElementById('setScheduleCloseEnabled') ? document.getElementById('setScheduleCloseEnabled').checked : false,
+            schedule_close_datetime: document.getElementById('setScheduleCloseDateTime') ? document.getElementById('setScheduleCloseDateTime').value : '',
+            repeat_schedule_enabled: document.getElementById('setRepeatScheduleEnabled') ? document.getElementById('setRepeatScheduleEnabled').checked : false,
+            repeat_type: document.querySelector('input[name="storeRepeatType"]:checked')?.value || 'daily',
+            repeat_closed_days: Array.from(document.querySelectorAll('.repeat-day-cb:checked')).map(cb => parseInt(cb.value)),
+            instant_override: STATE.data.settings.instantOverride || null,
             product_grid_mobile: document.querySelector('input[name="productGridMobile"]:checked')?.value === '3' ? '3' : '2'
         };
 
@@ -3342,8 +3494,18 @@
                 autoReset: payload.auto_reset, 
                 resetPeriod: payload.reset_period,
                 productGridMobile: payload.product_grid_mobile,
-                cashierEnabled: payload.cashier_enabled
+                cashierEnabled: payload.cashier_enabled,
+                hideStoreStatusBadge: payload.hide_store_status_badge,
+                scheduleOpenEnabled: payload.schedule_open_enabled,
+                scheduleOpenDateTime: payload.schedule_open_datetime,
+                scheduleCloseEnabled: payload.schedule_close_enabled,
+                scheduleCloseDateTime: payload.schedule_close_datetime,
+                repeatScheduleEnabled: payload.repeat_schedule_enabled,
+                repeatType: payload.repeat_type,
+                repeatClosedDays: payload.repeat_closed_days,
+                instantOverride: payload.instant_override
             };
+            window.updateStoreStatusDisplay();
 
             if(!IS_PREVIEW && db) { 
                 await db.collection('settings').doc('app_config').set(payload, { merge: true }); 
@@ -4133,6 +4295,168 @@
             await window.customAlert(e.message, "Gagal");
         }
     };
+    // ======================================================= //
+    // LOGIKA JADWAL & STATUS BUKA/TUTUP WARUNG
+    // ======================================================= //
+    window.handleStoreScheduleToggles = () => {
+        const openOn = document.getElementById('setScheduleOpenEnabled')?.checked;
+        const openBox = document.getElementById('scheduleOpenContainer');
+        if (openBox) openBox.classList.toggle('d-none', !openOn);
+
+        const closeOn = openOn && document.getElementById('setScheduleCloseEnabled')?.checked;
+        const closeBox = document.getElementById('scheduleCloseContainer');
+        if (closeBox) closeBox.classList.toggle('d-none', !closeOn);
+
+        const repOn = openOn && document.getElementById('setRepeatScheduleEnabled')?.checked;
+        const repBox = document.getElementById('repeatScheduleContainer');
+        if (repBox) repBox.classList.toggle('d-none', !repOn);
+
+        const isDays = repOn && (document.querySelector('input[name="storeRepeatType"]:checked')?.value === 'days');
+        const daysBox = document.getElementById('repeatDaysPickerContainer');
+        if (daysBox) daysBox.classList.toggle('d-none', !isDays);
+    };
+
+    window.syncInstantAlertUI = () => {
+        const el = document.getElementById('instantStatusAlert');
+        if (!el) return;
+        const inst = STATE.data.settings.instantOverride;
+        const todayStr = new Date().toDateString();
+        if (inst && inst.dateString === todayStr) {
+            el.classList.remove('d-none');
+            if (inst.status === 'open') {
+                el.className = 'text-xs italic font-bold mb-3 text-green-600';
+                el.textContent = '● Status instan berlaku hari ini: DIBUKA.';
+            } else {
+                el.className = 'text-xs italic font-bold mb-3 text-red-600';
+                el.textContent = '● Status instan berlaku hari ini: DITUTUP.';
+            }
+        } else {
+            el.classList.add('d-none');
+        }
+    };
+
+    window.triggerInstantStoreStatus = async (status) => {
+        showLoad();
+        const todayStr = new Date().toDateString();
+        const payload = {
+            status: status,
+            dateString: todayStr,
+            updatedAt: new Date().toISOString()
+        };
+        STATE.data.settings.instantOverride = payload;
+        try {
+            if (!IS_PREVIEW && db) {
+                await db.collection('settings').doc('app_config').set({ instant_override: payload }, { merge: true });
+            }
+            saveLocalDataCache();
+            window.syncInstantAlertUI();
+            window.updateStoreStatusDisplay();
+            hideLoad();
+            await window.customAlert(status === 'open' ? 'Warung dibuka sekarang (berlaku hari ini)!' : 'Warung ditutup sekarang (berlaku hari ini)!', 'Status Diperbarui');
+        } catch(e) {
+            hideLoad();
+            await window.customAlert(e.message, 'Gagal');
+        }
+    };
+
+    window.updateStoreStatusDisplay = () => {
+        const badge = document.getElementById('storeStatusBadge');
+        if (!badge) return;
+
+        const s = STATE.data.settings || {};
+
+        // 0. Prioritas Utama: Jika fitur Hide aktif, sembunyikan total
+        if (s.hideStoreStatusBadge) {
+            badge.classList.add('hidden');
+            badge.textContent = '';
+            return;
+        }
+
+        const now = new Date();
+        const todayStr = now.toDateString();
+
+        // 1. Cek tombol instan manual (hanya berlaku 1 hari / hari ini)
+        if (s.instantOverride && s.instantOverride.dateString === todayStr) {
+            badge.classList.remove('hidden');
+            if (s.instantOverride.status === 'open') {
+                badge.className = 'italic font-bold text-xs md:text-sm px-2 py-1 border-2 border-black tracking-tight whitespace-nowrap shadow-brutal-sm bg-success text-black';
+                badge.textContent = 'buka';
+            } else {
+                badge.className = 'italic font-bold text-xs md:text-sm px-2 py-1 border-2 border-black tracking-tight whitespace-nowrap shadow-brutal-sm bg-danger text-white';
+                badge.textContent = 'tutup';
+            }
+            return;
+        }
+
+        // 2. Jika jadwal buka OFF -> Hide keterangan
+        if (!s.scheduleOpenEnabled || !s.scheduleOpenDateTime) {
+            badge.classList.add('hidden');
+            badge.textContent = '';
+            return;
+        }
+
+        const openRaw = new Date(s.scheduleOpenDateTime);
+        const closeRaw = (s.scheduleCloseEnabled && s.scheduleCloseDateTime) ? new Date(s.scheduleCloseDateTime) : null;
+
+        let targetOpen = new Date(openRaw);
+        let targetClose = closeRaw ? new Date(closeRaw) : null;
+
+        if (s.repeatScheduleEnabled) {
+            // Mode Ulangi Jadwal: sesuaikan tanggal ke hari ini
+            targetOpen.setFullYear(now.getFullYear(), now.getMonth(), now.getDate());
+            if (targetClose) {
+                targetClose.setFullYear(now.getFullYear(), now.getMonth(), now.getDate());
+                if (targetClose <= targetOpen) {
+                    targetClose.setDate(targetClose.getDate() + 1);
+                }
+            }
+
+            // Jika mode hari libur aktif
+            if (s.repeatType === 'days') {
+                const currentDay = now.getDay();
+                const closedDays = Array.isArray(s.repeatClosedDays) ? s.repeatClosedDays : [];
+                if (closedDays.includes(currentDay)) {
+                    badge.classList.remove('hidden');
+                    badge.className = 'italic font-bold text-xs md:text-sm px-2 py-1 border-2 border-black tracking-tight whitespace-nowrap shadow-brutal-sm bg-danger text-white';
+                    badge.textContent = 'tutup';
+                    return;
+                }
+            }
+        } else {
+            // Non-repeat: refresh tiap hari, jika bukan tanggal jadwal maka hide
+            if (openRaw.toDateString() !== todayStr) {
+                badge.classList.add('hidden');
+                badge.textContent = '';
+                return;
+            }
+        }
+
+        // Evaluasi status jam
+        const openHours = String(targetOpen.getHours()).padStart(2, '0');
+        const openMinutes = String(targetOpen.getMinutes()).padStart(2, '0');
+
+        if (now < targetOpen) {
+            // Belum jam buka
+            badge.classList.remove('hidden');
+            badge.className = 'italic font-bold text-xs md:text-sm px-2 py-1 border-2 border-black tracking-tight whitespace-nowrap shadow-brutal-sm bg-yellow-300 text-black';
+            badge.textContent = `buka jam ${openHours}:${openMinutes}`;
+        } else {
+            // Sudah lewat jam buka
+            if (targetClose && now >= targetClose) {
+                // Lewat jam tutup
+                badge.classList.remove('hidden');
+                badge.className = 'italic font-bold text-xs md:text-sm px-2 py-1 border-2 border-black tracking-tight whitespace-nowrap shadow-brutal-sm bg-danger text-white';
+                badge.textContent = 'tutup';
+            } else {
+                // Sedang buka
+                badge.classList.remove('hidden');
+                badge.className = 'italic font-bold text-xs md:text-sm px-2 py-1 border-2 border-black tracking-tight whitespace-nowrap shadow-brutal-sm bg-success text-black';
+                badge.textContent = 'buka';
+            }
+        }
+    };
+
+    setInterval(window.updateStoreStatusDisplay, 30000);
 </script>
 </body>
 </html>
