@@ -96,7 +96,7 @@
             #cartPanelCard.cart-docked .aspect-square { aspect-ratio: auto; padding-top: 0.6rem; padding-bottom: 0.6rem; }
             #cartPanelCard.cart-docked #payMethodGridContainer label { font-size: 11px; }
         }
-
+        
         .table-seat-dot { width: 8px; height: 8px; border-radius: 9999px; background-color: #000; }
         .pulse-call { animation: pulseWarning 1s infinite alternate; }
         @keyframes pulseWarning { from { transform: scale(1); } to { transform: scale(1.06); } }
@@ -357,6 +357,7 @@
                     <button onclick="window.switchAdminTab('categories')" id="tab_categories" class="admin-tab brutal-btn bg-white px-4 py-2 whitespace-nowrap">Kategori</button>
                     <button onclick="window.switchAdminTab('tables')" id="tab_tables" class="admin-tab brutal-btn bg-white px-4 py-2 whitespace-nowrap d-none">Meja</button>
                     <button onclick="window.switchAdminTab('customers')" id="tab_customers" class="admin-tab brutal-btn bg-white px-4 py-2 whitespace-nowrap d-none">Pelanggan</button>
+                    <button onclick="window.switchAdminTab('cashier')" id="tab_cashier" class="admin-tab brutal-btn bg-white px-4 py-2 whitespace-nowrap d-none">Kasir</button>
                     <button onclick="window.switchAdminTab('history')" id="tab_history" class="admin-tab brutal-btn bg-white px-4 py-2 whitespace-nowrap">Riwayat</button>
                     <button onclick="window.switchAdminTab('settings')" id="tab_settings" class="admin-tab brutal-btn bg-white px-4 py-2 whitespace-nowrap">Pengaturan</button>
                 </div>
@@ -432,7 +433,18 @@
                         </table>
                     </div>
                 </div>
-
+                <!-- Admin: Cashier Management -->
+                <div id="admin_cashier" class="admin-content d-none max-w-xl mx-auto">
+                    <div class="brutal-box p-6 bg-white">
+                        <div class="flex justify-between items-center mb-4 border-b-4 border-black pb-2">
+                            <h3 class="text-xl font-bold uppercase">Kelola Akun Kasir</h3>
+                            <button onclick="window.openCashierModal()" id="btnOpenModalCashier" class="brutal-btn bg-accent px-3 py-1.5 text-xs font-bold">+ Atur Akun</button>
+                        </div>
+                        <div id="cashierDetailsCard">
+                            <p class="text-center font-bold text-gray-500 py-4">Data kasir belum dibuat. Klik tombol '+ Atur Akun' di atas.</p>
+                        </div>
+                    </div>
+                </div>
                 <!-- Admin: History -->
                 <div id="admin_history" class="admin-content d-none">
                     <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-4 gap-4">
@@ -516,6 +528,17 @@
                                 </label>
                                 <p class="text-[10px] md:text-xs text-gray-600 italic leading-tight mt-1" id="hintDeliveryAutoOn">
                                     *Status Default: <b>OFF</b>. Hanya melayani pesanan Dine In / Takeaway langsung.
+                                </p>
+                            </div>
+
+                            <!-- Fitur Akses Kasir -->
+                            <div class="mb-4 mt-4 border-t-2 border-black pt-4" id="settingCashierFeatureWrap">
+                                <h4 class="font-bold mb-2">Akses Tambahan Kasir</h4>
+                                <label class="flex items-center gap-2 font-bold cursor-pointer bg-yellow-100 p-3 border-2 border-black w-full">
+                                    <input type="checkbox" id="setCashierEnabled" class="w-5 h-5 accent-black"> Aktifkan Akses Kasir (Menu Kelola Kasir)
+                                </label>
+                                <p class="text-[10px] md:text-xs text-gray-600 italic leading-tight mt-1">
+                                    *Status Default: <b>OFF</b>. Jika ON, muncul tab 'Kasir' di Kelola Admin untuk mengatur akun login & profil staf kasir.
                                 </p>
                             </div>
 
@@ -988,7 +1011,37 @@
             <div class="p-0 flex border-t-4 border-black" id="dialogButtons"></div>
         </div>
     </div>
-
+<!-- Modal Setup Kasir (Admin) -->
+    <div id="modalCashierSetup" class="fixed inset-0 modal-backdrop d-none z-50 flex items-center justify-center p-4">
+        <div class="brutal-box bg-white w-full max-w-md relative p-6 max-h-[90vh] overflow-y-auto">
+            <button onclick="window.closeModal('modalCashierSetup')" class="absolute top-2 right-2 font-bold px-2 py-1 hover:bg-red-500 hover:text-white border-2 border-black">X</button>
+            <h2 class="text-2xl font-bold mb-4 uppercase border-b-2 border-black pb-2">Pengaturan Kasir</h2>
+            <form id="formCashierSetup" onsubmit="window.saveCashierAccount(event)">
+                <div class="mb-3">
+                    <label class="block font-bold mb-1 text-sm">Nama / Username Kasir</label>
+                    <input type="text" id="cashierSetUser" class="brutal-input bg-white" required>
+                </div>
+                <div class="mb-3">
+                    <label class="block font-bold mb-1 text-sm">Password Kasir</label>
+                    <input type="text" id="cashierSetPass" class="brutal-input bg-white" required>
+                </div>
+                <div class="mb-3">
+                    <label class="block font-bold mb-1 text-sm">No Telp / WhatsApp</label>
+                    <input type="text" id="cashierSetPhone" class="brutal-input bg-white">
+                </div>
+                <div class="mb-3">
+                    <label class="block font-bold mb-1 text-sm">Alamat</label>
+                    <textarea id="cashierSetAddress" class="brutal-input bg-white text-sm" rows="2"></textarea>
+                </div>
+                <div class="mb-4">
+                    <label class="block font-bold mb-1 text-sm">Foto Kasir</label>
+                    <input type="file" id="cashierSetPhotoFile" class="brutal-input bg-white text-xs" accept="image/*" onchange="window.handleCashierPhotoSelect(event)">
+                    <div id="cashierPhotoPreview" class="mt-2 text-xs text-gray-500"></div>
+                </div>
+                <button type="submit" class="brutal-btn w-full bg-main py-3 uppercase font-bold">Simpan Akun Kasir</button>
+            </form>
+        </div>
+    </div>
 </div>
 
 <script>
@@ -1090,8 +1143,10 @@
                 customCallAudio: '',
                 autoReset: false,
                 resetPeriod: "12",
-                productGridMobile: "2"
+                productGridMobile: "2",
+                cashierEnabled: false
             }, 
+            cashier: null,
             categories: ["Makanan", "Minuman"], 
             products: [
                 { id: "p1", name: "Nasi Goreng Spesial", cat: "Makanan", price: 15000, img: "", available: true },
@@ -1345,6 +1400,7 @@
                     auto_reset: false,
                     reset_period: "12",
                     product_grid_mobile: "2",
+                    cashier_enabled: false,
                     category_order: ["Makanan", "Minuman"]
                 });
                 batch.set(db.collection('categories').doc('Makanan'), { id: "Makanan", name: "Makanan" });
@@ -1380,8 +1436,14 @@
                     autoReset: Boolean(s.auto_reset),
                     resetPeriod: s.reset_period || "12",
                     productGridMobile: s.product_grid_mobile === "3" ? "3" : "2",
+                    cashierEnabled: Boolean(s.cashier_enabled),
                     categoryOrder: s.category_order || []
                 };
+            }
+
+            const cashDoc = await db.collection('settings').doc('cashier_config').get();
+            if (cashDoc.exists) {
+                STATE.data.cashier = cashDoc.data();
             }
 
             const cSnap = await db.collection('categories').get();
@@ -1445,7 +1507,8 @@
             ongkir: Number(o.ongkir || 0),
             total: Number(o.total || 0),
             address: o.address || '',
-            table: o.table_name || o.table || ''
+            table: o.table_name || o.table || '',
+            isEdited: Boolean(o.isEdited)
         };
     }
 
@@ -1589,6 +1652,28 @@
                 await fetchAllData(); 
                 hideLoad();
                 await window.customAlert("Berhasil Login sebagai Admin!", "Sukses"); 
+                route();
+                return;
+            }
+
+            // Validasi Login Kasir
+            const cashData = STATE.data.cashier;
+            if (cashData && cashData.username && cashData.username.toLowerCase() === username.toLowerCase()) {
+                if (!STATE.data.settings.cashierEnabled) {
+                    hideLoad();
+                    await window.customAlert("kasir off", "Peringatan");
+                    return;
+                }
+                if (cashData.password !== password) {
+                    hideLoad();
+                    await window.customAlert("Username atau Password salah!", "Gagal");
+                    return;
+                }
+                STATE.user = { id: 'cashier_user', role: 'cashier', name: cashData.username };
+                localStorage.setItem('wi_user', JSON.stringify(STATE.user));
+                await fetchAllData();
+                hideLoad();
+                await window.customAlert("Berhasil Login sebagai Kasir!", "Sukses");
                 route();
                 return;
             }
@@ -1741,7 +1826,7 @@
         window.updateCallButtonsVisibility();
 
         if(!STATE.user) { window.renderPublicCatalog(); window.showPage('pagePublic'); }
-        else if (STATE.user.role === 'admin') { startOrdersListener(); window.renderAdminPOS(); window.showPage('pageAdminPOS'); }
+        else if (STATE.user.role === 'admin' || STATE.user.role === 'cashier') { startOrdersListener(); window.renderAdminPOS(); window.showPage('pageAdminPOS'); }
         else if (STATE.user.role === 'customer') { 
             if (!STATE.data.settings.customerEnabled) {
                 window.logout();
@@ -2446,6 +2531,10 @@
     };
 
     window.renderAdminProducts = () => {
+        const isCashier = STATE.user && STATE.user.role === 'cashier';
+        const addBtn = document.querySelector('button[onclick="window.openModal(\'modalAddProduct\')"]');
+        if (addBtn) addBtn.classList.toggle('d-none', isCashier);
+
         const query = (document.getElementById('adminProductSearch')?.value || '').toLowerCase();
         const sortedProducts = [...STATE.data.products].filter(p => p.name.toLowerCase().includes(query)).sort((a, b) => {
             const catAIndex = STATE.data.categories.indexOf(a.cat); 
@@ -2463,8 +2552,7 @@
                         <span class="whitespace-nowrap">${escapeHTML(p.name)}</span>
                         <div class="flex items-center shrink-0 md:hidden">
                             <button onclick="window.toggleProductAvail('${p.id}')" class="font-bold text-[10px] px-2 py-1 border-2 border-black mr-1 ${p.available ? 'bg-success text-black' : 'bg-gray-300 text-gray-600'}">${p.available ? 'ON' : 'OFF'}</button>
-                            <button onclick="window.editProduct('${p.id}')" class="bg-main border-2 border-black px-2 py-1 text-[10px] font-bold mr-1">Edit</button>
-                            <button onclick="window.deleteProduct('${p.id}')" class="bg-danger text-white border-2 border-black px-2 py-1 text-[10px] font-bold">X</button>
+                            ${!isCashier ? `<button onclick="window.editProduct('${p.id}')" class="bg-main border-2 border-black px-2 py-1 text-[10px] font-bold mr-1">Edit</button><button onclick="window.deleteProduct('${p.id}')" class="bg-danger text-white border-2 border-black px-2 py-1 text-[10px] font-bold">X</button>` : ''}
                         </div>
                     </div>
                 </td>
@@ -2474,8 +2562,7 @@
                     <button onclick="window.toggleProductAvail('${p.id}')" class="font-bold text-[10px] md:text-xs px-2 py-1 border-2 border-black ${p.available ? 'bg-success text-black' : 'bg-gray-300 text-gray-600'}">${p.available ? 'ON' : 'OFF'}</button>
                 </td>
                 <td class="p-2 text-center hidden md:table-cell">
-                    <button onclick="window.editProduct('${p.id}')" class="bg-main border-2 border-black px-2 py-1 text-[10px] font-bold mr-1">Edit</button>
-                    <button onclick="window.deleteProduct('${p.id}')" class="bg-danger text-white border-2 border-black px-2 py-1 text-[10px] font-bold mt-1 md:mt-0">X</button>
+                    ${!isCashier ? `<button onclick="window.editProduct('${p.id}')" class="bg-main border-2 border-black px-2 py-1 text-[10px] font-bold mr-1">Edit</button><button onclick="window.deleteProduct('${p.id}')" class="bg-danger text-white border-2 border-black px-2 py-1 text-[10px] font-bold mt-1 md:mt-0">X</button>` : '<span class="text-xs text-gray-400 font-bold">-</span>'}
                 </td>
             </tr>`).join('');
     };
@@ -2587,17 +2674,20 @@
     };
 
     window.renderAdminCategories = () => { 
+        const isCashier = STATE.user && STATE.user.role === 'cashier';
+        const addCatBtn = document.querySelector('button[onclick="window.openAddCategory()"]');
+        if (addCatBtn) addCatBtn.classList.toggle('d-none', isCashier);
+
         const container = document.getElementById('adminCategoriesList');
         if (!container) return;
         container.innerHTML = STATE.data.categories.map((c, i) => `
-            <div draggable="true" ondragstart="window.dragCatStart(event, ${i})" ondragend="window.dragCatEnd(event)" ondragover="window.dragCatOver(event)" ondrop="window.dropCat(event, ${i})" class="brutal-box flex justify-between items-center p-3 bg-gray-50 cursor-move border-dashed border-2 border-transparent hover:border-black active:bg-yellow-100 transition-all">
+            <div ${isCashier ? '' : `draggable="true" ondragstart="window.dragCatStart(event, ${i})" ondragend="window.dragCatEnd(event)" ondragover="window.dragCatOver(event)" ondrop="window.dropCat(event, ${i})"`} class="brutal-box flex justify-between items-center p-3 bg-gray-50 ${isCashier ? '' : 'cursor-move'} border-dashed border-2 border-transparent hover:border-black active:bg-yellow-100 transition-all">
                 <div class="flex items-center gap-3">
-                    <span class="cursor-move text-gray-400 text-xl pointer-events-none">☰</span>
+                    ${!isCashier ? '<span class="cursor-move text-gray-400 text-xl pointer-events-none">☰</span>' : ''}
                     <span class="font-bold text-sm md:text-lg pointer-events-none">${escapeHTML(c)}</span>
                 </div>
                 <div class="flex gap-2">
-                    <button onclick="window.editCategory('${escapeHTML(c)}')" class="brutal-btn bg-main text-black px-3 py-1 text-xs md:text-sm">Edit</button>
-                    <button onclick="window.deleteCategory('${escapeHTML(c)}')" class="brutal-btn bg-danger text-white px-3 py-1 text-xs md:text-sm">Hapus</button>
+                    ${!isCashier ? `<button onclick="window.editCategory('${escapeHTML(c)}')" class="brutal-btn bg-main text-black px-3 py-1 text-xs md:text-sm">Edit</button><button onclick="window.deleteCategory('${escapeHTML(c)}')" class="brutal-btn bg-danger text-white px-3 py-1 text-xs md:text-sm">Hapus</button>` : '<span class="text-xs text-gray-400 font-bold">Terkunci</span>'}
                 </div>
             </div>`).join(''); 
     };
@@ -2837,7 +2927,7 @@
                 <td class="p-2 border-r-2 border-black text-center flex flex-col gap-1 items-center">
                     <button onclick="window.viewDebtReceipt('${c.id}')" class="brutal-btn bg-main px-2 py-1 text-[10px] w-full">Nota Hutang</button>
                     <button onclick="window.payDebt('${c.id}')" class="brutal-btn bg-success px-2 py-1 text-[10px] w-full">Lunas</button>
-                    <button onclick="window.deleteCustomer('${c.id}')" class="brutal-btn bg-danger text-white px-2 py-1 text-[10px] w-full mt-1">Hapus</button>
+                    ${!(STATE.user && STATE.user.role === 'cashier') ? `<button onclick="window.deleteCustomer('${c.id}')" class="brutal-btn bg-danger text-white px-2 py-1 text-[10px] w-full mt-1">Hapus</button>` : ''}
                 </td>
                 <td class="p-2 border-r-2 border-black text-xs md:text-sm w-1/5">${escapeHTML(c.wa)}</td>
                 <td class="p-2 text-[10px] md:text-xs w-1/3 cursor-pointer hover:bg-yellow-200" onclick="window.showAddressModal('${c.id}')">
@@ -2994,7 +3084,9 @@
         document.getElementById('adminHistoryTable').innerHTML = filtered.map(o => {
             let custName = o.custId ? (STATE.data.customers.find(x => x.id === o.custId)?.name || 'Umum') : 'Umum'; 
             let badgeColor = o.type === 'Hutang' ? 'bg-danger text-white' : (o.type === 'Transfer' ? 'bg-accent text-black' : (o.type === 'Kartu' ? 'bg-blue-600 text-white' : 'bg-black text-white'));
-            return `<tr class="border-b-2 border-black hover:bg-yellow-50"><td class="p-2 border-r-2 border-black text-xs md:text-sm">${safeDate(o.date)}</td><td class="p-2 border-r-2 border-black text-[10px] md:text-xs">${o.id}</td><td class="p-2 border-r-2 border-black text-xs md:text-sm">${escapeHTML(custName)}</td><td class="p-2 border-r-2 border-black text-center"><span class="px-2 py-1 text-[9px] md:text-[10px] font-bold ${badgeColor}">${o.type}</span><br><span class="text-[9px] md:text-[10px] ${o.paymentStatus === 'Unpaid' ? 'text-danger' : 'text-success'}">${o.paymentStatus === 'Unpaid' ? 'Belum Lunas' : 'Lunas'}</span></td><td class="p-2 border-r-2 border-black font-bold text-sm">${formatWon(o.total)}</td><td class="p-2 text-center flex gap-1 justify-center flex-wrap w-full md:w-32"><button onclick="window.showReceiptPopup('${o.id}')" class="brutal-btn bg-accent border-2 border-black px-2 py-1 text-[10px] flex-1">Nota</button><button onclick="window.editTransaction('${o.id}')" class="brutal-btn bg-main border-2 border-black px-2 py-1 text-[10px] flex-1">Edit</button><button onclick="window.deleteTransaction('${o.id}')" class="brutal-btn bg-danger text-white border-2 border-black px-2 py-1 text-[10px] w-full mt-1">Hapus</button></td></tr>`;
+            const isCashier = STATE.user && STATE.user.role === 'cashier';
+            const editedTag = o.isEdited ? '<span class="bg-danger text-white text-[9px] font-bold px-1 ml-1 rounded">DIEDIT</span>' : '';
+            return `<tr class="border-b-2 border-black hover:bg-yellow-50"><td class="p-2 border-r-2 border-black text-xs md:text-sm">${safeDate(o.date)}</td><td class="p-2 border-r-2 border-black text-[10px] md:text-xs">${o.id}${editedTag}</td><td class="p-2 border-r-2 border-black text-xs md:text-sm">${escapeHTML(custName)}</td><td class="p-2 border-r-2 border-black text-center"><span class="px-2 py-1 text-[9px] md:text-[10px] font-bold ${badgeColor}">${o.type}</span><br><span class="text-[9px] md:text-[10px] ${o.paymentStatus === 'Unpaid' ? 'text-danger' : 'text-success'}">${o.paymentStatus === 'Unpaid' ? 'Belum Lunas' : 'Lunas'}</span></td><td class="p-2 border-r-2 border-black font-bold text-sm">${formatWon(o.total)}</td><td class="p-2 text-center flex gap-1 justify-center flex-wrap w-full md:w-32"><button onclick="window.showReceiptPopup('${o.id}')" class="brutal-btn bg-accent border-2 border-black px-2 py-1 text-[10px] flex-1">Nota</button><button onclick="window.editTransaction('${o.id}')" class="brutal-btn bg-main border-2 border-black px-2 py-1 text-[10px] flex-1">Edit</button>${!isCashier ? `<button onclick="window.deleteTransaction('${o.id}')" class="brutal-btn bg-danger text-white border-2 border-black px-2 py-1 text-[10px] w-full mt-1">Hapus</button>` : ''}</td></tr>`;
         }).join('');
     };
 
@@ -3053,7 +3145,8 @@
             subtotal: parseInt(document.getElementById('editTrxSubtotal').value) || 0, 
             total: parseInt(document.getElementById('editTrxTotal').value) || 0, 
             ongkir: parseInt(document.getElementById('editTrxOngkir').value) || 0, 
-            items: STATE.editCart 
+            items: STATE.editCart,
+            isEdited: true
         };
         try { 
             const o = STATE.data.orders.find(x=>x.id===id);
@@ -3162,6 +3255,7 @@
         document.getElementById('setOwnerPass').value = STATE.data.settings.ownerPass || 'admin123';
         
         // Seluruh switch default OFF
+        if(document.getElementById('setCashierEnabled')) document.getElementById('setCashierEnabled').checked = Boolean(STATE.data.settings.cashierEnabled);
         document.getElementById('setPosEnabled').checked = Boolean(STATE.data.settings.posEnabled);
         document.getElementById('setCardEnabled').checked = Boolean(STATE.data.settings.cardEnabled);
 
@@ -3225,6 +3319,7 @@
             custom_call_audio: STATE.tempCallAudioBase64,
             auto_reset: document.getElementById('setAutoReset').checked, 
             reset_period: document.getElementById('setResetPeriod').value,
+            cashier_enabled: document.getElementById('setCashierEnabled') ? document.getElementById('setCashierEnabled').checked : false,
             product_grid_mobile: document.querySelector('input[name="productGridMobile"]:checked')?.value === '3' ? '3' : '2'
         };
 
@@ -3246,7 +3341,8 @@
                 customCallAudio: payload.custom_call_audio,
                 autoReset: payload.auto_reset, 
                 resetPeriod: payload.reset_period,
-                productGridMobile: payload.product_grid_mobile
+                productGridMobile: payload.product_grid_mobile,
+                cashierEnabled: payload.cashier_enabled
             };
 
             if(!IS_PREVIEW && db) { 
@@ -3880,6 +3976,161 @@
         } catch(e) { 
             hideLoad();
             await window.customAlert("Gagal simpan: " + e.message, "Gagal"); 
+        }
+    };
+    // ======================================================= //
+    // MODUL AKSES & PROFIL KASIR (ROLE SEPARATION)
+    // ======================================================= //
+    STATE.tempCashierPhotoBase64 = '';
+
+    window.handleCashierPhotoSelect = e => {
+        const file = e.target.files[0];
+        if (file) compressImage(file, d => {
+            STATE.tempCashierPhotoBase64 = d;
+            document.getElementById('cashierPhotoPreview').innerHTML = `<img src="${d}" class="h-16 w-16 object-cover mt-2 border-2 border-black">`;
+        });
+    };
+
+    window.openCashierModal = () => {
+        const c = STATE.data.cashier || {};
+        document.getElementById('cashierSetUser').value = c.username || '';
+        document.getElementById('cashierSetPass').value = c.password || '';
+        document.getElementById('cashierSetPhone').value = c.phone || '';
+        document.getElementById('cashierSetAddress').value = c.address || '';
+        STATE.tempCashierPhotoBase64 = c.photo || '';
+        document.getElementById('cashierPhotoPreview').innerHTML = c.photo ? `<img src="${c.photo}" class="h-16 w-16 object-cover mt-2 border-2 border-black">` : '';
+        window.openModal('modalCashierSetup');
+    };
+
+    window.saveCashierAccount = async e => {
+        e.preventDefault();
+        showLoad();
+        const payload = {
+            username: document.getElementById('cashierSetUser').value.trim(),
+            password: document.getElementById('cashierSetPass').value,
+            phone: document.getElementById('cashierSetPhone').value.trim(),
+            address: document.getElementById('cashierSetAddress').value.trim(),
+            photo: STATE.tempCashierPhotoBase64
+        };
+
+        try {
+            if (!IS_PREVIEW && db) {
+                await db.collection('settings').doc('cashier_config').set(payload, { merge: true });
+            }
+            STATE.data.cashier = payload;
+            window.closeModal('modalCashierSetup');
+            window.renderAdminCashier();
+            hideLoad();
+            await window.customAlert('Data akun kasir tersimpan!', 'Sukses');
+        } catch (err) {
+            hideLoad();
+            await window.customAlert(err.message, 'Gagal');
+        }
+    };
+
+    window.renderAdminCashier = () => {
+        const wrap = document.getElementById('cashierDetailsCard');
+        if (!wrap) return;
+        const c = STATE.data.cashier;
+        if (!c || !c.username) {
+            wrap.innerHTML = '<p class="text-center font-bold text-gray-500 py-4">Data kasir belum dibuat. Klik tombol \'+ Atur Akun\' di atas.</p>';
+            return;
+        }
+
+        wrap.innerHTML = `
+            <div class="flex flex-col sm:flex-row items-center gap-4 p-4 border-2 border-black bg-yellow-50">
+                <img src="${c.photo || 'https://placehold.co/100x100?text=Kasir'}" class="w-24 h-24 object-cover border-2 border-black">
+                <div class="flex-1 text-sm space-y-1 w-full">
+                    <div><b>Nama Kasir:</b> ${escapeHTML(c.username)}</div>
+                    <div><b>Password Terkini:</b> <span class="bg-black text-white px-2 py-0.5 font-mono text-xs">${escapeHTML(c.password)}</span></div>
+                    <div><b>No Telp:</b> ${escapeHTML(c.phone || '-')}</div>
+                    <div><b>Alamat:</b> ${escapeHTML(c.address || '-')}</div>
+                </div>
+            </div>
+        `;
+    };
+
+    const originalSwitchAdminTab = window.switchAdminTab;
+    window.switchAdminTab = tabName => {
+        const isCashier = STATE.user && STATE.user.role === 'cashier';
+        const isCashierOn = Boolean(STATE.data.settings.cashierEnabled);
+
+        const tabCashierBtn = document.getElementById('tab_cashier');
+        if (tabCashierBtn) {
+            tabCashierBtn.classList.toggle('d-none', !isCashierOn || isCashier);
+        }
+
+        if (isCashier && tabName === 'cashier') tabName = 'products';
+
+        originalSwitchAdminTab(tabName);
+
+        if (tabName === 'cashier' && isCashierOn && !isCashier) {
+            window.renderAdminCashier();
+        }
+
+        if (tabName === 'settings' && isCashier) {
+            window.applyCashierSettingsRestrictions();
+        }
+    };
+
+    window.applyCashierSettingsRestrictions = () => {
+        const isCashier = STATE.user && STATE.user.role === 'cashier';
+        const formSettings = document.getElementById('formSettings');
+        if (!formSettings) return;
+
+        if (isCashier) {
+            const cash = STATE.data.cashier || {};
+            formSettings.innerHTML = `
+                <div class="p-4 border-2 border-black bg-yellow-50 mb-4 flex items-center gap-4">
+                    <img src="${cash.photo || 'https://placehold.co/80x80?text=Kasir'}" class="w-20 h-20 object-cover border-2 border-black">
+                    <div>
+                        <div class="text-xs font-bold text-gray-500 uppercase">Profil Kasir</div>
+                        <div class="text-lg font-bold">${escapeHTML(cash.username || STATE.user.name)}</div>
+                        <div class="text-xs text-gray-600">Foto & Nama dikunci (Hanya Admin yang dapat mengubah)</div>
+                    </div>
+                </div>
+                <form onsubmit="window.saveCashierSelfSettings(event)">
+                    <div class="mb-3">
+                        <label class="block font-bold mb-1 text-sm">Ganti Password Login Kasir</label>
+                        <input type="text" id="cashierSelfPass" class="brutal-input bg-white" value="${escapeHTML(cash.password || '')}" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="block font-bold mb-1 text-sm">No Telp</label>
+                        <input type="text" id="cashierSelfPhone" class="brutal-input bg-white" value="${escapeHTML(cash.phone || '')}">
+                    </div>
+                    <div class="mb-4">
+                        <label class="block font-bold mb-1 text-sm">Alamat</label>
+                        <textarea id="cashierSelfAddress" class="brutal-input bg-white text-sm" rows="2">${escapeHTML(cash.address || '')}</textarea>
+                    </div>
+                    <button type="button" onclick="window.saveCashierSelfSettings()" class="brutal-btn w-full bg-main py-3 uppercase font-bold">Simpan Profil Kasir</button>
+                </form>
+            `;
+        }
+    };
+
+    window.saveCashierSelfSettings = async () => {
+        showLoad();
+        const newPass = document.getElementById('cashierSelfPass').value;
+        const newPhone = document.getElementById('cashierSelfPhone').value.trim();
+        const newAddress = document.getElementById('cashierSelfAddress').value.trim();
+
+        const updated = {
+            ...(STATE.data.cashier || {}),
+            password: newPass,
+            phone: newPhone,
+            address: newAddress
+        };
+
+        try {
+            if (!IS_PREVIEW && db) {
+                await db.collection('settings').doc('cashier_config').set(updated, { merge: true });
+            }
+            STATE.data.cashier = updated;
+            hideLoad();
+            await window.customAlert("Profil & Password kasir berhasil diperbarui!", "Sukses");
+        } catch (e) {
+            hideLoad();
+            await window.customAlert(e.message, "Gagal");
         }
     };
 </script>
