@@ -120,6 +120,29 @@
         .table-seat-dot { width: 8px; height: 8px; border-radius: 9999px; background-color: #000; }
         .pulse-call { animation: pulseWarning 1s infinite alternate; }
         @keyframes pulseWarning { from { transform: scale(1); } to { transform: scale(1.06); } }
+    #posProductsCol > div:nth-child(1),
+        #posProductsCol > div:nth-child(2) {
+            position: sticky;
+            z-index: 20;
+            background-color: #f4f4f0;
+        }
+        #posProductsCol > div:nth-child(1) {
+            top: 59px;
+            padding-top: 0.5rem;
+            padding-bottom: 0.5rem;
+        }
+        #posProductsCol > div:nth-child(2) {
+            top: 118px;
+            padding-bottom: 0.5rem;
+        }
+        @media (min-width: 768px) {
+            #posProductsCol > div:nth-child(1) {
+                top: 70px;
+            }
+            #posProductsCol > div:nth-child(2) {
+                top: 130px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -4396,7 +4419,7 @@
             el.classList.remove('d-none');
             if (status === 'open') {
                 el.className = 'text-xs italic font-bold mb-3 text-emerald-700';
-                el.textContent = '● Pilihan instan: DIBUKA (Klik "Simpan Pengaturan" untuk menerapkan)';
+                el.textContent = '● Pilihan instan: SEDANG BUKA (Klik "Simpan Pengaturan" untuk menerapkan)';
             } else {
                 el.className = 'text-xs italic font-bold mb-3 text-rose-700';
                 el.textContent = '● Pilihan instan: DITUTUP (Klik "Simpan Pengaturan" untuk menerapkan)';
@@ -4434,7 +4457,7 @@
             badge.classList.remove('hidden');
             if (s.instantOverride.status === 'open') {
                 badge.className = 'italic font-bold text-[10px] md:text-xs px-1.5 py-0.5 border border-black tracking-tight whitespace-nowrap shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] bg-emerald-600 text-white z-10 [clip-path:polygon(0%_0%,100%_0%,96%_100%,0%_100%)]';
-                badge.textContent = 'buka';
+                badge.textContent = 'sedang buka';
             } else {
                 badge.className = 'italic font-bold text-[10px] md:text-xs px-1.5 py-0.5 border border-black tracking-tight whitespace-nowrap shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] bg-rose-600 text-white z-10 [clip-path:polygon(0%_0%,100%_0%,96%_100%,0%_100%)]';
                 badge.textContent = 'tutup';
@@ -4530,7 +4553,7 @@
                 // Sedang jam buka
                 badge.classList.remove('hidden');
                 badge.className = 'italic font-bold text-[10px] md:text-xs px-1.5 py-0.5 border border-black tracking-tight whitespace-nowrap shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] bg-emerald-600 text-white z-10 [clip-path:polygon(0%_0%,100%_0%,96%_100%,0%_100%)]';
-                badge.textContent = 'buka';
+                badge.textContent = 'sedang buka';
 
                 // Jika jadwal tutup aktif dan waktu tutup belum terlewati
                 if (targetClose && now < targetClose && closeBadge) {
