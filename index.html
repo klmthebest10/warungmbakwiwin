@@ -58,23 +58,6 @@
         .receipt-88mm { width: 332px; max-width: 100%; margin: 0 auto; background: white; color: black; padding: 16px; border: 1px solid #ccc; box-sizing: border-box; }
         .d-none { display: none !important; }
 
-        /* Keterangan buka/tutup warung di header (tampilan HP): lebih kecil, tutup di bawah buka & saling menempel */
-        @media (max-width: 767px) {
-            .store-status-wrap:not(:has(> div:not(.hidden))) { display: none; }
-            #storeStatusBadge, #storeCloseStatusBadge {
-                font-size: 10px;
-                line-height: 1.15;
-                padding: 1px 6px;
-                box-shadow: 1px 1px 0 #000;
-            }
-            #storeCloseStatusBadge {
-                margin-left: 0 !important;
-                margin-top: -2px;
-                transform: none !important;
-                translate: none !important;
-            }
-        }
-
         @media print {
             @page { margin: 0; size: 88mm auto; }
             body, html { margin: 0; padding: 0; background: white; height: max-content !important; min-height: 0 !important; }
@@ -157,9 +140,9 @@
                 <div class="flex items-center gap-2 md:gap-4 cursor-pointer" onclick="window.goHome()">
                     <img id="headerLogo" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='60' height='60'><rect width='60' height='60' fill='%23FFD500'/><text x='50%' y='60%' font-size='22' font-weight='bold' text-anchor='middle' fill='black'>WI</text></svg>" class="w-10 h-10 md:w-14 md:h-14 border-2 border-black object-cover shrink-0 shadow-brutal-sm" alt="Logo">
                     <h1 id="headerTitle" class="text-sm md:text-2xl font-bold uppercase tracking-tight leading-tight">WARUNG<br><span class="text-[10px] md:text-xs text-gray-600 leading-none">INDONESIA</span></h1>
-                    <div id="storeStatusWrap" class="store-status-wrap flex flex-col items-start md:contents">
-                        <div id="storeStatusBadge" class="hidden italic font-bold text-xs md:text-sm px-2 py-1 border-2 border-black tracking-tight whitespace-nowrap shadow-brutal-sm"></div>
-                        <div id="storeCloseStatusBadge" class="hidden italic font-bold text-xs md:text-sm px-2 py-1 border-2 border-black tracking-tight whitespace-nowrap shadow-brutal-sm"></div>
+                    <div class="relative flex flex-col md:gap-1 items-start">
+                        <div id="storeStatusBadge" class="hidden italic font-bold text-[10px] md:text-xs px-1.5 py-0.5 border border-black tracking-tight whitespace-nowrap shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] z-10 [clip-path:polygon(0%_0%,100%_0%,96%_100%,0%_100%)]"></div>
+                        <div id="storeCloseStatusBadge" class="hidden italic font-bold text-[10px] md:text-xs px-1.5 py-0.5 border border-black tracking-tight whitespace-nowrap shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] [clip-path:polygon(0%_0%,100%_0%,96%_100%,0%_100%)]"></div>
                     </div>
                 </div>
                 <nav class="flex items-center flex-wrap justify-end gap-2 md:gap-3" id="navMenu"></nav>
@@ -596,13 +579,11 @@
                                     <input type="checkbox" id="setHideStoreStatusBadge" class="w-5 h-5 accent-black"> Sembunyikan (Hide) Keterangan Buka/Tutup di Header
                                 </label>
                                 
-                                <div id="instantStatusControls">
-                                    <div class="flex gap-2 mb-3">
-                                        <button type="button" onclick="window.triggerInstantStoreStatus('open')" class="brutal-btn flex-1 bg-success text-black py-2 text-xs md:text-sm font-bold">Buka Sekarang</button>
-                                        <button type="button" onclick="window.triggerInstantStoreStatus('closed')" class="brutal-btn flex-1 bg-danger text-white py-2 text-xs md:text-sm font-bold">Tutup Sekarang</button>
-                                    </div>
-                                    <div id="instantStatusAlert" class="text-xs italic font-bold mb-3 d-none"></div>
+                                <div class="flex gap-2 mb-3">
+                                    <button type="button" onclick="window.triggerInstantStoreStatus('open')" class="brutal-btn flex-1 bg-success text-black py-2 text-xs md:text-sm font-bold">Buka Sekarang</button>
+                                    <button type="button" onclick="window.triggerInstantStoreStatus('closed')" class="brutal-btn flex-1 bg-danger text-white py-2 text-xs md:text-sm font-bold">Tutup Sekarang</button>
                                 </div>
+                                <div id="instantStatusAlert" class="text-xs italic font-bold mb-3 d-none"></div>
 
                                 <label class="flex items-center gap-2 font-bold cursor-pointer bg-yellow-50 p-3 border-2 border-black w-full mb-2">
                                     <input type="checkbox" id="setScheduleOpenEnabled" class="w-5 h-5 accent-black" onchange="window.handleStoreScheduleToggles()"> Aktifkan Jadwal Waktu Buka Warung
@@ -611,7 +592,7 @@
                                 <div id="scheduleOpenContainer" class="d-none pl-3 border-l-4 border-black space-y-3 mt-2 mb-4 bg-gray-50 p-3 border-2 border-black">
                                     <div>
                                         <label class="block font-bold mb-1 text-xs md:text-sm">Pilih Tanggal & Waktu/Jam Buka:</label>
-                                        <input type="datetime-local" id="setScheduleOpenDateTime" class="brutal-input bg-white text-xs md:text-sm" oninput="window.handleStoreScheduleToggles()" onchange="window.handleStoreScheduleToggles()">
+                                        <input type="datetime-local" id="setScheduleOpenDateTime" class="brutal-input bg-white text-xs md:text-sm">
                                     </div>
 
                                     <div class="pt-2 border-t-2 border-black">
@@ -3500,7 +3481,9 @@
             repeat_schedule_enabled: document.getElementById('setRepeatScheduleEnabled') ? document.getElementById('setRepeatScheduleEnabled').checked : false,
             repeat_type: document.querySelector('input[name="storeRepeatType"]:checked')?.value || 'daily',
             repeat_closed_days: Array.from(document.querySelectorAll('.repeat-day-cb:checked')).map(cb => parseInt(cb.value)),
-            instant_override: STATE.data.settings.instantOverride || null,
+            instant_override: (document.getElementById('setHideStoreStatusBadge') && document.getElementById('setHideStoreStatusBadge').checked)
+                ? null 
+                : (STATE.tempInstantOverride !== undefined ? STATE.tempInstantOverride : (STATE.data.settings.instantOverride || null)),
             product_grid_mobile: document.querySelector('input[name="productGridMobile"]:checked')?.value === '3' ? '3' : '2'
         };
 
@@ -4380,15 +4363,7 @@
         const isDays = repOn && (document.querySelector('input[name="storeRepeatType"]:checked')?.value === 'days');
         const daysBox = document.getElementById('repeatDaysPickerContainer');
         if (daysBox) daysBox.classList.toggle('d-none', !isDays);
-
-        // Tombol instan Buka/Tutup Sekarang di-hide jika jadwal buka ON dan sudah diatur (tanggal/jam terisi)
-        const openVal = document.getElementById('setScheduleOpenDateTime')?.value;
-        const instantBox = document.getElementById('instantStatusControls');
-        if (instantBox) instantBox.classList.toggle('d-none', Boolean(openOn && openVal));
     };
-
-    // Jadwal dianggap aktif jika switch jadwal buka ON dan tanggal/jam buka sudah diatur
-    window.isStoreScheduleActive = (s) => Boolean(s && s.scheduleOpenEnabled && s.scheduleOpenDateTime);
 
     window.syncInstantAlertUI = () => {
         const el = document.getElementById('instantStatusAlert');
@@ -4409,27 +4384,23 @@
         }
     };
 
-    window.triggerInstantStoreStatus = async (status) => {
-        showLoad();
+    window.triggerInstantStoreStatus = (status) => {
         const todayStr = new Date().toDateString();
-        const payload = {
+        STATE.tempInstantOverride = {
             status: status,
             dateString: todayStr,
             updatedAt: new Date().toISOString()
         };
-        STATE.data.settings.instantOverride = payload;
-        try {
-            if (!IS_PREVIEW && db) {
-                await db.collection('settings').doc('app_config').set({ instant_override: payload }, { merge: true });
+        const el = document.getElementById('instantStatusAlert');
+        if (el) {
+            el.classList.remove('d-none');
+            if (status === 'open') {
+                el.className = 'text-xs italic font-bold mb-3 text-emerald-700';
+                el.textContent = '● Pilihan instan: DIBUKA (Klik "Simpan Pengaturan" untuk menerapkan)';
+            } else {
+                el.className = 'text-xs italic font-bold mb-3 text-rose-700';
+                el.textContent = '● Pilihan instan: DITUTUP (Klik "Simpan Pengaturan" untuk menerapkan)';
             }
-            saveLocalDataCache();
-            window.syncInstantAlertUI();
-            window.updateStoreStatusDisplay();
-            hideLoad();
-            await window.customAlert(status === 'open' ? 'Warung dibuka sekarang (berlaku hari ini)!' : 'Warung ditutup sekarang (berlaku hari ini)!', 'Status Diperbarui');
-        } catch(e) {
-            hideLoad();
-            await window.customAlert(e.message, 'Gagal');
         }
     };
 
@@ -4455,18 +4426,17 @@
         const todayStr = now.toDateString();
 
         // Cek tombol instan manual (hanya berlaku 1 hari jika hide sedang OFF)
-        // Jika jadwal ON dan diatur, tombol instan kalah (diabaikan) dan status mengikuti jadwal
-        if (!window.isStoreScheduleActive(s) && s.instantOverride && s.instantOverride.dateString === todayStr) {
+        if (s.instantOverride && s.instantOverride.dateString === todayStr) {
             if (closeBadge) {
                 closeBadge.classList.add('hidden');
                 closeBadge.textContent = '';
             }
             badge.classList.remove('hidden');
             if (s.instantOverride.status === 'open') {
-                badge.className = 'italic font-bold text-xs md:text-sm px-2 py-1 border-2 border-black tracking-tight whitespace-nowrap shadow-brutal-sm bg-success text-black';
+                badge.className = 'italic font-bold text-[10px] md:text-xs px-1.5 py-0.5 border border-black tracking-tight whitespace-nowrap shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] bg-emerald-600 text-white z-10 [clip-path:polygon(0%_0%,100%_0%,96%_100%,0%_100%)]';
                 badge.textContent = 'buka';
             } else {
-                badge.className = 'italic font-bold text-xs md:text-sm px-2 py-1 border-2 border-black tracking-tight whitespace-nowrap shadow-brutal-sm bg-danger text-white';
+                badge.className = 'italic font-bold text-[10px] md:text-xs px-1.5 py-0.5 border border-black tracking-tight whitespace-nowrap shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] bg-rose-600 text-white z-10 [clip-path:polygon(0%_0%,100%_0%,96%_100%,0%_100%)]';
                 badge.textContent = 'tutup';
             }
             return;
@@ -4509,7 +4479,7 @@
                         closeBadge.textContent = '';
                     }
                     badge.classList.remove('hidden');
-                    badge.className = 'italic font-bold text-xs md:text-sm px-2 py-1 border-2 border-black tracking-tight whitespace-nowrap shadow-brutal-sm bg-danger text-white';
+                    badge.className = 'italic font-bold text-[10px] md:text-xs px-1.5 py-0.5 border border-black tracking-tight whitespace-nowrap shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] bg-rose-600 text-white z-10 [clip-path:polygon(0%_0%,100%_0%,96%_100%,0%_100%)]';
                     badge.textContent = 'tutup';
                     return;
                 }
@@ -4538,7 +4508,7 @@
         if (now < targetOpen) {
             // Belum jam buka
             badge.classList.remove('hidden');
-            badge.className = 'italic font-bold text-xs md:text-sm px-2 py-1 border-2 border-black tracking-tight whitespace-nowrap shadow-brutal-sm bg-yellow-300 text-black';
+            badge.className = 'italic font-bold text-[10px] md:text-xs px-1.5 py-0.5 border border-black tracking-tight whitespace-nowrap shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] bg-amber-200 text-amber-950 z-10 [clip-path:polygon(0%_0%,100%_0%,96%_100%,0%_100%)]';
             badge.textContent = `buka jam ${openHours}.${openMinutes}`;
 
             // Jika jadwal tutup aktif dan belum terlewati, tampilkan keterangan tutup di sampingnya
@@ -4546,7 +4516,7 @@
                 const closeHours = String(targetClose.getHours()).padStart(2, '0');
                 const closeMinutes = String(targetClose.getMinutes()).padStart(2, '0');
                 closeBadge.classList.remove('hidden');
-                closeBadge.className = 'italic font-bold text-xs md:text-sm px-2 py-1 border-2 border-black tracking-tight whitespace-nowrap shadow-brutal-sm bg-danger text-white -ml-1 md:-ml-2 translate-y-1';
+                closeBadge.className = 'italic font-bold text-[10px] md:text-xs px-1.5 py-0.5 border border-black tracking-tight whitespace-nowrap shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] bg-rose-600 text-white -mt-1 ml-2 md:mt-0 md:ml-3 z-0 pt-1.5 md:pt-0.5 [clip-path:polygon(0%_0%,100%_0%,96%_100%,0%_100%)]';
                 closeBadge.textContent = `tutup jam ${closeHours}.${closeMinutes}`;
             }
         } else {
@@ -4554,12 +4524,12 @@
             if (targetClose && now >= targetClose) {
                 // Lewat jam tutup -> hanya menampilkan satu keterangan 'tutup'
                 badge.classList.remove('hidden');
-                badge.className = 'italic font-bold text-xs md:text-sm px-2 py-1 border-2 border-black tracking-tight whitespace-nowrap shadow-brutal-sm bg-danger text-white';
+                badge.className = 'italic font-bold text-[10px] md:text-xs px-1.5 py-0.5 border border-black tracking-tight whitespace-nowrap shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] bg-rose-600 text-white z-10 [clip-path:polygon(0%_0%,100%_0%,96%_100%,0%_100%)]';
                 badge.textContent = 'tutup';
             } else {
                 // Sedang jam buka
                 badge.classList.remove('hidden');
-                badge.className = 'italic font-bold text-xs md:text-sm px-2 py-1 border-2 border-black tracking-tight whitespace-nowrap shadow-brutal-sm bg-success text-black';
+                badge.className = 'italic font-bold text-[10px] md:text-xs px-1.5 py-0.5 border border-black tracking-tight whitespace-nowrap shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] bg-emerald-600 text-white z-10 [clip-path:polygon(0%_0%,100%_0%,96%_100%,0%_100%)]';
                 badge.textContent = 'buka';
 
                 // Jika jadwal tutup aktif dan waktu tutup belum terlewati
@@ -4567,7 +4537,7 @@
                     const closeHours = String(targetClose.getHours()).padStart(2, '0');
                     const closeMinutes = String(targetClose.getMinutes()).padStart(2, '0');
                     closeBadge.classList.remove('hidden');
-                    closeBadge.className = 'italic font-bold text-xs md:text-sm px-2 py-1 border-2 border-black tracking-tight whitespace-nowrap shadow-brutal-sm bg-danger text-white -ml-1 md:-ml-2 translate-y-1';
+                    closeBadge.className = 'italic font-bold text-[10px] md:text-xs px-1.5 py-0.5 border border-black tracking-tight whitespace-nowrap shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] bg-rose-600 text-white -mt-1 ml-2 md:mt-0 md:ml-3 z-0 pt-1.5 md:pt-0.5 [clip-path:polygon(0%_0%,100%_0%,96%_100%,0%_100%)]';
                     closeBadge.textContent = `tutup jam ${closeHours}.${closeMinutes}`;
                 }
             }
