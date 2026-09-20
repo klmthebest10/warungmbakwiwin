@@ -22,6 +22,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     
     <!-- Firebase SDK Compat Version: Kompatibilitas 100% di Blogger & Browser Native -->
     <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
@@ -436,6 +437,7 @@
                     <button onclick="window.switchAdminTab('customers')" id="tab_customers" class="admin-tab brutal-btn bg-white px-4 py-2 whitespace-nowrap d-none">Pelanggan</button>
                     <button onclick="window.switchAdminTab('cashier')" id="tab_cashier" class="admin-tab brutal-btn bg-white px-4 py-2 whitespace-nowrap d-none">Kasir</button>
                     <button onclick="window.switchAdminTab('history')" id="tab_history" class="admin-tab brutal-btn bg-white px-4 py-2 whitespace-nowrap">Riwayat</button>
+                    <button onclick="window.switchAdminTab('finance')" id="tab_finance" class="admin-tab brutal-btn bg-white px-4 py-2 whitespace-nowrap d-none">Catatan Keuangan</button>
                     <button onclick="window.switchAdminTab('settings')" id="tab_settings" class="admin-tab brutal-btn bg-white px-4 py-2 whitespace-nowrap">Pengaturan</button>
                 </div>
 
@@ -565,6 +567,59 @@
                     </div>
                 </div>
 
+                <!-- Admin: Catatan Keuangan -->
+                <div id="admin_finance" class="admin-content d-none w-full">
+                    <div class="flex flex-col sm:flex-row justify-between sm:items-center mb-4 gap-3">
+                        <div>
+                            <h3 class="text-xl font-bold uppercase">Catatan Keuangan</h3>
+                            <p class="text-[11px] md:text-xs text-gray-600 italic leading-tight mt-1">Pemasukan &amp; pengeluaran dicatat manual. Jenis <b>Catatan</b> hanya untuk diingat dan tidak ikut dihitung.</p>
+                        </div>
+                        <button onclick="window.openFinanceModal()" class="brutal-btn bg-main px-4 py-3 text-sm whitespace-nowrap">+ Tambah Catatan</button>
+                    </div>
+
+                    <!-- Filter periode -->
+                    <div class="brutal-box p-3 md:p-4 mb-4 flex flex-col lg:flex-row lg:items-center justify-between gap-3">
+                        <div class="flex flex-col sm:flex-row sm:items-center gap-3">
+                            <div class="grid grid-cols-2 gap-2 sm:flex">
+                                <button onclick="window.setFinanceMode('month')" id="finMode_month" class="fin-mode brutal-btn bg-black text-white px-4 py-2 text-sm">Bulanan</button>
+                                <button onclick="window.setFinanceMode('3month')" id="finMode_3month" class="fin-mode brutal-btn bg-white px-4 py-2 text-sm">3 Bulan</button>
+                            </div>
+                            <div class="flex items-stretch gap-2">
+                                <button onclick="window.shiftFinanceMonth(-1)" class="brutal-btn bg-white px-3 text-base" aria-label="Bulan sebelumnya">◀</button>
+                                <select id="finMonthSel" onchange="window.onFinanceSelectChange()" class="brutal-input !w-auto flex-1 sm:flex-none bg-white text-sm font-bold py-1.5"></select>
+                                <select id="finYearSel" onchange="window.onFinanceSelectChange()" class="brutal-input !w-auto bg-white text-sm font-bold py-1.5"></select>
+                                <button onclick="window.shiftFinanceMonth(1)" class="brutal-btn bg-white px-3 text-base" aria-label="Bulan berikutnya">▶</button>
+                            </div>
+                        </div>
+                        <button onclick="window.downloadFinancePDF()" id="btnFinancePdf" class="brutal-btn bg-accent px-4 py-3 text-sm whitespace-nowrap">📄 Download Laporan PDF</button>
+                    </div>
+
+                    <div class="mb-3">
+                        <div id="finPeriodLabel" class="text-base md:text-lg font-bold"></div>
+                        <div id="finPeriodHint" class="text-[11px] text-gray-600 italic"></div>
+                    </div>
+
+                    <!-- Ringkasan -->
+                    <div class="grid grid-cols-2 md:grid-cols-3 gap-3 mb-2">
+                        <div class="brutal-box bg-success p-3">
+                            <div class="text-[11px] md:text-xs font-bold uppercase">Total Pemasukan</div>
+                            <div id="finTotalIn" class="text-lg md:text-2xl font-bold break-all">₩0</div>
+                        </div>
+                        <div class="brutal-box bg-danger text-white p-3">
+                            <div class="text-[11px] md:text-xs font-bold uppercase">Total Pengeluaran</div>
+                            <div id="finTotalOut" class="text-lg md:text-2xl font-bold break-all">₩0</div>
+                        </div>
+                        <div class="brutal-box bg-main p-3 col-span-2 md:col-span-1">
+                            <div class="text-[11px] md:text-xs font-bold uppercase">Selisih (Masuk − Keluar)</div>
+                            <div id="finTotalDiff" class="text-lg md:text-2xl font-bold break-all">₩0</div>
+                        </div>
+                    </div>
+                    <p id="finSummaryNote" class="text-[11px] text-gray-600 italic mb-4"></p>
+
+                    <!-- Daftar -->
+                    <div id="finList" class="space-y-3"></div>
+                </div>
+
                 <!-- Admin: Settings -->
                 <div id="admin_settings" class="admin-content d-none w-full">
                     <div class="brutal-box p-4 md:p-8 bg-white w-full">
@@ -622,6 +677,16 @@
                                 </label>
                                 <p class="text-[10px] md:text-xs text-gray-600 italic leading-tight mt-1">
                                     *Status Default: <b>OFF</b>. Jika ON, muncul tab 'Kasir' di Kelola Admin untuk mengatur akun login & profil staf kasir.
+                                </p>
+                            </div>
+                            <!-- Fitur Catatan Keuangan -->
+                            <div class="mb-4 mt-4 border-t-2 border-black pt-4">
+                                <h4 class="font-bold mb-2">Catatan Keuangan</h4>
+                                <label class="flex items-center gap-2 font-bold cursor-pointer bg-violet-100 p-3 border-2 border-black w-full">
+                                    <input type="checkbox" id="setFinanceEnabled" class="w-5 h-5 accent-black"> Aktifkan Catatan Keuangan (Menu Kelola Admin)
+                                </label>
+                                <p class="text-[10px] md:text-xs text-gray-600 italic leading-tight mt-1">
+                                    *Status Default: <b>OFF</b>. Jika ON, muncul tab 'Catatan Keuangan' di Kelola Admin untuk mencatat pemasukan, pengeluaran, dan catatan, lengkap dengan laporan PDF A4. Data yang sudah tersimpan tidak hilang saat fitur di-OFF-kan.
                                 </p>
                             </div>
                             <!-- Pengaturan Jadwal Operasional Toko -->
@@ -1108,6 +1173,52 @@
         </div>
     </div>
 
+    <!-- Modal Catatan Keuangan -->
+    <div id="modalFinanceNote" class="fixed inset-0 modal-backdrop d-none z-50 flex items-center justify-center p-4">
+        <div class="brutal-box bg-white w-full max-w-md relative p-5 md:p-6 max-h-[95vh] overflow-y-auto">
+            <button onclick="window.closeModal('modalFinanceNote')" class="absolute top-2 right-2 font-bold px-2 py-1 hover:bg-red-500 hover:text-white border-2 border-black">X</button>
+            <h2 id="finModalTitle" class="text-xl font-bold mb-4 uppercase border-b-2 border-black pb-2 pr-10">Tambah Catatan</h2>
+            <form id="formFinance" onsubmit="window.saveFinanceNote(event)">
+                <input type="hidden" id="finId">
+
+                <label class="block font-bold mb-1 text-sm">Jenis</label>
+                <div class="grid grid-cols-3 gap-2 mb-1">
+                    <label class="brutal-btn bg-white text-center py-2 px-1 cursor-pointer has-[:checked]:bg-violet-300 text-[11px] sm:text-xs leading-tight">
+                        <input type="radio" name="finType" value="catatan" class="hidden" onchange="window.onFinanceTypeChange()"><span class="block text-base">📝</span>Catatan
+                    </label>
+                    <label class="brutal-btn bg-white text-center py-2 px-1 cursor-pointer has-[:checked]:bg-success text-[11px] sm:text-xs leading-tight">
+                        <input type="radio" name="finType" value="pemasukan" class="hidden" onchange="window.onFinanceTypeChange()"><span class="block text-base">⬆</span>Pemasukan
+                    </label>
+                    <label class="brutal-btn bg-white text-center py-2 px-1 cursor-pointer has-[:checked]:bg-danger has-[:checked]:text-white text-[11px] sm:text-xs leading-tight">
+                        <input type="radio" name="finType" value="pengeluaran" class="hidden" onchange="window.onFinanceTypeChange()"><span class="block text-base">⬇</span>Pengeluaran
+                    </label>
+                </div>
+                <p id="finTypeHint" class="text-[11px] italic text-gray-600 leading-tight mb-4 min-h-[28px]"></p>
+
+                <div class="mb-3">
+                    <label class="block font-bold mb-1 text-sm">Tanggal</label>
+                    <input type="date" id="finDate" class="brutal-input bg-white" required>
+                </div>
+                <div class="mb-3">
+                    <label class="block font-bold mb-1 text-sm">Nama Catatan</label>
+                    <input type="text" id="finName" maxlength="80" autocomplete="off" class="brutal-input bg-white" placeholder="Contoh: Belanja bahan" required>
+                </div>
+                <div class="mb-3">
+                    <label class="block font-bold mb-1 text-sm">Nominal</label>
+                    <input type="number" id="finAmount" min="0" step="1" inputmode="numeric" class="brutal-input bg-white text-right text-lg font-bold" placeholder="₩0" required>
+                </div>
+                <div class="mb-4">
+                    <label class="block font-bold mb-1 text-sm">Keterangan <span class="text-gray-500 font-normal">(opsional)</span></label>
+                    <textarea id="finDesc" maxlength="300" rows="3" class="brutal-input bg-white text-sm" placeholder="Tambahkan detail bila perlu..."></textarea>
+                </div>
+                <div class="grid grid-cols-2 gap-2">
+                    <button type="button" onclick="window.closeModal('modalFinanceNote')" class="brutal-btn bg-white py-3">Batal</button>
+                    <button type="submit" class="brutal-btn bg-accent py-3">Simpan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <!-- Modal Tambah Kategori -->
     <div id="modalAddCategory" class="fixed inset-0 modal-backdrop d-none z-50 flex items-center justify-center p-4">
         <div class="brutal-box bg-white w-full max-w-sm relative p-6">
@@ -1298,6 +1409,7 @@
                 resetPeriod: "12",
                 productGridMobile: "2",
                 cashierEnabled: false,
+                financeEnabled: false,
                 hideStoreStatusBadge: false,
                 scheduleOpenEnabled: false,
                 scheduleOpenDateTime: "",
@@ -1563,6 +1675,7 @@
                     reset_period: "12",
                     product_grid_mobile: "2",
                     cashier_enabled: false,
+                    finance_enabled: false,
                     category_order: ["Makanan", "Minuman"]
                 });
                 batch.set(db.collection('categories').doc('Makanan'), { id: "Makanan", name: "Makanan" });
@@ -1599,6 +1712,7 @@
                     resetPeriod: s.reset_period || "12",
                     productGridMobile: s.product_grid_mobile === "3" ? "3" : "2",
                     cashierEnabled: Boolean(s.cashier_enabled),
+                    financeEnabled: Boolean(s.finance_enabled),
                     hideStoreStatusBadge: Boolean(s.hide_store_status_badge),
                     scheduleOpenEnabled: Boolean(s.schedule_open_enabled),
                     scheduleOpenDateTime: s.schedule_open_datetime || "",
@@ -1962,6 +2076,7 @@
         const wrapEl = document.getElementById('mainAppWrapper');
         if (wrapEl) wrapEl.classList.toggle('pos-wide', pageId === 'pageAdminPOS');
         if (pageId === 'pageAdminPOS') { window.layoutPosCart(); window.refreshBestSellers(); }
+        if (pageId === 'pageAdminMgmt') window.syncFinanceTab();
 
         if (pageId === 'pageLogin') {
             window.prepareLoginPageUI();
@@ -2665,9 +2780,11 @@
     window.switchAdminTab = tabName => {
         const isCustOn = Boolean(STATE.data.settings.customerEnabled);
         const isTableOn = Boolean(STATE.data.settings.tableEnabled);
+        const isFinanceOn = window.isFinanceAvailable();
 
         if (!isCustOn && tabName === 'customers') tabName = 'products';
         if (!isTableOn && tabName === 'tables') tabName = 'products';
+        if (!isFinanceOn && tabName === 'finance') tabName = 'products';
 
         document.querySelectorAll('.admin-content').forEach(el => el.classList.add('d-none'));
         document.querySelectorAll('.admin-tab').forEach(el => el.classList.remove('bg-main', 'translate-x-[2px]', 'translate-y-[2px]', 'shadow-none') || el.classList.add('bg-white'));
@@ -2677,6 +2794,8 @@
 
         const tabTableBtn = document.getElementById('tab_tables');
         if (tabTableBtn) tabTableBtn.classList.toggle('d-none', !isTableOn);
+
+        window.syncFinanceTab();
 
         document.getElementById(`admin_${tabName}`).classList.remove('d-none');
         const btn = document.getElementById(`tab_${tabName}`); 
@@ -2691,6 +2810,7 @@
         if(tabName === 'customers' && isCustOn) window.renderAdminCustomers();
         if(tabName === 'history') window.renderAdminHistory();
         if(tabName === 'settings') window.renderAdminSettings();
+        if(tabName === 'finance' && isFinanceOn) window.openFinanceTab();
     };
 
     window.handleProdImgSelect = e => { 
@@ -3440,6 +3560,7 @@
         
         // Seluruh switch default OFF
         if(document.getElementById('setCashierEnabled')) document.getElementById('setCashierEnabled').checked = Boolean(STATE.data.settings.cashierEnabled);
+        if(document.getElementById('setFinanceEnabled')) document.getElementById('setFinanceEnabled').checked = Boolean(STATE.data.settings.financeEnabled);
         if(document.getElementById('setHideStoreStatusBadge')) document.getElementById('setHideStoreStatusBadge').checked = Boolean(STATE.data.settings.hideStoreStatusBadge);
 
         const sOpenCheck = document.getElementById('setScheduleOpenEnabled');
@@ -3537,7 +3658,8 @@
             instant_override: (document.getElementById('setHideStoreStatusBadge') && document.getElementById('setHideStoreStatusBadge').checked)
                 ? null 
                 : (STATE.tempInstantOverride !== undefined ? STATE.tempInstantOverride : (STATE.data.settings.instantOverride || null)),
-            product_grid_mobile: document.querySelector('input[name="productGridMobile"]:checked')?.value === '3' ? '3' : '2'
+            product_grid_mobile: document.querySelector('input[name="productGridMobile"]:checked')?.value === '3' ? '3' : '2',
+            finance_enabled: document.getElementById('setFinanceEnabled') ? document.getElementById('setFinanceEnabled').checked : Boolean(STATE.data.settings.financeEnabled)
         };
 
         try { 
@@ -3560,6 +3682,7 @@
                 resetPeriod: payload.reset_period,
                 productGridMobile: payload.product_grid_mobile,
                 cashierEnabled: payload.cashier_enabled,
+                financeEnabled: payload.finance_enabled,
                 hideStoreStatusBadge: payload.hide_store_status_badge,
                 scheduleOpenEnabled: payload.schedule_open_enabled,
                 scheduleOpenDateTime: payload.schedule_open_datetime,
@@ -4594,6 +4717,394 @@
                     closeBadge.textContent = `tutup jam ${closeHours}.${closeMinutes}`;
                 }
             }
+        }
+    };
+
+    // ======================================================= //
+    // MODUL CATATAN KEUANGAN (Kelola Admin)
+    // Koleksi Firestore: finance_notes  |  Jenis: catatan / pemasukan / pengeluaran
+    // ======================================================= //
+    const FIN_MONTHS = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+    const FIN_DAYS = ['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
+    const FIN_TYPES = {
+        pemasukan:   { label: 'Pemasukan',   icon: '⬆', bar: '#16a34a', bg: '#f0fdf4', badge: 'background:#4ade80;color:#000;', amt: '#15803d', sign: '+' },
+        pengeluaran: { label: 'Pengeluaran', icon: '⬇', bar: '#dc2626', bg: '#fef2f2', badge: 'background:#ef4444;color:#fff;', amt: '#dc2626', sign: '−' },
+        catatan:     { label: 'Catatan',     icon: '📝', bar: '#7c3aed', bg: '#ede9fe', badge: 'background:#7c3aed;color:#fff;', amt: '#6d28d9', sign: '' }
+    };
+    const FIN_HINTS = {
+        catatan: 'Hanya dicatat (misal: jumlah uang cash). Tidak masuk hitungan total pemasukan maupun pengeluaran.',
+        pemasukan: 'Dihitung sebagai pemasukan pada total periode.',
+        pengeluaran: 'Dihitung sebagai pengeluaran pada total periode.'
+    };
+
+    STATE.finance = { mode: 'month', ym: '', loaded: false };
+    STATE.data.financeNotes = [];
+
+    const finPad = n => String(n).padStart(2, '0');
+    const finTodayDate = () => { const d = new Date(); return `${d.getFullYear()}-${finPad(d.getMonth() + 1)}-${finPad(d.getDate())}`; };
+    const finTodayYM = () => finTodayDate().slice(0, 7);
+    const finShiftYM = (ym, n) => { const [y, m] = ym.split('-').map(Number); const d = new Date(y, m - 1 + n, 1); return `${d.getFullYear()}-${finPad(d.getMonth() + 1)}`; };
+    const finMonthLabel = ym => { const [y, m] = ym.split('-').map(Number); return `${FIN_MONTHS[m - 1]} ${y}`; };
+    const finDateLabel = (dateStr, withDay = true) => {
+        const [y, m, d] = String(dateStr).split('-').map(Number);
+        if (!y || !m || !d) return dateStr || '-';
+        const dt = new Date(y, m - 1, d);
+        return `${withDay ? FIN_DAYS[dt.getDay()] + ', ' : ''}${d} ${FIN_MONTHS[m - 1]} ${y}`;
+    };
+    const finShortDate = dateStr => { const [y, m, d] = String(dateStr).split('-'); return (y && m && d) ? `${d}/${m}/${y}` : (dateStr || '-'); };
+    const finSigned = (val, plus = '+') => (val < 0 ? '−' : (val > 0 ? plus : '')) + formatWon(Math.abs(val));
+
+    window.isFinanceAvailable = () => Boolean(STATE.data.settings.financeEnabled) && Boolean(STATE.user) && STATE.user.role === 'admin';
+    window.syncFinanceTab = () => {
+        const btn = document.getElementById('tab_finance');
+        if (btn) btn.classList.toggle('d-none', !window.isFinanceAvailable());
+    };
+
+    const finRange = () => {
+        const end = STATE.finance.ym || finTodayYM();
+        const start = STATE.finance.mode === '3month' ? finShiftYM(end, -2) : end;
+        return { start, end };
+    };
+    const finRangeLabel = () => {
+        const { start, end } = finRange();
+        if (start === end) return finMonthLabel(end);
+        const [y1, m1] = start.split('-').map(Number);
+        const [y2, m2] = end.split('-').map(Number);
+        return y1 === y2 ? `${FIN_MONTHS[m1 - 1]} - ${FIN_MONTHS[m2 - 1]} ${y2}` : `${finMonthLabel(start)} - ${finMonthLabel(end)}`;
+    };
+    const finReportTitle = () => 'Catatan Bulan ' + finRangeLabel();
+
+    const finInPeriod = () => {
+        const { start, end } = finRange();
+        return STATE.data.financeNotes.filter(n => { const ym = String(n.date).slice(0, 7); return ym >= start && ym <= end; });
+    };
+    const finSort = (arr, dir) => [...arr].sort((a, b) => (a.date === b.date ? (a.ts - b.ts) : (a.date < b.date ? -1 : 1)) * dir);
+    const finTotals = arr => {
+        let inc = 0, out = 0, notes = 0;
+        arr.forEach(n => { if (n.type === 'pemasukan') inc += n.amount; else if (n.type === 'pengeluaran') out += n.amount; else notes++; });
+        return { inc, out, diff: inc - out, notes };
+    };
+    const finMapDoc = doc => {
+        const n = doc.data();
+        return {
+            id: doc.id,
+            type: FIN_TYPES[n.type] ? n.type : 'catatan',
+            name: n.name || '',
+            amount: Number(n.amount || 0),
+            desc: n.desc || '',
+            date: n.date || '',
+            ts: Number(n.ts || 0)
+        };
+    };
+    const finErrMsg = e => {
+        const msg = (e && e.message) ? e.message : String(e);
+        return (e && (e.code === 'permission-denied' || /permission/i.test(msg)))
+            ? "Akses ditolak oleh Firestore. Pastikan aturan (rules) database mengizinkan koleksi 'finance_notes'.\n\n" + msg
+            : msg;
+    };
+    const finPersistLocal = () => { try { localStorage.setItem('wi_finance_notes', JSON.stringify(STATE.data.financeNotes)); } catch (e) {} };
+
+    window.loadFinanceNotes = async () => {
+        if (IS_PREVIEW || !db) {
+            try { STATE.data.financeNotes = JSON.parse(localStorage.getItem('wi_finance_notes') || '[]'); } catch (e) { STATE.data.financeNotes = []; }
+            STATE.finance.loaded = true;
+            return;
+        }
+        const first = !STATE.finance.loaded;
+        if (first) showLoad();
+        try {
+            const snap = await db.collection('finance_notes').get();
+            STATE.data.financeNotes = snap.docs.map(finMapDoc);
+            STATE.finance.loaded = true;
+        } catch (e) {
+            console.warn('Gagal memuat catatan keuangan:', e);
+            if (first) { hideLoad(); await window.customAlert('Gagal memuat catatan keuangan.\n\n' + finErrMsg(e), 'Gagal'); }
+        } finally { if (first) hideLoad(); }
+    };
+
+    window.openFinanceTab = async () => {
+        window.renderFinance();
+        await window.loadFinanceNotes();
+        window.renderFinance();
+    };
+
+    // ---------- Filter periode ----------
+    window.setFinanceMode = mode => { STATE.finance.mode = mode === '3month' ? '3month' : 'month'; window.renderFinance(); };
+    window.shiftFinanceMonth = n => { STATE.finance.ym = finShiftYM(STATE.finance.ym || finTodayYM(), n); window.renderFinance(); };
+    window.onFinanceSelectChange = () => {
+        const m = document.getElementById('finMonthSel').value, y = document.getElementById('finYearSel').value;
+        if (m && y) STATE.finance.ym = `${y}-${finPad(m)}`;
+        window.renderFinance();
+    };
+
+    // ---------- Render ----------
+    const finRowHtml = n => {
+        const t = FIN_TYPES[n.type];
+        const isNote = n.type === 'catatan';
+        return `<div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 p-3" style="background:${t.bg};border:3px ${isNote ? 'dashed' : 'solid'} #000;border-left:12px solid ${t.bar};box-shadow:4px 4px 0 #000;">
+            <div class="flex-1 min-w-0">
+                <div class="flex items-center gap-2 flex-wrap mb-1">
+                    <span class="px-2 py-0.5 text-[10px] font-bold border-2 border-black uppercase" style="${t.badge}">${t.icon} ${t.label}</span>
+                    ${isNote ? '<span class="text-[10px] font-bold italic text-violet-700">tidak dihitung dalam total</span>' : ''}
+                </div>
+                <div class="font-bold text-sm md:text-base break-words">${escapeHTML(n.name)}</div>
+                ${n.desc ? `<div class="text-xs text-gray-700 break-words whitespace-pre-wrap mt-0.5">${escapeHTML(n.desc)}</div>` : ''}
+            </div>
+            <div class="flex sm:flex-col items-center sm:items-end justify-between gap-2 shrink-0">
+                <div class="font-bold text-lg md:text-xl whitespace-nowrap" style="color:${t.amt}">${t.sign}${formatWon(n.amount)}</div>
+                <div class="flex gap-1">
+                    <button onclick="window.openFinanceModal('${n.id}')" class="brutal-btn bg-main border-2 border-black px-3 py-1 text-[10px]">Edit</button>
+                    <button onclick="window.deleteFinanceNote('${n.id}')" class="brutal-btn bg-danger text-white border-2 border-black px-3 py-1 text-[10px]">Hapus</button>
+                </div>
+            </div>
+        </div>`;
+    };
+
+    window.renderFinance = () => {
+        if (!document.getElementById('admin_finance')) return;
+        if (!STATE.finance.ym) STATE.finance.ym = finTodayYM();
+        const [selY, selM] = STATE.finance.ym.split('-').map(Number);
+
+        // Tombol mode
+        document.querySelectorAll('.fin-mode').forEach(b => { b.classList.remove('bg-black', 'text-white'); b.classList.add('bg-white', 'text-black'); });
+        const activeMode = document.getElementById('finMode_' + STATE.finance.mode);
+        if (activeMode) { activeMode.classList.remove('bg-white', 'text-black'); activeMode.classList.add('bg-black', 'text-white'); }
+
+        // Dropdown bulan & tahun
+        const monthSel = document.getElementById('finMonthSel'), yearSel = document.getElementById('finYearSel');
+        monthSel.innerHTML = FIN_MONTHS.map((m, i) => `<option value="${i + 1}">${m}</option>`).join('');
+        monthSel.value = String(selM);
+        const curY = new Date().getFullYear();
+        const years = STATE.data.financeNotes.map(n => parseInt(String(n.date).slice(0, 4))).filter(Boolean);
+        const minY = Math.min(curY - 3, selY, ...years), maxY = Math.max(curY + 1, selY, ...years);
+        let yOpts = '';
+        for (let y = maxY; y >= minY; y--) yOpts += `<option value="${y}">${y}</option>`;
+        yearSel.innerHTML = yOpts;
+        yearSel.value = String(selY);
+
+        // Label periode
+        const is3 = STATE.finance.mode === '3month';
+        document.getElementById('finPeriodLabel').textContent = finReportTitle();
+        document.getElementById('finPeriodHint').textContent = is3 ? '3 bulan berakhir di bulan yang dipilih.' : '';
+
+        // Data & ringkasan
+        const items = finInPeriod();
+        const tot = finTotals(items);
+        document.getElementById('finTotalIn').textContent = formatWon(tot.inc);
+        document.getElementById('finTotalOut').textContent = formatWon(tot.out);
+        document.getElementById('finTotalDiff').textContent = finSigned(tot.diff);
+        document.getElementById('finSummaryNote').textContent = tot.notes > 0
+            ? `*${tot.notes} catatan pada periode ini tidak termasuk dalam total.`
+            : '*Catatan (jenis "Catatan") tidak termasuk dalam total.';
+
+        // Daftar (terbaru di atas), dikelompokkan per tanggal
+        const list = document.getElementById('finList');
+        if (items.length === 0) {
+            list.innerHTML = `<div class="brutal-box bg-white p-8 text-center"><div class="text-3xl mb-2">🧾</div><div class="font-bold">Belum ada catatan pada periode ini.</div><div class="text-xs text-gray-600 mt-1">Klik "+ Tambah Catatan" untuk mulai mencatat.</div></div>`;
+            return;
+        }
+        let html = '', lastDate = null;
+        finSort(items, -1).forEach(n => {
+            if (n.date !== lastDate) {
+                lastDate = n.date;
+                html += `<div class="text-xs md:text-sm font-bold text-gray-700 border-b-2 border-black pb-1 pt-3">${finDateLabel(n.date)}</div>`;
+            }
+            html += finRowHtml(n);
+        });
+        list.innerHTML = html;
+    };
+
+    // ---------- Tambah / Edit / Hapus ----------
+    window.onFinanceTypeChange = () => {
+        const t = document.querySelector('input[name="finType"]:checked')?.value;
+        document.getElementById('finTypeHint').textContent = FIN_HINTS[t] || '';
+    };
+
+    window.openFinanceModal = id => {
+        document.getElementById('formFinance').reset();
+        const n = id ? STATE.data.financeNotes.find(x => x.id === id) : null;
+        document.getElementById('finId').value = n ? n.id : '';
+        document.getElementById('finModalTitle').textContent = n ? 'Edit Catatan' : 'Tambah Catatan';
+        const typeInput = document.querySelector(`input[name="finType"][value="${n ? n.type : 'pengeluaran'}"]`);
+        if (typeInput) typeInput.checked = true;
+        document.getElementById('finDate').value = n ? n.date : finTodayDate();
+        document.getElementById('finName').value = n ? n.name : '';
+        document.getElementById('finAmount').value = n ? n.amount : '';
+        document.getElementById('finDesc').value = n ? n.desc : '';
+        window.onFinanceTypeChange();
+        window.openModal('modalFinanceNote');
+        if (!n) setTimeout(() => { const el = document.getElementById('finName'); if (el) el.focus(); }, 100);
+    };
+
+    window.saveFinanceNote = async e => {
+        e.preventDefault();
+        const id = document.getElementById('finId').value;
+        const type = document.querySelector('input[name="finType"]:checked')?.value;
+        const name = document.getElementById('finName').value.trim();
+        const amount = Math.round(Number(document.getElementById('finAmount').value));
+        const desc = document.getElementById('finDesc').value.trim();
+        const date = document.getElementById('finDate').value;
+
+        if (!FIN_TYPES[type]) return await window.customAlert('Pilih jenis catatan terlebih dahulu.', 'Peringatan');
+        if (!name) return await window.customAlert('Nama catatan wajib diisi.', 'Peringatan');
+        if (!date) return await window.customAlert('Tanggal wajib diisi.', 'Peringatan');
+        if (!isFinite(amount) || amount < 0) return await window.customAlert('Nominal tidak valid.', 'Peringatan');
+        if (type !== 'catatan' && amount === 0) return await window.customAlert('Nominal pemasukan/pengeluaran harus lebih dari 0.', 'Peringatan');
+
+        const existing = id ? STATE.data.financeNotes.find(x => x.id === id) : null;
+        const note = {
+            id: id || 'fn_' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
+            type, name, amount, desc, date,
+            ts: existing ? existing.ts : Date.now()
+        };
+
+        showLoad();
+        try {
+            if (!IS_PREVIEW && db) await db.collection('finance_notes').doc(note.id).set(note);
+            const idx = STATE.data.financeNotes.findIndex(x => x.id === note.id);
+            if (idx > -1) STATE.data.financeNotes[idx] = note; else STATE.data.financeNotes.push(note);
+            if (IS_PREVIEW || !db) finPersistLocal();
+
+            // Jika catatan berada di luar periode yang sedang dilihat, pindah ke bulan catatan tersebut
+            const { start, end } = finRange();
+            const nym = date.slice(0, 7);
+            if (nym < start || nym > end) STATE.finance.ym = nym;
+
+            window.closeModal('modalFinanceNote');
+            hideLoad();
+            window.renderFinance();
+        } catch (err) {
+            hideLoad();
+            await window.customAlert('Gagal menyimpan catatan.\n\n' + finErrMsg(err), 'Gagal');
+        }
+    };
+
+    window.deleteFinanceNote = async id => {
+        const n = STATE.data.financeNotes.find(x => x.id === id);
+        if (!n) return;
+        if (!(await window.customConfirm(`Hapus catatan "${n.name}" (${FIN_TYPES[n.type].label} ${formatWon(n.amount)})?`, 'Hapus Catatan'))) return;
+        showLoad();
+        try {
+            if (!IS_PREVIEW && db) await db.collection('finance_notes').doc(id).delete();
+            STATE.data.financeNotes = STATE.data.financeNotes.filter(x => x.id !== id);
+            if (IS_PREVIEW || !db) finPersistLocal();
+            hideLoad();
+            window.renderFinance();
+        } catch (err) {
+            hideLoad();
+            await window.customAlert('Gagal menghapus catatan.\n\n' + finErrMsg(err), 'Gagal');
+        }
+    };
+
+    // ---------- Laporan PDF (A4, otomatis lanjut ke halaman berikutnya) ----------
+    window.downloadFinancePDF = async () => {
+        const items = finSort(finInPeriod(), 1);
+        if (items.length === 0) return await window.customAlert('Belum ada catatan pada periode ini untuk dibuat laporan.', 'Peringatan');
+        if (!(window.jspdf && window.jspdf.jsPDF) || typeof html2canvas === 'undefined') {
+            return await window.customAlert('Pustaka PDF belum termuat. Periksa koneksi internet lalu coba lagi.', 'Gagal');
+        }
+
+        const PAGE_W = 794, PAGE_H = 1123;              // A4 pada 96 dpi
+        const PAD_T = 44, PAD_B = 64, PAD_X = 44;
+        const MAX_BODY = PAGE_H - PAD_T - PAD_B;
+        const store = escapeHTML(STATE.data.settings.storeName || 'Warung Indonesia');
+        const title = finReportTitle();
+        const tot = finTotals(items);
+        const font = "'Space Grotesk', Arial, sans-serif";
+
+        const cell = 'padding:7px 8px;border-bottom:1px solid #cbd5e1;vertical-align:top;font-size:12px;line-height:1.35;word-break:break-word;overflow-wrap:anywhere;';
+        const thCell = 'padding:8px;font-size:11px;font-weight:700;text-align:left;border-top:2px solid #000;border-bottom:2px solid #000;background:#e5e7eb;';
+        const tableHead = `<colgroup><col style="width:6%"><col style="width:14%"><col style="width:14%"><col style="width:24%"><col style="width:26%"><col style="width:16%"></colgroup>
+            <thead><tr><th style="${thCell}">No</th><th style="${thCell}">Tanggal</th><th style="${thCell}">Jenis</th><th style="${thCell}">Nama Catatan</th><th style="${thCell}">Keterangan</th><th style="${thCell}text-align:right;">Nominal</th></tr></thead>`;
+
+        const rowHtml = (n, i) => {
+            const t = FIN_TYPES[n.type];
+            const isNote = n.type === 'catatan';
+            return `<tr style="background:${isNote ? '#ede9fe' : '#fff'};">
+                <td style="${cell}">${i + 1}</td>
+                <td style="${cell}">${finShortDate(n.date)}</td>
+                <td style="${cell}"><span style="display:inline-block;padding:1px 6px;border:1.5px ${isNote ? 'dashed' : 'solid'} #000;font-size:10px;font-weight:700;background:${n.type === 'pemasukan' ? '#86efac' : (n.type === 'pengeluaran' ? '#fca5a5' : '#c4b5fd')};">${t.label}</span></td>
+                <td style="${cell}font-weight:700;">${escapeHTML(n.name)}</td>
+                <td style="${cell}color:#374151;white-space:pre-wrap;">${escapeHTML(n.desc) || '-'}</td>
+                <td style="${cell}text-align:right;font-weight:700;white-space:nowrap;color:${t.amt};${isNote ? 'font-style:italic;' : ''}">${t.sign}${formatWon(n.amount)}</td>
+            </tr>`;
+        };
+
+        const firstHeader = `
+            <div style="display:flex;justify-content:space-between;align-items:flex-end;gap:16px;border-bottom:4px solid #000;padding-bottom:10px;margin-bottom:14px;">
+                <div style="min-width:0;">
+                    <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;">${store}</div>
+                    <div style="font-size:25px;font-weight:700;line-height:1.15;margin-top:3px;">${escapeHTML(title)}</div>
+                </div>
+                <div style="text-align:right;font-size:11px;color:#4b5563;white-space:nowrap;">Dicetak<br><b style="color:#000;">${finDateLabel(finTodayDate(), false)}</b></div>
+            </div>
+            <div style="display:flex;gap:10px;margin-bottom:8px;">
+                <div style="flex:1;border:2px solid #000;background:#bbf7d0;padding:8px 10px;"><div style="font-size:10px;font-weight:700;text-transform:uppercase;">Total Pemasukan</div><div style="font-size:17px;font-weight:700;margin-top:2px;">${formatWon(tot.inc)}</div></div>
+                <div style="flex:1;border:2px solid #000;background:#fecaca;padding:8px 10px;"><div style="font-size:10px;font-weight:700;text-transform:uppercase;">Total Pengeluaran</div><div style="font-size:17px;font-weight:700;margin-top:2px;">${formatWon(tot.out)}</div></div>
+                <div style="flex:1;border:2px solid #000;background:#fde68a;padding:8px 10px;"><div style="font-size:10px;font-weight:700;text-transform:uppercase;">Selisih</div><div style="font-size:17px;font-weight:700;margin-top:2px;">${finSigned(tot.diff)}</div></div>
+            </div>
+            <div style="font-size:10.5px;color:#4b5563;font-style:italic;margin-bottom:14px;">Baris ungu (jenis Catatan) hanya dicatat dan tidak dihitung dalam total.${tot.notes ? ` Jumlah catatan: ${tot.notes}.` : ''}</div>`;
+        const nextHeader = `
+            <div style="border-bottom:2px solid #000;padding-bottom:6px;margin-bottom:10px;font-size:12px;font-weight:700;">${escapeHTML(title)} <span style="font-weight:400;color:#4b5563;">(lanjutan)</span></div>`;
+
+        const mount = document.createElement('div');
+        mount.style.cssText = `position:fixed;left:0;top:0;width:${PAGE_W}px;z-index:-1;pointer-events:none;`;
+        const stage = document.createElement('div');
+        stage.style.cssText = `position:fixed;left:0;top:0;width:${PAGE_W}px;height:${PAGE_H}px;z-index:-1;pointer-events:none;background:#fff;`;
+        document.body.appendChild(mount);
+        document.body.appendChild(stage);
+
+        showLoad();
+        try {
+            if (document.fonts && document.fonts.load) {
+                try { await Promise.all([document.fonts.load('400 12px "Space Grotesk"'), document.fonts.load('700 12px "Space Grotesk"')]); } catch (e) {}
+            }
+
+            const pages = [];
+            const makePage = first => {
+                const pg = document.createElement('div');
+                pg.style.cssText = `position:relative;box-sizing:border-box;width:${PAGE_W}px;height:${PAGE_H}px;padding:${PAD_T}px ${PAD_X}px ${PAD_B}px;background:#fff;color:#000;font-family:${font};overflow:hidden;`;
+                pg.innerHTML = `<div class="fr-body">${first ? firstHeader : nextHeader}<table style="width:100%;border-collapse:collapse;table-layout:fixed;">${tableHead}<tbody></tbody></table></div>
+                    <div class="fr-foot" style="position:absolute;left:${PAD_X}px;right:${PAD_X}px;bottom:24px;display:flex;justify-content:space-between;font-size:10px;color:#4b5563;border-top:1px solid #9ca3af;padding-top:6px;"><span>${store} – Catatan Keuangan</span><span class="fr-num"></span></div>`;
+                mount.appendChild(pg);
+                pages.push(pg);
+                return pg;
+            };
+
+            let page = makePage(true);
+            items.forEach((n, i) => {
+                let body = page.querySelector('.fr-body'), tbody = page.querySelector('tbody');
+                tbody.insertAdjacentHTML('beforeend', rowHtml(n, i));
+                if (body.offsetHeight > MAX_BODY && tbody.children.length > 1) {
+                    tbody.removeChild(tbody.lastElementChild);
+                    page = makePage(false);
+                    page.querySelector('tbody').insertAdjacentHTML('beforeend', rowHtml(n, i));
+                }
+            });
+            pages.forEach((pg, i) => { pg.querySelector('.fr-num').textContent = `Halaman ${i + 1} dari ${pages.length}`; });
+
+            const { jsPDF } = window.jspdf;
+            const pdf = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4', compress: true });
+            for (let i = 0; i < pages.length; i++) {
+                stage.replaceChildren(pages[i]);
+                const canvas = await html2canvas(pages[i], {
+                    scale: 2, backgroundColor: '#ffffff', useCORS: true, logging: false,
+                    width: PAGE_W, height: PAGE_H, windowWidth: PAGE_W, windowHeight: PAGE_H, scrollX: 0, scrollY: 0
+                });
+                if (i > 0) pdf.addPage();
+                pdf.addImage(canvas.toDataURL('image/jpeg', 0.92), 'JPEG', 0, 0, 210, 297, undefined, 'FAST');
+            }
+
+            const { start, end } = finRange();
+            pdf.save(`Catatan_Keuangan_${start === end ? start : start + '_sd_' + end}.pdf`);
+            hideLoad();
+        } catch (err) {
+            console.error(err);
+            hideLoad();
+            await window.customAlert('Gagal membuat PDF: ' + (err && err.message ? err.message : err), 'Gagal');
+        } finally {
+            mount.remove();
+            stage.remove();
         }
     };
 
