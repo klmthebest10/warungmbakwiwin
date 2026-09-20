@@ -143,6 +143,36 @@
                 top: 130px;
             }
         }
+     /* Sticky Header & Kategori pada Halaman Umum, Pelanggan, dan POS */
+        #pagePublic > div:first-of-type + div,
+        #pagePublic #publicSearchWrap,
+        #custCatalogArea > div:first-child,
+        #custCatalogArea #custSearchWrap {
+            position: sticky;
+            z-index: 20;
+            background-color: #f4f4f0;
+        }
+        #pagePublic > div:first-of-type + div,
+        #custCatalogArea > div:first-child {
+            top: 59px;
+            padding-top: 0.5rem;
+            padding-bottom: 0.5rem;
+        }
+        #pagePublic #publicSearchWrap,
+        #custCatalogArea #custSearchWrap {
+            top: 112px;
+            padding-bottom: 0.5rem;
+        }
+        @media (min-width: 768px) {
+            #pagePublic > div:first-of-type + div,
+            #custCatalogArea > div:first-child {
+                top: 70px;
+            }
+            #pagePublic #publicSearchWrap,
+            #custCatalogArea #custSearchWrap {
+                top: 126px;
+            }
+        }   
     </style>
 </head>
 <body>
