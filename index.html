@@ -108,11 +108,11 @@
         }
         /* Tombol "Pesanan Anda" diperkecil di HP agar header tidak melebar ke 2 baris */
         @media (max-width: 639px) {
-            #navBtnCustWait, #navBtnLogout { border-width: 2px; box-shadow: 2px 2px 0 0 #000; padding: 0.3rem 0.5rem; font-size: 10px; }
+            #navBtnCustWait, #navBtnLogout, #navBtnManage { border-width: 2px; box-shadow: 2px 2px 0 0 #000; padding: 0.3rem 0.5rem; font-size: 10px; }
             #navMenu { gap: 0.4rem; }
         }
         @media (max-width: 400px) {
-            #navBtnCustWait, #navBtnLogout { padding: 0.25rem 0.4rem; font-size: 9px; }
+            #navBtnCustWait, #navBtnLogout, #navBtnManage { padding: 0.25rem 0.4rem; font-size: 9px; }
             #navMenu { gap: 0.3rem; }
         }
         /* Tombol keranjang Umum & Pelanggan melayang di HP (sama seperti POS admin) */
@@ -465,6 +465,10 @@
 
             <!-- PAGE: ADMIN MANAGEMENT -->
             <section id="pageAdminMgmt" class="app-page d-none w-full">
+                <div id="cashierMgmtBar" class="d-none flex flex-wrap items-center justify-between gap-2 mb-4">
+                    <h2 class="text-xl md:text-3xl font-bold uppercase bg-main px-2 border-2 border-black border-l-8 border-l-dark">⚙️ Kelola Aplikasi</h2>
+                    <button onclick="window.showPage('pageAdminPOS')" class="brutal-btn bg-white px-3 sm:px-4 py-2 text-sm text-black border-2 border-black whitespace-nowrap">← POS<span class="hidden sm:inline"> Kasir</span></button>
+                </div>
                 <div class="flex overflow-x-auto lg:overflow-visible gap-2 md:gap-3 mb-6 border-b-4 border-black pb-3 no-scrollbar flex-nowrap lg:flex-wrap">
                     <button onclick="window.switchAdminTab('products')" id="tab_products" class="admin-tab brutal-btn bg-white px-4 py-2 whitespace-nowrap">Produk</button>
                     <button onclick="window.switchAdminTab('categories')" id="tab_categories" class="admin-tab brutal-btn bg-white px-4 py-2 whitespace-nowrap">Kategori</button>
@@ -549,21 +553,20 @@
                     </div>
                 </div>
                 <!-- Admin: Cashier Management -->
-                <div id="admin_cashier" class="admin-content d-none max-w-xl mx-auto">
-                    <div class="brutal-box p-6 bg-white">
-                        <div class="flex justify-between items-center mb-4 border-b-4 border-black pb-2">
-                            <h3 class="text-xl font-bold uppercase">Kelola Akun Kasir</h3>
-                            <button onclick="window.openCashierModal()" id="btnOpenModalCashier" class="brutal-btn bg-accent px-3 py-1.5 text-xs font-bold">+ Atur Akun</button>
+                <div id="admin_cashier" class="admin-content d-none w-full">
+                    <div class="flex flex-col sm:flex-row justify-between sm:items-center mb-4 gap-3">
+                        <div>
+                            <h3 class="text-xl font-bold uppercase">Kelola Akun Kasir <span id="cashierCountLabel" class="text-sm font-bold bg-black text-white px-2 ml-1 align-middle"></span></h3>
+                            <p class="text-[11px] md:text-xs text-gray-600 italic leading-tight mt-1">Bisa menambahkan lebih dari satu akun kasir. Perubahan password, no. telp, dan alamat yang dilakukan kasir dari menu Pengaturan-nya ikut tampil di sini.</p>
                         </div>
-                        <div id="cashierDetailsCard">
-                            <p class="text-center font-bold text-gray-500 py-4">Data kasir belum dibuat. Klik tombol '+ Atur Akun' di atas.</p>
-                        </div>
+                        <button onclick="window.openCashierModal()" id="btnOpenModalCashier" class="brutal-btn bg-accent px-4 py-3 text-sm whitespace-nowrap">+ Tambah Akun Kasir</button>
                     </div>
+                    <div id="cashierDetailsCard" class="grid grid-cols-1 lg:grid-cols-2 gap-4"></div>
                 </div>
-                <!-- Admin: History -->
+
                 <div id="admin_history" class="admin-content d-none">
                     <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-4 gap-4">
-                        <h3 class="text-xl font-bold uppercase">Riwayat & Pendapatan</h3>
+                        <h3 id="histTitle" class="text-xl font-bold uppercase">Riwayat & Pendapatan</h3>
                         <div class="flex gap-2 flex-wrap">
                             <button onclick="window.filterAdminHistory('day')" id="flt_day" class="hist-filter brutal-btn bg-black text-white px-3 py-1 text-sm">Hari Ini</button>
                             <button onclick="window.filterAdminHistory('week')" id="flt_week" class="hist-filter brutal-btn bg-white px-3 py-1 text-sm">7 Hari</button>
@@ -577,7 +580,24 @@
                         </div>
                     </div>
 
-                    <div class="brutal-box bg-success p-4 mb-4 flex items-center justify-between">
+                    <div id="cashierHistoryExtras" class="d-none flex gap-2 mb-4">
+                        <button onclick="window.setCashierHistoryScope('mine')" id="histScope_mine" class="brutal-btn bg-black text-white px-3 py-2 text-xs sm:text-sm flex-1 sm:flex-none">Transaksi Saya</button>
+                        <button onclick="window.setCashierHistoryScope('all')" id="histScope_all" class="brutal-btn bg-white text-black px-3 py-2 text-xs sm:text-sm flex-1 sm:flex-none">Semua Transaksi</button>
+                    </div>
+                    <div id="cashierHistoryStats" class="d-none grid grid-cols-2 gap-3 mb-4">
+                        <div class="brutal-box bg-accent p-3">
+                            <div class="text-[11px] md:text-xs font-bold uppercase">Total Transaksi</div>
+                            <div id="cashierStatCount" class="text-xl md:text-2xl font-bold">0</div>
+                            <div class="text-[10px] italic leading-tight">akun <span id="cashierStatName" class="font-bold"></span></div>
+                        </div>
+                        <div class="brutal-box bg-success p-3">
+                            <div class="text-[11px] md:text-xs font-bold uppercase">Total Nominal</div>
+                            <div id="cashierStatTotal" class="text-xl md:text-2xl font-bold break-all">₩0</div>
+                            <div class="text-[10px] italic leading-tight">hutang belum lunas tidak dihitung</div>
+                        </div>
+                    </div>
+
+                    <div id="adminIncomeBox" class="brutal-box bg-success p-4 mb-4 flex items-center justify-between">
                         <div>
                             <span class="font-bold uppercase text-sm md:text-base">Total Pendapatan:</span>
                             <div class="text-xs max-w-[200px] md:max-w-none">(Transaksi hutang belum lunas tidak dihitung)</div>
@@ -657,7 +677,8 @@
 
                 <!-- Admin: Settings -->
                 <div id="admin_settings" class="admin-content d-none w-full">
-                    <div class="brutal-box p-4 md:p-8 bg-white w-full">
+                    <div id="cashierSelfSettingsWrap" class="d-none w-full max-w-xl mx-auto"></div>
+                    <div id="adminSettingsBox" class="brutal-box p-4 md:p-8 bg-white w-full">
                         <h3 class="text-xl md:text-2xl font-bold uppercase mb-6 border-b-4 border-black pb-3">Pengaturan Warung</h3>
                         <form id="formSettings" onsubmit="window.saveSettings(event)">
                             <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
@@ -1314,8 +1335,9 @@
     <div id="modalCashierSetup" class="fixed inset-0 modal-backdrop d-none z-50 flex items-center justify-center p-4">
         <div class="brutal-box bg-white w-full max-w-md relative p-6 max-h-[90vh] overflow-y-auto">
             <button onclick="window.closeModal('modalCashierSetup')" class="absolute top-2 right-2 font-bold px-2 py-1 hover:bg-red-500 hover:text-white border-2 border-black">X</button>
-            <h2 class="text-2xl font-bold mb-4 uppercase border-b-2 border-black pb-2">Pengaturan Kasir</h2>
+            <h2 id="cashierModalTitle" class="text-2xl font-bold mb-4 uppercase border-b-2 border-black pb-2 pr-10">Tambah Akun Kasir</h2>
             <form id="formCashierSetup" onsubmit="window.saveCashierAccount(event)">
+                <input type="hidden" id="cashierSetId">
                 <div class="mb-3">
                     <label class="block font-bold mb-1 text-sm">Nama / Username Kasir</label>
                     <input type="text" id="cashierSetUser" class="brutal-input bg-white" required>
@@ -1456,6 +1478,7 @@
                 instantOverride: null
             }, 
             cashier: null,
+            cashiers: [],
             categories: ["Makanan", "Minuman"], 
             products: [
                 { id: "p1", name: "Nasi Goreng Spesial", cat: "Makanan", price: 15000, img: "", available: true },
@@ -1763,9 +1786,7 @@
             }
 
             const cashDoc = await db.collection('settings').doc('cashier_config').get();
-            if (cashDoc.exists) {
-                STATE.data.cashier = cashDoc.data();
-            }
+            STATE.data.cashiers = cashDoc.exists ? normalizeCashiers(cashDoc.data()) : [];
 
             const cSnap = await db.collection('categories').get();
             if (!cSnap.empty) {
@@ -1829,7 +1850,10 @@
             total: Number(o.total || 0),
             address: o.address || '',
             table: o.table_name || o.table || '',
-            isEdited: Boolean(o.isEdited)
+            isEdited: Boolean(o.isEdited),
+            editedBy: o.editedBy || '',
+            cashierId: o.cashier_id || '',
+            cashierName: o.cashier_name || ''
         };
     }
 
@@ -1977,20 +2001,21 @@
                 return;
             }
 
-            // Validasi Login Kasir
-            const cashData = STATE.data.cashier;
-            if (cashData && cashData.username && cashData.username.toLowerCase() === username.toLowerCase()) {
+            // Validasi Login Kasir (bisa lebih dari satu akun; akun yang sudah dihapus admin tidak bisa login)
+            await window.loadCashierAccounts();
+            const cashAcc = (STATE.data.cashiers || []).find(c => c.username && c.username.toLowerCase() === username.toLowerCase());
+            if (cashAcc) {
                 if (!STATE.data.settings.cashierEnabled) {
                     hideLoad();
                     await window.customAlert("kasir off", "Peringatan");
                     return;
                 }
-                if (cashData.password !== password) {
+                if (cashAcc.password !== password) {
                     hideLoad();
                     await window.customAlert("Username atau Password salah!", "Gagal");
                     return;
                 }
-                STATE.user = { id: 'cashier_user', role: 'cashier', name: cashData.username };
+                STATE.user = { id: cashAcc.id, role: 'cashier', name: cashAcc.username };
                 localStorage.setItem('wi_user', JSON.stringify(STATE.user));
                 await fetchAllData();
                 hideLoad();
@@ -2206,6 +2231,8 @@
             nav.innerHTML = `${posMenu}${loginBtnHtml}`; 
         } else if (STATE.user.role === 'admin') { 
             nav.innerHTML = `<button onclick="window.showPage('pageAdminPOS')" class="${iconClasses} !bg-main hidden sm:block">POS Kasir</button><button onclick="window.showPage('pageAdminMgmt'); window.renderAdminProducts();" class="${iconClasses}">Kelola Admin</button><button onclick="window.logout()" class="${iconClasses} !bg-danger !text-white">Keluar</button>`; 
+        } else if (STATE.user.role === 'cashier') { 
+            nav.innerHTML = `<span class="font-bold text-xs md:text-sm mr-2 hidden sm:inline-block">Hi, ${escapeHTML(STATE.user.name)}</span><button onclick="window.showPage('pageAdminPOS')" class="${iconClasses} !bg-main hidden sm:block">POS Kasir</button><button onclick="window.openCashierManage()" id="navBtnManage" class="${iconClasses}">Kelola Aplikasi</button><button onclick="window.logout()" id="navBtnLogout" class="${iconClasses} !bg-danger !text-white">Keluar</button>`; 
         } else { 
             nav.innerHTML = `<span class="font-bold text-xs md:text-sm mr-2 hidden sm:inline-block">Hi, ${escapeHTML(STATE.user.name)}</span>${posMenu}<button onclick="window.logout()" id="navBtnLogout" class="${iconClasses} !bg-danger !text-white">Keluar</button>`; 
         }
@@ -2649,6 +2676,10 @@
             address: directAddress,
             table_name: tableName
         };
+        if (STATE.user && STATE.user.role === 'cashier') {
+            payload.cashier_id = STATE.user.id;
+            payload.cashier_name = window.getCashierNameById(STATE.user.id, STATE.user.name);
+        }
 
         showLoad();
         try {
@@ -2669,7 +2700,8 @@
                     id: payload.id, date: payload.date, custId: payload.cust_id,
                     orderType: payload.order_type, type: payload.type, paymentStatus: payload.payment_status,
                     items: payload.items, subtotal: payload.subtotal, ongkir: payload.ongkir,
-                    total: payload.total, address: payload.address, table: payload.table_name
+                    total: payload.total, address: payload.address, table: payload.table_name,
+                    cashierId: payload.cashier_id || '', cashierName: payload.cashier_name || ''
                 }); 
                 if(payload.type === 'Hutang' && custId) { 
                     const cust = STATE.data.customers.find(c => c.id === custId); 
@@ -2827,17 +2859,12 @@
         if (!isCustOn && tabName === 'customers') tabName = 'products';
         if (!isTableOn && tabName === 'tables') tabName = 'products';
         if (!isFinanceOn && tabName === 'finance') tabName = 'products';
+        if (STATE.user && STATE.user.role === 'cashier' && ['categories', 'customers', 'cashier', 'finance'].includes(tabName)) tabName = 'products';
 
         document.querySelectorAll('.admin-content').forEach(el => el.classList.add('d-none'));
         document.querySelectorAll('.admin-tab').forEach(el => el.classList.remove('bg-main', 'translate-x-[2px]', 'translate-y-[2px]', 'shadow-none') || el.classList.add('bg-white'));
         
-        const tabCustBtn = document.getElementById('tab_customers');
-        if (tabCustBtn) tabCustBtn.classList.toggle('d-none', !isCustOn);
-
-        const tabTableBtn = document.getElementById('tab_tables');
-        if (tabTableBtn) tabTableBtn.classList.toggle('d-none', !isTableOn);
-
-        window.syncFinanceTab();
+        window.syncAdminTabs();
 
         document.getElementById(`admin_${tabName}`).classList.remove('d-none');
         const btn = document.getElementById(`tab_${tabName}`); 
@@ -3424,17 +3451,43 @@
             return true; 
         }).sort((a,b) => new Date(b.date) - new Date(a.date));
 
-        document.getElementById('adminIncomeTotal').textContent = formatWon(filtered.reduce((sum, o) => (o.type === 'Hutang' && o.paymentStatus === 'Unpaid') ? sum : sum + o.total, 0));
+        const isCashierView = Boolean(STATE.user) && STATE.user.role === 'cashier';
+        const paidSum = arr => arr.reduce((sum, o) => (o.type === 'Hutang' && o.paymentStatus === 'Unpaid') ? sum : sum + o.total, 0);
+        const setVis = (id, on) => { const el = document.getElementById(id); if (el) el.classList.toggle('d-none', !on); };
+        setVis('cashierHistoryExtras', isCashierView); setVis('cashierHistoryStats', isCashierView); setVis('adminIncomeBox', !isCashierView);
+        const titleEl = document.getElementById('histTitle');
+        if (titleEl) titleEl.textContent = isCashierView ? 'Riwayat Transaksi' : 'Riwayat & Pendapatan';
 
-        if(filtered.length === 0) return document.getElementById('adminHistoryTable').innerHTML = `<tr><td colspan="6" class="p-4 text-center font-bold">Kosong.</td></tr>`;
-        document.getElementById('adminHistoryTable').innerHTML = filtered.map(o => {
+        let shown = filtered;
+        if (isCashierView) {
+            const mine = filtered.filter(o => o.cashierId && o.cashierId === STATE.user.id);
+            const scope = STATE.cashierHistScope === 'all' ? 'all' : 'mine';
+            document.getElementById('cashierStatCount').textContent = mine.length;
+            document.getElementById('cashierStatTotal').textContent = formatWon(paidSum(mine));
+            document.getElementById('cashierStatName').textContent = window.getCashierNameById(STATE.user.id, STATE.user.name);
+            ['mine', 'all'].forEach(k => {
+                const btn = document.getElementById('histScope_' + k); if (!btn) return;
+                btn.classList.toggle('bg-black', k === scope); btn.classList.toggle('text-white', k === scope);
+                btn.classList.toggle('bg-white', k !== scope); btn.classList.toggle('text-black', k !== scope);
+            });
+            shown = scope === 'all' ? filtered : mine;
+        } else {
+            document.getElementById('adminIncomeTotal').textContent = formatWon(paidSum(filtered));
+        }
+
+        if(shown.length === 0) return document.getElementById('adminHistoryTable').innerHTML = `<tr><td colspan="6" class="p-4 text-center font-bold">Kosong.</td></tr>`;
+        document.getElementById('adminHistoryTable').innerHTML = shown.map(o => {
             let custName = o.custId ? (STATE.data.customers.find(x => x.id === o.custId)?.name || 'Umum') : 'Umum'; 
             let badgeColor = o.type === 'Hutang' ? 'bg-danger text-white' : (o.type === 'Transfer' ? 'bg-accent text-black' : (o.type === 'Kartu' ? 'bg-blue-600 text-white' : 'bg-black text-white'));
             const isCashier = STATE.user && STATE.user.role === 'cashier';
-            const editedTag = o.isEdited ? '<span class="bg-danger text-white text-[9px] font-bold px-1 ml-1 rounded">DIEDIT</span>' : '';
-            return `<tr class="border-b-2 border-black hover:bg-yellow-50"><td class="p-2 border-r-2 border-black text-xs md:text-sm">${safeDate(o.date)}</td><td class="p-2 border-r-2 border-black text-[10px] md:text-xs">${o.id}${editedTag}</td><td class="p-2 border-r-2 border-black text-xs md:text-sm">${escapeHTML(custName)}</td><td class="p-2 border-r-2 border-black text-center"><span class="px-2 py-1 text-[9px] md:text-[10px] font-bold ${badgeColor}">${o.type}</span><br><span class="text-[9px] md:text-[10px] ${o.paymentStatus === 'Unpaid' ? 'text-danger' : 'text-success'}">${o.paymentStatus === 'Unpaid' ? 'Belum Lunas' : 'Lunas'}</span></td><td class="p-2 border-r-2 border-black font-bold text-sm">${formatWon(o.total)}</td><td class="p-2 text-center flex gap-1 justify-center flex-wrap w-full md:w-32"><button onclick="window.showReceiptPopup('${o.id}')" class="brutal-btn bg-accent border-2 border-black px-2 py-1 text-[10px] flex-1">Nota</button><button onclick="window.editTransaction('${o.id}')" class="brutal-btn bg-main border-2 border-black px-2 py-1 text-[10px] flex-1">Edit</button>${!isCashier ? `<button onclick="window.deleteTransaction('${o.id}')" class="brutal-btn bg-danger text-white border-2 border-black px-2 py-1 text-[10px] w-full mt-1">Hapus</button>` : ''}</td></tr>`;
+            const editedTag = o.isEdited ? `<div class="mt-0.5"><span class="bg-danger text-white text-[9px] font-bold px-1 rounded">TELAH DIEDIT</span>${o.editedBy ? ` <span class="text-[9px] text-gray-500">oleh ${escapeHTML(o.editedBy)}</span>` : ''}</div>` : '';
+            const cashierTag = o.cashierId ? `<div class="text-[9px] text-gray-500">Kasir: ${escapeHTML(window.getCashierNameById(o.cashierId, o.cashierName))}</div>` : '';
+            return `<tr class="border-b-2 border-black hover:bg-yellow-50"><td class="p-2 border-r-2 border-black text-xs md:text-sm">${safeDate(o.date)}</td><td class="p-2 border-r-2 border-black text-[10px] md:text-xs">${o.id}${cashierTag}${editedTag}</td><td class="p-2 border-r-2 border-black text-xs md:text-sm">${escapeHTML(custName)}</td><td class="p-2 border-r-2 border-black text-center"><span class="px-2 py-1 text-[9px] md:text-[10px] font-bold ${badgeColor}">${o.type}</span><br><span class="text-[9px] md:text-[10px] ${o.paymentStatus === 'Unpaid' ? 'text-danger' : 'text-success'}">${o.paymentStatus === 'Unpaid' ? 'Belum Lunas' : 'Lunas'}</span></td><td class="p-2 border-r-2 border-black font-bold text-sm">${formatWon(o.total)}</td><td class="p-2 text-center flex gap-1 justify-center flex-wrap w-full md:w-32"><button onclick="window.showReceiptPopup('${o.id}')" class="brutal-btn bg-accent border-2 border-black px-2 py-1 text-[10px] flex-1">Nota</button><button onclick="window.editTransaction('${o.id}')" class="brutal-btn bg-main border-2 border-black px-2 py-1 text-[10px] flex-1">Edit</button>${!isCashier ? `<button onclick="window.deleteTransaction('${o.id}')" class="brutal-btn bg-danger text-white border-2 border-black px-2 py-1 text-[10px] w-full mt-1">Hapus</button>` : ''}</td></tr>`;
         }).join('');
     };
+
+    STATE.cashierHistScope = 'mine';
+    window.setCashierHistoryScope = scope => { STATE.cashierHistScope = scope === 'all' ? 'all' : 'mine'; window.renderAdminHistory(); };
 
     window.editTransaction = id => {
         const o = STATE.data.orders.find(x => x.id === id); if(!o) return;
@@ -3492,7 +3545,8 @@
             total: parseInt(document.getElementById('editTrxTotal').value) || 0, 
             ongkir: parseInt(document.getElementById('editTrxOngkir').value) || 0, 
             items: STATE.editCart,
-            isEdited: true
+            isEdited: true,
+            editedBy: (STATE.user && STATE.user.role === 'cashier') ? window.getCashierNameById(STATE.user.id, STATE.user.name) : 'Admin'
         };
         try { 
             const o = STATE.data.orders.find(x=>x.id===id);
@@ -3508,7 +3562,8 @@
                         ...STATE.data.orders[idx], 
                         date: payload.date, orderType: payload.order_type, type: payload.type, 
                         paymentStatus: payload.payment_status, subtotal: payload.subtotal, total: payload.total, 
-                        ongkir: payload.ongkir, items: payload.items
+                        ongkir: payload.ongkir, items: payload.items,
+                        isEdited: true, editedBy: payload.editedBy
                     }; 
                     if(o.custId) { 
                         const c = STATE.data.customers.find(c=>c.id===o.custId); 
@@ -3529,6 +3584,7 @@
     };
     
     window.deleteTransaction = async id => {
+        if (STATE.user && STATE.user.role === 'cashier') return await window.customAlert('Kasir tidak dapat menghapus transaksi.', 'Ditolak');
         if(!(await window.customConfirm('Hapus transaksi?'))) return; 
         showLoad();
         try { 
@@ -4466,6 +4522,58 @@
     // ======================================================= //
     STATE.tempCashierPhotoBase64 = '';
 
+    // Akun kasir (bisa lebih dari satu) disimpan di settings/cashier_config -> { accounts: [...] }
+    // Format lama (satu akun: username/password di level dokumen) otomatis dibaca sebagai 1 akun.
+    function normalizeCashiers(data) {
+        if (!data) return [];
+        const clean = (a, fallbackId) => ({
+            id: a.id || fallbackId,
+            username: String(a.username || '').trim(),
+            password: String(a.password || ''),
+            phone: a.phone || '',
+            address: a.address || '',
+            photo: a.photo || ''
+        });
+        if (Array.isArray(data.accounts)) return data.accounts.filter(a => a && a.username).map((a, i) => clean(a, 'cashier_' + i));
+        if (data.username) return [clean(data, 'cashier_user')];
+        return [];
+    }
+    window.normalizeCashiers = normalizeCashiers;
+
+    const cashierIsRole = () => Boolean(STATE.user) && STATE.user.role === 'cashier';
+    const findMyCashier = () => {
+        if (!cashierIsRole()) return null;
+        const list = STATE.data.cashiers || [];
+        return list.find(c => c.id === STATE.user.id) || null;
+    };
+    window.getCashierNameById = (id, fallback) => {
+        const c = (STATE.data.cashiers || []).find(x => x.id === id);
+        return c ? c.username : (fallback || 'Kasir');
+    };
+
+    window.loadCashierAccounts = async () => {
+        if (IS_PREVIEW || !db) return;
+        try {
+            const d = await db.collection('settings').doc('cashier_config').get();
+            STATE.data.cashiers = d.exists ? normalizeCashiers(d.data()) : [];
+        } catch (e) { console.warn('Gagal memuat akun kasir:', e); }
+    };
+
+    // Ubah daftar akun secara aman (transaksi) agar perubahan admin & kasir tidak saling menimpa
+    const persistCashiers = async mutator => {
+        if (IS_PREVIEW || !db) { STATE.data.cashiers = mutator([...(STATE.data.cashiers || [])]); return; }
+        const ref = db.collection('settings').doc('cashier_config');
+        let result = [];
+        await db.runTransaction(async t => {
+            const snap = await t.get(ref);
+            const current = snap.exists ? normalizeCashiers(snap.data()) : [];
+            result = mutator(current);
+            if (JSON.stringify(result).length > 900000) throw new Error('Data akun kasir terlalu besar. Perkecil ukuran foto kasir.');
+            t.set(ref, { accounts: result });
+        });
+        STATE.data.cashiers = result;
+    };
+
     window.handleCashierPhotoSelect = e => {
         const file = e.target.files[0];
         if (file) compressImage(file, d => {
@@ -4474,37 +4582,74 @@
         });
     };
 
-    window.openCashierModal = () => {
-        const c = STATE.data.cashier || {};
-        document.getElementById('cashierSetUser').value = c.username || '';
-        document.getElementById('cashierSetPass').value = c.password || '';
-        document.getElementById('cashierSetPhone').value = c.phone || '';
-        document.getElementById('cashierSetAddress').value = c.address || '';
-        STATE.tempCashierPhotoBase64 = c.photo || '';
-        document.getElementById('cashierPhotoPreview').innerHTML = c.photo ? `<img src="${c.photo}" class="h-16 w-16 object-cover mt-2 border-2 border-black">` : '';
+    window.togglePassVisibility = (inputId, btn) => {
+        const el = document.getElementById(inputId); if (!el) return;
+        const show = el.type === 'password';
+        el.type = show ? 'text' : 'password';
+        if (btn) btn.textContent = show ? '🙈' : '👁';
+    };
+
+    // ---------- Admin: kelola banyak akun kasir ----------
+    window.openCashierModal = id => {
+        const c = id ? (STATE.data.cashiers || []).find(x => x.id === id) : null;
+        document.getElementById('cashierSetId').value = c ? c.id : '';
+        document.getElementById('cashierModalTitle').textContent = c ? 'Edit Akun Kasir' : 'Tambah Akun Kasir';
+        document.getElementById('cashierSetUser').value = c ? c.username : '';
+        document.getElementById('cashierSetPass').value = c ? c.password : '';
+        document.getElementById('cashierSetPhone').value = c ? c.phone : '';
+        document.getElementById('cashierSetAddress').value = c ? c.address : '';
+        document.getElementById('cashierSetPhotoFile').value = '';
+        STATE.tempCashierPhotoBase64 = c ? c.photo : '';
+        document.getElementById('cashierPhotoPreview').innerHTML = (c && c.photo) ? `<img src="${c.photo}" class="h-16 w-16 object-cover mt-2 border-2 border-black">` : '';
         window.openModal('modalCashierSetup');
     };
 
     window.saveCashierAccount = async e => {
         e.preventDefault();
-        showLoad();
-        const payload = {
+        const id = document.getElementById('cashierSetId').value;
+        const data = {
             username: document.getElementById('cashierSetUser').value.trim(),
             password: document.getElementById('cashierSetPass').value,
             phone: document.getElementById('cashierSetPhone').value.trim(),
             address: document.getElementById('cashierSetAddress').value.trim(),
-            photo: STATE.tempCashierPhotoBase64
+            photo: STATE.tempCashierPhotoBase64 || ''
         };
+        if (!data.username || !data.password) return await window.customAlert('Username dan password kasir wajib diisi.', 'Peringatan');
+        const ownerName = String((STATE.data.settings && STATE.data.settings.ownerName) || '').toLowerCase();
+        if (ownerName && data.username.toLowerCase() === ownerName) return await window.customAlert('Username tersebut dipakai oleh admin. Gunakan username lain.', 'Peringatan');
 
+        showLoad();
         try {
-            if (!IS_PREVIEW && db) {
-                await db.collection('settings').doc('cashier_config').set(payload, { merge: true });
-            }
-            STATE.data.cashier = payload;
+            await persistCashiers(list => {
+                if (list.some(c => c.id !== id && c.username.toLowerCase() === data.username.toLowerCase())) throw new Error('Username kasir sudah dipakai. Gunakan username lain.');
+                if (id) {
+                    const i = list.findIndex(c => c.id === id);
+                    if (i === -1) throw new Error('Akun kasir tidak ditemukan (mungkin sudah dihapus).');
+                    list[i] = { ...list[i], ...data };
+                } else {
+                    list.push({ id: 'cashier_' + Date.now().toString(36) + Math.random().toString(36).slice(2, 5), ...data });
+                }
+                return list;
+            });
             window.closeModal('modalCashierSetup');
             window.renderAdminCashier();
             hideLoad();
-            await window.customAlert('Data akun kasir tersimpan!', 'Sukses');
+            await window.customAlert(id ? 'Akun kasir diperbarui!' : 'Akun kasir ditambahkan!', 'Sukses');
+        } catch (err) {
+            hideLoad();
+            await window.customAlert(err.message, 'Gagal');
+        }
+    };
+
+    window.deleteCashierAccount = async id => {
+        const c = (STATE.data.cashiers || []).find(x => x.id === id);
+        if (!c) return;
+        if (!(await window.customConfirm(`Hapus akun kasir "${c.username}"?\n\nAkun yang dihapus tidak bisa login lagi. Riwayat transaksinya tetap tersimpan.`, 'Hapus Akun Kasir'))) return;
+        showLoad();
+        try {
+            await persistCashiers(list => list.filter(x => x.id !== id));
+            window.renderAdminCashier();
+            hideLoad();
         } catch (err) {
             hideLoad();
             await window.customAlert(err.message, 'Gagal');
@@ -4514,108 +4659,141 @@
     window.renderAdminCashier = () => {
         const wrap = document.getElementById('cashierDetailsCard');
         if (!wrap) return;
-        const c = STATE.data.cashier;
-        if (!c || !c.username) {
-            wrap.innerHTML = '<p class="text-center font-bold text-gray-500 py-4">Data kasir belum dibuat. Klik tombol \'+ Atur Akun\' di atas.</p>';
+        const list = STATE.data.cashiers || [];
+        const countEl = document.getElementById('cashierCountLabel');
+        if (countEl) { countEl.textContent = list.length ? list.length + ' akun' : ''; countEl.classList.toggle('d-none', !list.length); }
+        if (!list.length) {
+            wrap.innerHTML = `<div class="brutal-box bg-white p-8 text-center lg:col-span-2"><div class="text-3xl mb-2">🧑‍💼</div><div class="font-bold">Belum ada akun kasir.</div><div class="text-xs text-gray-600 mt-1">Klik "+ Tambah Akun Kasir" untuk membuat akun pertama.</div></div>`;
             return;
         }
-
-        wrap.innerHTML = `
-            <div class="flex flex-col sm:flex-row items-center gap-4 p-4 border-2 border-black bg-yellow-50">
-                <img src="${c.photo || 'https://placehold.co/100x100?text=Kasir'}" class="w-24 h-24 object-cover border-2 border-black">
-                <div class="flex-1 text-sm space-y-1 w-full">
-                    <div><b>Nama Kasir:</b> ${escapeHTML(c.username)}</div>
-                    <div><b>Password Terkini:</b> <span class="bg-black text-white px-2 py-0.5 font-mono text-xs">${escapeHTML(c.password)}</span></div>
-                    <div><b>No Telp:</b> ${escapeHTML(c.phone || '-')}</div>
-                    <div><b>Alamat:</b> ${escapeHTML(c.address || '-')}</div>
+        wrap.innerHTML = list.map(c => `
+            <div class="brutal-box bg-white p-4 flex gap-3 sm:gap-4 items-start" style="border-left:12px solid #00F0FF;">
+                <img src="${c.photo || 'https://placehold.co/100x100?text=Kasir'}" class="w-16 h-16 sm:w-20 sm:h-20 object-cover border-2 border-black shrink-0">
+                <div class="flex-1 min-w-0 space-y-1">
+                    <div class="font-bold text-base sm:text-lg uppercase break-words leading-tight">${escapeHTML(c.username)}</div>
+                    <div class="text-xs"><span class="font-bold text-gray-500">PASSWORD</span> <span class="bg-black text-white px-2 py-0.5 font-mono break-all">${escapeHTML(c.password)}</span></div>
+                    <div class="text-xs break-words">📞 ${escapeHTML(c.phone || '-')}</div>
+                    <div class="text-xs break-words">📍 ${escapeHTML(c.address || '-')}</div>
                 </div>
-            </div>
-        `;
+                <div class="flex flex-col gap-1.5 shrink-0">
+                    <button onclick="window.openCashierModal('${c.id}')" class="brutal-btn bg-main border-2 border-black px-3 py-1 text-[10px] font-bold">Edit</button>
+                    <button onclick="window.deleteCashierAccount('${c.id}')" class="brutal-btn bg-danger text-white border-2 border-black px-3 py-1 text-[10px] font-bold">Hapus</button>
+                </div>
+            </div>`).join('');
     };
+
+    // ---------- Kasir: Kelola Aplikasi ----------
+    window.openCashierManage = async () => {
+        window.showPage('pageAdminMgmt');
+        window.switchAdminTab('products');
+        window.verifyCashierSession();
+    };
+
+    // Akun yang dihapus admin langsung dikeluarkan dari sesi kasir
+    window.verifyCashierSession = async () => {
+        if (!cashierIsRole() || IS_PREVIEW || !db) return;
+        await window.loadCashierAccounts();
+        if (!findMyCashier()) {
+            await window.customAlert('Akun kasir Anda sudah dihapus oleh admin. Anda akan dikeluarkan.', 'Akun Dihapus');
+            window.logout();
+        }
+    };
+    setInterval(() => { if (!document.hidden) window.verifyCashierSession(); }, 45000);
+    document.addEventListener('visibilitychange', () => { if (!document.hidden) window.verifyCashierSession(); });
 
     const originalSwitchAdminTab = window.switchAdminTab;
     window.switchAdminTab = tabName => {
-        const isCashier = STATE.user && STATE.user.role === 'cashier';
+        const isCashier = cashierIsRole();
         const isCashierOn = Boolean(STATE.data.settings.cashierEnabled);
-
-        const tabCashierBtn = document.getElementById('tab_cashier');
-        if (tabCashierBtn) {
-            tabCashierBtn.classList.toggle('d-none', !isCashierOn || isCashier);
-        }
-
-        if (isCashier && tabName === 'cashier') tabName = 'products';
 
         originalSwitchAdminTab(tabName);
 
         if (tabName === 'cashier' && isCashierOn && !isCashier) {
             window.renderAdminCashier();
+            window.loadCashierAccounts().then(() => window.renderAdminCashier());
         }
+        if (tabName === 'settings') window.applyCashierSettingsRestrictions();
+    };
 
-        if (tabName === 'settings' && isCashier) {
-            window.applyCashierSettingsRestrictions();
+    window.applyCashierSettingsRestrictions = async () => {
+        const isCashier = cashierIsRole();
+        const wrap = document.getElementById('cashierSelfSettingsWrap');
+        const box = document.getElementById('adminSettingsBox');
+        if (wrap) wrap.classList.toggle('d-none', !isCashier);
+        if (box) box.classList.toggle('d-none', isCashier);
+        if (isCashier) {
+            window.renderCashierSelfSettings();
+            await window.loadCashierAccounts();
+            if (cashierIsRole()) window.renderCashierSelfSettings();
         }
     };
 
-    window.applyCashierSettingsRestrictions = () => {
-        const isCashier = STATE.user && STATE.user.role === 'cashier';
-        const formSettings = document.getElementById('formSettings');
-        if (!formSettings) return;
-
-        if (isCashier) {
-            const cash = STATE.data.cashier || {};
-            formSettings.innerHTML = `
-                <div class="p-4 border-2 border-black bg-yellow-50 mb-4 flex items-center gap-4">
-                    <img src="${cash.photo || 'https://placehold.co/80x80?text=Kasir'}" class="w-20 h-20 object-cover border-2 border-black">
-                    <div>
-                        <div class="text-xs font-bold text-gray-500 uppercase">Profil Kasir</div>
-                        <div class="text-lg font-bold">${escapeHTML(cash.username || STATE.user.name)}</div>
-                        <div class="text-xs text-gray-600">Foto & Nama dikunci (Hanya Admin yang dapat mengubah)</div>
+    window.renderCashierSelfSettings = () => {
+        const wrap = document.getElementById('cashierSelfSettingsWrap');
+        if (!wrap) return;
+        const me = findMyCashier() || (IS_PREVIEW || !db ? { username: STATE.user.name, password: '', phone: '', address: '', photo: '' } : null);
+        if (!me) {
+            wrap.innerHTML = `<div class="brutal-box bg-white p-6 text-center font-bold">Data akun kasir tidak ditemukan. Hubungi admin.</div>`;
+            return;
+        }
+        const editing = document.activeElement && document.activeElement.closest && document.activeElement.closest('#cashierSelfSettingsWrap form');
+        if (editing) return; // jangan menimpa isian yang sedang diketik
+        wrap.innerHTML = `
+            <div class="brutal-box bg-white p-4 md:p-6">
+                <h3 class="text-xl font-bold uppercase mb-4 border-b-4 border-black pb-2">Pengaturan Akun</h3>
+                <div class="flex items-center gap-4 p-3 border-2 border-black bg-yellow-50 mb-4">
+                    <img src="${me.photo || 'https://placehold.co/80x80?text=Kasir'}" class="w-16 h-16 object-cover border-2 border-black shrink-0">
+                    <div class="min-w-0">
+                        <div class="text-[10px] font-bold text-gray-500 uppercase">Akun Kasir</div>
+                        <div class="text-lg font-bold uppercase break-words leading-tight">${escapeHTML(me.username)}</div>
+                        <div class="text-[11px] text-gray-600 leading-tight">Nama & foto hanya bisa diubah oleh admin</div>
                     </div>
                 </div>
                 <form onsubmit="window.saveCashierSelfSettings(event)">
                     <div class="mb-3">
-                        <label class="block font-bold mb-1 text-sm">Ganti Password Login Kasir</label>
-                        <input type="text" id="cashierSelfPass" class="brutal-input bg-white" value="${escapeHTML(cash.password || '')}" required>
+                        <label class="block font-bold mb-1 text-sm">Password Login</label>
+                        <div class="flex gap-2">
+                            <input type="password" id="cashierSelfPass" autocomplete="new-password" class="brutal-input bg-white" value="${escapeHTML(me.password || '')}" required>
+                            <button type="button" onclick="window.togglePassVisibility('cashierSelfPass', this)" class="brutal-btn bg-white px-3" aria-label="Lihat password">👁</button>
+                        </div>
                     </div>
                     <div class="mb-3">
-                        <label class="block font-bold mb-1 text-sm">No Telp</label>
-                        <input type="text" id="cashierSelfPhone" class="brutal-input bg-white" value="${escapeHTML(cash.phone || '')}">
+                        <label class="block font-bold mb-1 text-sm">No. Telp</label>
+                        <input type="text" id="cashierSelfPhone" inputmode="tel" class="brutal-input bg-white" value="${escapeHTML(me.phone || '')}">
                     </div>
                     <div class="mb-4">
                         <label class="block font-bold mb-1 text-sm">Alamat</label>
-                        <textarea id="cashierSelfAddress" class="brutal-input bg-white text-sm" rows="2">${escapeHTML(cash.address || '')}</textarea>
+                        <textarea id="cashierSelfAddress" class="brutal-input bg-white text-sm" rows="2">${escapeHTML(me.address || '')}</textarea>
                     </div>
-                    <button type="button" onclick="window.saveCashierSelfSettings()" class="brutal-btn w-full bg-main py-3 uppercase font-bold">Simpan Profil Kasir</button>
+                    <button type="submit" class="brutal-btn w-full bg-main py-3 uppercase font-bold">Simpan Perubahan</button>
                 </form>
-            `;
-        }
+                <p class="text-[11px] italic text-gray-600 leading-tight mt-3">Perubahan langsung ikut diperbarui di menu Kasir pada akun admin.</p>
+            </div>`;
     };
 
-    window.saveCashierSelfSettings = async () => {
-        showLoad();
+    window.saveCashierSelfSettings = async e => {
+        if (e && e.preventDefault) e.preventDefault();
         const newPass = document.getElementById('cashierSelfPass').value;
         const newPhone = document.getElementById('cashierSelfPhone').value.trim();
         const newAddress = document.getElementById('cashierSelfAddress').value.trim();
-
-        const updated = {
-            ...(STATE.data.cashier || {}),
-            password: newPass,
-            phone: newPhone,
-            address: newAddress
-        };
-
+        if (!newPass) return await window.customAlert('Password tidak boleh kosong.', 'Peringatan');
+        const myId = STATE.user.id;
+        showLoad();
         try {
-            if (!IS_PREVIEW && db) {
-                await db.collection('settings').doc('cashier_config').set(updated, { merge: true });
-            }
-            STATE.data.cashier = updated;
+            await persistCashiers(list => {
+                const i = list.findIndex(c => c.id === myId);
+                if (i === -1) throw new Error('Akun kasir tidak ditemukan. Mungkin sudah dihapus admin.');
+                list[i] = { ...list[i], password: newPass, phone: newPhone, address: newAddress };
+                return list;
+            });
             hideLoad();
-            await window.customAlert("Profil & Password kasir berhasil diperbarui!", "Sukses");
-        } catch (e) {
+            await window.customAlert('Password, no. telp, dan alamat berhasil diperbarui!', 'Sukses');
+        } catch (err) {
             hideLoad();
-            await window.customAlert(e.message, "Gagal");
+            await window.customAlert(err.message, 'Gagal');
         }
     };
+
     // ======================================================= //
     // LOGIKA JADWAL & STATUS BUKA/TUTUP WARUNG
     // ======================================================= //
@@ -4854,9 +5032,11 @@
     window.syncAdminTabs = () => {
         const st = STATE.data.settings, isCashier = Boolean(STATE.user) && STATE.user.role === 'cashier';
         const set = (id, show) => { const el = document.getElementById(id); if (el) el.classList.toggle('d-none', !show); };
+        set('tab_categories', !isCashier);
         set('tab_tables', Boolean(st.tableEnabled));
-        set('tab_customers', Boolean(st.customerEnabled));
+        set('tab_customers', Boolean(st.customerEnabled) && !isCashier);
         set('tab_cashier', Boolean(st.cashierEnabled) && !isCashier);
+        set('cashierMgmtBar', isCashier);
         window.syncFinanceTab();
     };
     window.syncFinanceTab = () => {
