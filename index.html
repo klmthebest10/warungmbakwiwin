@@ -106,6 +106,23 @@
             }
             #posProductsCol { padding-bottom: 5.5rem; }
         }
+        /* Tombol "Pesanan Anda" diperkecil di HP agar header tidak melebar ke 2 baris */
+        @media (max-width: 639px) {
+            #navBtnCustWait, #navBtnLogout { border-width: 2px; box-shadow: 2px 2px 0 0 #000; padding: 0.3rem 0.5rem; font-size: 10px; }
+            #navMenu { gap: 0.4rem; }
+        }
+        @media (max-width: 400px) {
+            #navBtnCustWait, #navBtnLogout { padding: 0.25rem 0.4rem; font-size: 9px; }
+            #navMenu { gap: 0.3rem; }
+        }
+        /* Tombol keranjang Umum & Pelanggan melayang di HP (sama seperti POS admin) */
+        @media (max-width: 767px) {
+            #btnCustCartFloat {
+                position: fixed; right: 14px; bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+                z-index: 35; padding: 0.8rem 1.1rem; border-radius: 9999px; font-size: 14px;
+            }
+            #pagePublic, #pageCustomerDashboard { padding-bottom: 5.5rem; }
+        }
         /* Layout responsif layar lebar (Tablet & PC) untuk Kelola Admin */
         @media (min-width: 1024px) {
             #mainAppWrapper.admin-wide > main { max-width: 100% !important; padding-left: 2rem; padding-right: 2rem; }
@@ -211,6 +228,8 @@
                 <nav class="flex items-center flex-wrap justify-end gap-2 md:gap-3" id="navMenu"></nav>
             </div>
         </header>
+
+        <div id="custCartFloatWrap" class="md:hidden no-print"></div>
 
         <main class="flex-1 container mx-auto px-3 py-6 no-print max-w-full md:max-w-7xl">
             
@@ -2170,7 +2189,7 @@
         const isCustOn = Boolean(STATE.data.settings.customerEnabled);
         const isPosOn = Boolean(STATE.data.settings.posEnabled);
         
-        const posMenu = (isPosOn && isCustOn) ? `<button onclick="window.openCustWaitList()" id="navBtnCustWait" class="${iconClasses} !bg-accent d-none">📝 Pesanan Anda</button><button onclick="window.openCustCartModal()" class="${iconClasses} !bg-black !text-white relative">🛒 <span id="custCartNavTotal" class="d-none ml-0.5 bg-main text-black border-2 border-black px-1.5 text-[11px] md:text-xs font-bold whitespace-nowrap">₩0</span><span id="custCartCount" class="absolute -top-2 -right-2 bg-danger text-white rounded-full w-5 h-5 flex items-center justify-center text-[10px]">0</span></button>` : '';
+        const posMenu = (isPosOn && isCustOn) ? `<button onclick="window.openCustWaitList()" id="navBtnCustWait" class="brutal-btn !bg-accent px-2 py-1 text-[10px] sm:px-3 sm:py-1.5 sm:text-xs md:px-4 md:py-2 md:text-sm whitespace-nowrap d-none">📝 Pesanan<span class="max-[400px]:hidden"> Anda</span></button><button onclick="window.openCustCartModal()" class="${iconClasses} !bg-black !text-white relative max-md:hidden">🛒 <span id="custCartNavTotal" class="d-none ml-0.5 bg-main text-black border-2 border-black px-1.5 text-[11px] md:text-xs font-bold whitespace-nowrap">₩0</span><span id="custCartCount" class="absolute -top-2 -right-2 bg-danger text-white rounded-full w-5 h-5 flex items-center justify-center text-[10px]">0</span></button>` : '';
         
         if(!STATE.user) { 
             const loginBtnHtml = !isCustOn 
@@ -2181,7 +2200,14 @@
         } else if (STATE.user.role === 'admin') { 
             nav.innerHTML = `<button onclick="window.showPage('pageAdminPOS')" class="${iconClasses} !bg-main hidden sm:block">POS Kasir</button><button onclick="window.showPage('pageAdminMgmt'); window.renderAdminProducts();" class="${iconClasses}">Kelola Admin</button><button onclick="window.logout()" class="${iconClasses} !bg-danger !text-white">Keluar</button>`; 
         } else { 
-            nav.innerHTML = `<span class="font-bold text-xs md:text-sm mr-2 hidden sm:inline-block">Hi, ${escapeHTML(STATE.user.name)}</span>${posMenu}<button onclick="window.logout()" class="${iconClasses} !bg-danger !text-white">Keluar</button>`; 
+            nav.innerHTML = `<span class="font-bold text-xs md:text-sm mr-2 hidden sm:inline-block">Hi, ${escapeHTML(STATE.user.name)}</span>${posMenu}<button onclick="window.logout()" id="navBtnLogout" class="${iconClasses} !bg-danger !text-white">Keluar</button>`; 
+        }
+        const floatWrap = document.getElementById('custCartFloatWrap');
+        if (floatWrap) {
+            const showFloat = (isPosOn && isCustOn) && (!STATE.user || STATE.user.role === 'customer');
+            floatWrap.innerHTML = showFloat
+                ? `<button onclick="window.openCustCartModal()" id="btnCustCartFloat" class="brutal-btn !bg-black !text-white relative" aria-label="Keranjang">🛒 <span id="custCartNavTotalF" class="d-none ml-0.5 bg-main text-black border-2 border-black px-1.5 text-[11px] font-bold whitespace-nowrap">₩0</span><span id="custCartCountF" class="absolute -top-2 -right-2 bg-danger text-white rounded-full w-5 h-5 flex items-center justify-center text-[10px]">0</span></button>`
+                : '';
         }
         window.updateCustCartUI();
     }
@@ -3770,11 +3796,14 @@
     window.updateCustCartUI = () => { 
         const badge = document.getElementById('custCartCount'); 
         if(badge) badge.textContent = STATE.custCart.reduce((sum, item) => sum + item.qty, 0); 
+        const badgeF = document.getElementById('custCartCountF');
+        if(badgeF) badgeF.textContent = STATE.custCart.reduce((sum, item) => sum + item.qty, 0);
         const navTotal = document.getElementById('custCartNavTotal');
-        if(navTotal) {
+        const navTotalF = document.getElementById('custCartNavTotalF');
+        if(navTotal || navTotalF) {
             const t = STATE.custCart.reduce((sum, item) => sum + (item.price * item.qty), 0);
-            navTotal.textContent = formatWon(t);
-            navTotal.classList.toggle('d-none', t <= 0);
+            if(navTotal) { navTotal.textContent = formatWon(t); navTotal.classList.toggle('d-none', t <= 0); }
+            if(navTotalF) { navTotalF.textContent = formatWon(t); navTotalF.classList.toggle('d-none', t <= 0); }
         }
         if(!document.getElementById('modalCustCart')?.classList.contains('d-none')) window.renderCustCartModal(); 
     };
