@@ -452,6 +452,14 @@
                         <button onclick="window.showPage('pageAdminPOS')" class="brutal-btn bg-white px-4 py-2 text-sm text-black border-2 border-black whitespace-nowrap">Kembali ke POS</button>
                     </div>
                 </div>
+                <div class="grid grid-cols-2 gap-2 sm:gap-3 mb-4">
+                    <button onclick="window.setAdminWaitTab('incoming')" id="waitTab_incoming" class="wait-tab brutal-btn bg-black text-white px-1.5 sm:px-4 py-3 text-[11px] sm:text-sm whitespace-nowrap flex items-center justify-center gap-1.5 sm:gap-2">
+                        <span>📥 Incoming Order</span><span id="waitTabCount_incoming" class="bg-main text-black border-2 border-black px-1.5 min-w-[1.5rem] text-center text-xs font-bold">0</span>
+                    </button>
+                    <button onclick="window.setAdminWaitTab('cooking')" id="waitTab_cooking" class="wait-tab brutal-btn bg-white text-black px-1.5 sm:px-4 py-3 text-[11px] sm:text-sm whitespace-nowrap flex items-center justify-center gap-1.5 sm:gap-2">
+                        <span>🔥 Diterima</span><span id="waitTabCount_cooking" class="bg-main text-black border-2 border-black px-1.5 min-w-[1.5rem] text-center text-xs font-bold">0</span>
+                    </button>
+                </div>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="adminWaitListAreaPage"></div>
             </section>
 
@@ -3961,7 +3969,7 @@
                         return {
                             id: doc.id, date: w.date, buyerName: w.buyer_name, notes: w.notes,
                             items: w.items || [], total: Number(w.total || 0), status: w.status, userId: w.user_id,
-                            table: w.table_name || w.table || ''
+                            table: w.table_name || w.table || '', cookingAt: w.cooking_at || ''
                         };
                     });
                 } else {
@@ -3979,6 +3987,8 @@
                 document.getElementById('adminUncookedCount').textContent = uncooked; 
             }
             window.renderAdminTables();
+            const waitPage = document.getElementById('pageAdminWaitList');
+            if (waitPage && !waitPage.classList.contains('d-none')) window.filterAdminWaitList();
         } else {
             const btnWait = document.getElementById('navBtnCustWait');
             let myWaits = 0;
@@ -4137,38 +4147,86 @@
         window.filterAdminWaitList();
     };
 
-    window.filterAdminWaitList = () => {
-        const query = (document.getElementById('adminWaitSearch')?.value || '').toLowerCase().trim();
-        let sorted = [...STATE.waitingList].sort((a,b) => new Date(a.date) - new Date(b.date));
+    // ---- Pesanan Masuk: filter "Incoming Order" & "Diterima" ----
+    STATE.adminWaitTab = 'incoming';
+    const awPad = n => String(n).padStart(2, '0');
+    const awClock = iso => {
+        const d = new Date(iso);
+        if (isNaN(d)) return '-';
+        const hm = `${awPad(d.getHours())}:${awPad(d.getMinutes())}`;
+        return d.toDateString() === new Date().toDateString() ? hm : `${awPad(d.getDate())}/${awPad(d.getMonth() + 1)} ${hm}`;
+    };
+    const awAgo = iso => {
+        const m = Math.floor((Date.now() - new Date(iso)) / 60000);
+        if (isNaN(m)) return '';
+        if (m < 1) return 'baru saja';
+        if (m < 60) return m + ' menit lalu';
+        const h = Math.floor(m / 60);
+        if (h < 24) return h + ' jam' + (m % 60 ? ' ' + (m % 60) + ' menit' : '') + ' lalu';
+        return Math.floor(h / 24) + ' hari lalu';
+    };
 
+    window.setAdminWaitTab = tab => {
+        STATE.adminWaitTab = tab === 'cooking' ? 'cooking' : 'incoming';
+        window.filterAdminWaitList();
+    };
+
+    const adminWaitCardHtml = (w, isCooking) => {
+        const timeChip = isCooking
+            ? (w.cookingAt
+                ? `<div class="mt-1.5 inline-flex items-center gap-1 flex-wrap text-[11px] font-bold border-2 border-black px-2 py-0.5 bg-green-100">🔥 Mulai dimasak ${awClock(w.cookingAt)} <span class="font-normal text-gray-600">· ${awAgo(w.cookingAt)}</span></div>`
+                : `<div class="mt-1.5 inline-flex items-center gap-1 flex-wrap text-[11px] font-bold border-2 border-black px-2 py-0.5 bg-green-100">🕐 Masuk ${awClock(w.date)} <span class="font-normal text-gray-600">· waktu mulai masak tidak tercatat</span></div>`)
+            : `<div class="mt-1.5 inline-flex items-center gap-1 flex-wrap text-[11px] font-bold border-2 border-black px-2 py-0.5 bg-yellow-100">🕐 Masuk ${awClock(w.date)} <span class="font-normal text-gray-600">· ${awAgo(w.date)}</span></div>`;
+        const cookBtn = isCooking
+            ? `<div class="text-center text-sm font-bold border-2 border-black bg-green-100 py-2 w-full">✔ Sedang Dimasak (Diterima)</div>`
+            : `<button onclick="window.startCooking('${w.id}')" class="brutal-btn bg-black text-white px-3 py-2 text-sm font-bold w-full">🔥 Mulai Memasak</button>`;
+        return `<div class="brutal-box bg-white p-4 flex flex-col border-l-8 ${isCooking ? 'border-l-success' : 'border-l-main'}"><div class="flex justify-between items-start gap-2 border-b-2 border-black pb-2 mb-2"><div class="min-w-0"><div class="font-bold text-lg uppercase break-words">${escapeHTML(w.buyerName)} <span class="text-[10px] bg-black text-white px-1">${w.userId ? 'Pelanggan' : 'Tamu'}</span></div>${w.table ? `<div class="mt-1 font-bold text-xs bg-purple-100 border-2 border-black px-2 py-0.5 inline-block">🪑 ${escapeHTML(w.table)}</div>` : ''}<div>${timeChip}</div></div><button onclick="window.editWaitList('${w.id}')" class="brutal-btn bg-accent px-2 py-1 text-xs font-bold shrink-0">✏️ Edit</button></div><div class="flex-1">${w.items.map(i => `<div class="text-sm font-bold">${i.qty}x ${escapeHTML(i.name)}</div>`).join('')}</div>${w.notes ? `<div class="mt-2 p-2 bg-gray-100 text-xs italic border-2 border-black">Catatan: ${escapeHTML(w.notes)}</div>` : ''}<div class="mt-4 flex flex-col gap-2">${cookBtn}<button onclick="window.pullToCart('${w.id}')" class="brutal-btn bg-success px-3 py-2 text-sm font-bold w-full">🛒 Kirim ke Keranjang</button></div></div>`;
+    };
+
+    window.filterAdminWaitList = () => {
+        const container = document.getElementById('adminWaitListAreaPage');
+        if (!container) return;
+        const query = (document.getElementById('adminWaitSearch')?.value || '').toLowerCase().trim();
+        let all = [...STATE.waitingList];
         if (query) {
-            sorted = sorted.filter(w => 
-                (w.buyerName || '').toLowerCase().includes(query) || 
+            all = all.filter(w =>
+                (w.buyerName || '').toLowerCase().includes(query) ||
                 (w.table || '').toLowerCase().includes(query)
             );
         }
+        // Terlama di atas: Incoming berdasarkan waktu pesanan dibuat, Diterima berdasarkan waktu mulai memasak
+        const incoming = all.filter(w => w.status !== 'cooking').sort((a, b) => new Date(a.date) - new Date(b.date));
+        const cooking = all.filter(w => w.status === 'cooking').sort((a, b) => new Date(a.cookingAt || a.date) - new Date(b.cookingAt || b.date));
 
-        const container = document.getElementById('adminWaitListAreaPage');
-        if (!container) return;
+        const tab = STATE.adminWaitTab === 'cooking' ? 'cooking' : 'incoming';
+        document.getElementById('waitTabCount_incoming').textContent = incoming.length;
+        document.getElementById('waitTabCount_cooking').textContent = cooking.length;
+        document.querySelectorAll('.wait-tab').forEach(btn => {
+            const active = btn.id === 'waitTab_' + tab;
+            btn.classList.toggle('bg-black', active); btn.classList.toggle('text-white', active);
+            btn.classList.toggle('bg-white', !active); btn.classList.toggle('text-black', !active);
+        });
 
-        if (sorted.length === 0) {
-            container.innerHTML = query 
-                ? `<div class="p-6 text-center font-bold text-gray-600 bg-white border-2 border-black col-span-full">Tidak ada pesanan masuk yang cocok dengan "${escapeHTML(query)}".</div>`
-                : '<p class="font-bold col-span-full text-center py-6">Tidak ada pesanan masuk.</p>';
+        const list = tab === 'cooking' ? cooking : incoming;
+        if (list.length === 0) {
+            const emptyMsg = query
+                ? `Tidak ada pesanan yang cocok dengan "${escapeHTML(query)}" di ${tab === 'cooking' ? 'Diterima' : 'Incoming Order'}.`
+                : (tab === 'cooking' ? 'Belum ada pesanan yang diterima / sedang dimasak.' : 'Tidak ada incoming order.');
+            container.innerHTML = `<div class="p-6 text-center font-bold text-gray-600 bg-white border-2 border-black col-span-full">${emptyMsg}</div>`;
             return;
         }
-
-        container.innerHTML = sorted.map(w => `<div class="brutal-box bg-white p-4 flex flex-col border-l-8 ${w.status === 'cooking' ? 'border-l-success' : 'border-l-main'}"><div class="flex justify-between items-start border-b-2 border-black pb-2 mb-2"><div><div class="font-bold text-lg uppercase">${escapeHTML(w.buyerName)} <span class="text-[10px] bg-black text-white px-1">${w.userId ? 'Pelanggan' : 'Tamu'}</span></div>${w.table ? `<div class="mt-1 font-bold text-xs bg-purple-100 border-2 border-black px-2 py-0.5 inline-block">🪑 ${escapeHTML(w.table)}</div>` : ''}<div class="text-xs text-gray-500 mt-1">${timeAgo(w.date)}</div></div><button onclick="window.editWaitList('${w.id}')" class="brutal-btn bg-accent px-2 py-1 text-xs font-bold">✏️ Edit</button></div><div class="flex-1">${w.items.map(i=>`<div class="text-sm font-bold">${i.qty}x ${escapeHTML(i.name)}</div>`).join('')}</div>${w.notes ? `<div class="mt-2 p-2 bg-gray-100 text-xs italic border-2 border-black">Catatan: ${escapeHTML(w.notes)}</div>` : ''}<div class="mt-4 flex flex-col gap-2"><button onclick="window.startCooking('${w.id}')" class="brutal-btn ${w.status === 'cooking' ? 'bg-white text-black' : 'bg-black text-white'} px-3 py-2 text-sm font-bold w-full">${w.status === 'cooking' ? '✔ Sedang Dimasak (Diterima)' : '🔥 Mulai Memasak'}</button><button onclick="window.pullToCart('${w.id}')" class="brutal-btn bg-success px-3 py-2 text-sm font-bold w-full">🛒 Kirim ke Keranjang</button></div></div>`).join('');
+        container.innerHTML = list.map(w => adminWaitCardHtml(w, tab === 'cooking')).join('');
     };
 
     window.startCooking = async (waitId) => {
+        const cookingAt = new Date().toISOString();
         showLoad();
         try {
             if(!IS_PREVIEW && db) {
-                await db.collection('waiting_list').doc(waitId).update({ status: 'cooking' });
+                await db.collection('waiting_list').doc(waitId).update({ status: 'cooking', cooking_at: cookingAt });
             }
             const w = STATE.waitingList.find(x => x.id === waitId); 
-            if(w) w.status = 'cooking';
+            if(w) { w.status = 'cooking'; w.cookingAt = cookingAt; }
             window.openAdminWaitingList();
         } catch(e) { 
             await window.customAlert("Gagal update: " + e.message, "Gagal"); 
