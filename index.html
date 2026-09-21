@@ -97,6 +97,15 @@
             #cartPanelCard.cart-docked .aspect-square { aspect-ratio: auto; padding-top: 0.6rem; padding-bottom: 0.6rem; }
             #cartPanelCard.cart-docked #payMethodGridContainer label { font-size: 11px; }
         }
+        /* Tombol keranjang POS melayang (HP & tablet): tetap terlihat saat halaman di-scroll */
+        @media (max-width: 1023px) {
+            #btnPosCart {
+                position: fixed; right: 14px; bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+                z-index: 35; flex: none; width: auto;
+                padding: 0.8rem 1.1rem; border-radius: 9999px;
+            }
+            #posProductsCol { padding-bottom: 5.5rem; }
+        }
         /* Layout responsif layar lebar (Tablet & PC) untuk Kelola Admin */
         @media (min-width: 1024px) {
             #mainAppWrapper.admin-wide > main { max-width: 100% !important; padding-left: 2rem; padding-right: 2rem; }
@@ -2076,7 +2085,7 @@
         const wrapEl = document.getElementById('mainAppWrapper');
         if (wrapEl) wrapEl.classList.toggle('pos-wide', pageId === 'pageAdminPOS');
         if (pageId === 'pageAdminPOS') { window.layoutPosCart(); window.refreshBestSellers(); }
-        if (pageId === 'pageAdminMgmt') window.syncFinanceTab();
+        if (pageId === 'pageAdminMgmt') window.syncAdminTabs();
 
         if (pageId === 'pageLogin') {
             window.prepareLoginPageUI();
@@ -3659,6 +3668,7 @@
                 ? null 
                 : (STATE.tempInstantOverride !== undefined ? STATE.tempInstantOverride : (STATE.data.settings.instantOverride || null)),
             product_grid_mobile: document.querySelector('input[name="productGridMobile"]:checked')?.value === '3' ? '3' : '2',
+            cashier_enabled: document.getElementById('setCashierEnabled') ? document.getElementById('setCashierEnabled').checked : Boolean(STATE.data.settings.cashierEnabled),
             finance_enabled: document.getElementById('setFinanceEnabled') ? document.getElementById('setFinanceEnabled').checked : Boolean(STATE.data.settings.financeEnabled)
         };
 
@@ -4755,6 +4765,14 @@
     const finSigned = (val, plus = '+') => (val < 0 ? '−' : (val > 0 ? plus : '')) + formatWon(Math.abs(val));
 
     window.isFinanceAvailable = () => Boolean(STATE.data.settings.financeEnabled) && Boolean(STATE.user) && STATE.user.role === 'admin';
+    window.syncAdminTabs = () => {
+        const st = STATE.data.settings, isCashier = Boolean(STATE.user) && STATE.user.role === 'cashier';
+        const set = (id, show) => { const el = document.getElementById(id); if (el) el.classList.toggle('d-none', !show); };
+        set('tab_tables', Boolean(st.tableEnabled));
+        set('tab_customers', Boolean(st.customerEnabled));
+        set('tab_cashier', Boolean(st.cashierEnabled) && !isCashier);
+        window.syncFinanceTab();
+    };
     window.syncFinanceTab = () => {
         const btn = document.getElementById('tab_finance');
         if (btn) btn.classList.toggle('d-none', !window.isFinanceAvailable());
