@@ -1862,6 +1862,12 @@
         const cutoffDate = new Date(); cutoffDate.setMonth(cutoffDate.getMonth() - limitMonths);
         return cutoffDate;
     }
+    // Riwayat transaksi kasir (order yang tercatat atas nama akun kasir) dihapus permanen otomatis setelah 6 bulan,
+    // terlepas dari pengaturan retensi umum di atas.
+    const CASHIER_HISTORY_MONTHS = 6;
+    function getCashierHistoryCutoffDate() {
+        const d = new Date(); d.setMonth(d.getMonth() - CASHIER_HISTORY_MONTHS); return d;
+    }
 
     // Listener realtime: transaksi baru/ubah/hapus dari perangkat kasir mana pun langsung memperbarui urutan terlaris
     let ordersUnsub = null;
@@ -1916,9 +1922,12 @@
                 const mappedOrders = ordSnap.docs.map(mapOrderDoc);
 
                 const cutoffDate = getOrderCutoffDate();
+                const cashierCutoff = getCashierHistoryCutoffDate();
                 const validOrders = [];
                 for (const o of mappedOrders) {
-                    if (new Date(o.date) < cutoffDate) {
+                    const expired = new Date(o.date) < cutoffDate;
+                    const cashierExpired = o.cashierId && new Date(o.date) < cashierCutoff;
+                    if (expired || cashierExpired) {
                         db.collection('orders').doc(o.id).delete().catch(()=>{});
                     } else {
                         validOrders.push(o);
@@ -2477,7 +2486,7 @@
             list.innerHTML = '<p class="font-bold text-center p-4">Keranjang kosong</p>'; 
             noteWrap.classList.add('d-none'); 
         } else { 
-            list.innerHTML = STATE.cart.map((item, index) => `<div class="flex justify-between items-center mb-2 bg-gray-50 p-2 border-2 border-black"><div class="flex-1"><h4 class="font-bold text-xs md:text-sm leading-tight">${escapeHTML(item.name)}</h4><div class="text-xs md:text-sm">${formatWon(item.price)}</div></div><div class="flex items-center gap-1 md:gap-2"><button onclick="window.changeQty(${index}, -1)" class="w-6 h-6 md:w-8 md:h-8 font-bold bg-white border-2 border-black">-</button><span class="w-6 text-center font-bold text-sm md:text-base">${item.qty}</span><button onclick="window.changeQty(${index}, 1)" class="w-6 h-6 md:w-8 md:h-8 font-bold bg-main border-2 border-black">+</button><button onclick="window.changeQty(${index}, -999)" class="w-6 h-6 md:w-8 md:h-8 font-bold bg-danger text-white border-2 border-black ml-1 md:ml-2">X</button></div></div>`).join(''); 
+            list.innerHTML = STATE.cart.map((item, index) => `<div class="flex justify-between items-center mb-2 bg-gray-50 p-2 border-2 border-black"><div class="flex-1"><h4 class="font-bold text-xs md:text-sm leading-tight">${escapeHTML(item.name)}</h4><div class="text-xs md:text-sm">${formatWon(item.price)}</div></div><div class="flex items-center gap-1 md:gap-2"><button onclick="window.changeQty(${index}, -1)" class="w-6 h-6 md:w-8 md:h-8 font-bold bg-white border-2 border-black">-</button><input type="number" min="1" inputmode="numeric" value="${item.qty}" onchange="window.setCartQty(${index}, this.value)" onclick="this.select()" class="w-11 md:w-12 text-center font-bold text-sm md:text-base border-2 border-black bg-white py-0.5"><button onclick="window.changeQty(${index}, 1)" class="w-6 h-6 md:w-8 md:h-8 font-bold bg-main border-2 border-black">+</button><button onclick="window.changeQty(${index}, -999)" class="w-6 h-6 md:w-8 md:h-8 font-bold bg-danger text-white border-2 border-black ml-1 md:ml-2">X</button></div></div>`).join(''); 
             noteWrap.classList.remove('d-none'); 
         }
 
@@ -2555,6 +2564,13 @@
         if(STATE.cart[index].qty <= 0) STATE.cart.splice(index, 1); 
         window.renderCartModal(); 
         window.updateCartUI(); 
+    };
+    window.setCartQty = (index, val) => {
+        const n = Math.floor(Number(val));
+        if (!isFinite(n) || n <= 0) { STATE.cart.splice(index, 1); }
+        else { STATE.cart[index].qty = n; }
+        window.renderCartModal();
+        window.updateCartUI();
     };
     
     window.toggleOrderType = () => { 
@@ -3508,7 +3524,7 @@
     window.renderEditTrxCart = () => {
         const list = document.getElementById('editTrxItemsList');
         if(STATE.editCart.length === 0) list.innerHTML = '<p class="text-xs text-center text-gray-500 italic">Produk kosong</p>';
-        else list.innerHTML = STATE.editCart.map((item, index) => `<div class="flex justify-between items-center bg-white border border-black p-1"><div class="text-xs font-bold w-1/2 truncate">${escapeHTML(item.name)}</div><div class="flex items-center gap-1"><button type="button" onclick="window.changeEditQty(${index}, -1)" class="w-5 h-5 font-bold border border-black bg-gray-200 text-xs">-</button><span class="w-4 text-center font-bold text-xs">${item.qty}</span><button type="button" onclick="window.changeEditQty(${index}, 1)" class="w-5 h-5 font-bold border border-black bg-main text-xs">+</button><button type="button" onclick="window.changeEditQty(${index}, -999)" class="w-5 h-5 font-bold border border-black bg-danger text-white text-xs ml-1">X</button></div></div>`).join('');
+        else list.innerHTML = STATE.editCart.map((item, index) => `<div class="flex justify-between items-center bg-white border border-black p-1"><div class="text-xs font-bold w-1/2 truncate">${escapeHTML(item.name)}</div><div class="flex items-center gap-1"><button type="button" onclick="window.changeEditQty(${index}, -1)" class="w-5 h-5 font-bold border border-black bg-gray-200 text-xs">-</button><input type="number" min="1" inputmode="numeric" value="${item.qty}" onchange="window.setEditQty(${index}, this.value)" onclick="this.select()" class="w-9 text-center font-bold text-xs border border-black bg-white py-0.5"><button type="button" onclick="window.changeEditQty(${index}, 1)" class="w-5 h-5 font-bold border border-black bg-main text-xs">+</button><button type="button" onclick="window.changeEditQty(${index}, -999)" class="w-5 h-5 font-bold border border-black bg-danger text-white text-xs ml-1">X</button></div></div>`).join('');
         
         const subtotal = STATE.editCart.reduce((sum, item) => sum + (item.price * item.qty), 0);
         document.getElementById('editTrxSubtotal').value = subtotal; 
@@ -3519,6 +3535,12 @@
         STATE.editCart[index].qty += delta; 
         if(STATE.editCart[index].qty <= 0) STATE.editCart.splice(index, 1); 
         window.renderEditTrxCart(); 
+    };
+    window.setEditQty = (index, val) => {
+        const n = Math.floor(Number(val));
+        if (!isFinite(n) || n <= 0) { STATE.editCart.splice(index, 1); }
+        else { STATE.editCart[index].qty = n; }
+        window.renderEditTrxCart();
     };
     
     window.addEditTrxItem = () => { 
@@ -3913,7 +3935,7 @@
         if(STATE.custCart.length === 0) {
             list.innerHTML = '<p class="font-bold text-center p-4">Keranjang kosong</p>';
         } else {
-            list.innerHTML = STATE.custCart.map((item, index) => `<div class="flex justify-between items-center mb-2 bg-gray-50 p-2 border-2 border-black"><div class="flex-1"><h4 class="font-bold text-xs md:text-sm leading-tight">${escapeHTML(item.name)}</h4><div class="text-xs md:text-sm">${formatWon(item.price)}</div></div><div class="flex items-center gap-1 md:gap-2"><button onclick="window.changeCustQty(${index}, -1)" class="w-6 h-6 md:w-8 md:h-8 font-bold bg-white border-2 border-black">-</button><span class="w-6 text-center font-bold text-sm md:text-base">${item.qty}</span><button onclick="window.changeCustQty(${index}, 1)" class="w-6 h-6 md:w-8 md:h-8 font-bold bg-main border-2 border-black">+</button></div></div>`).join('');
+            list.innerHTML = STATE.custCart.map((item, index) => `<div class="flex justify-between items-center mb-2 bg-gray-50 p-2 border-2 border-black"><div class="flex-1"><h4 class="font-bold text-xs md:text-sm leading-tight">${escapeHTML(item.name)}</h4><div class="text-xs md:text-sm">${formatWon(item.price)}</div></div><div class="flex items-center gap-1 md:gap-2"><button onclick="window.changeCustQty(${index}, -1)" class="w-6 h-6 md:w-8 md:h-8 font-bold bg-white border-2 border-black">-</button><input type="number" min="1" inputmode="numeric" value="${item.qty}" onchange="window.setCustQty(${index}, this.value)" onclick="this.select()" class="w-11 md:w-12 text-center font-bold text-sm md:text-base border-2 border-black bg-white py-0.5"><button onclick="window.changeCustQty(${index}, 1)" class="w-6 h-6 md:w-8 md:h-8 font-bold bg-main border-2 border-black">+</button></div></div>`).join('');
         }
         document.getElementById('custCartTotal').textContent = formatWon(STATE.custCart.reduce((s, i) => s + (i.price * i.qty), 0));
     };
@@ -3922,6 +3944,12 @@
         STATE.custCart[index].qty += delta; 
         if(STATE.custCart[index].qty <= 0) STATE.custCart.splice(index, 1); 
         window.updateCustCartUI(); 
+    };
+    window.setCustQty = (index, val) => {
+        const n = Math.floor(Number(val));
+        if (!isFinite(n) || n <= 0) { STATE.custCart.splice(index, 1); }
+        else { STATE.custCart[index].qty = n; }
+        window.updateCustCartUI();
     };
 
     window.submitCustOrder = async () => {
@@ -4477,7 +4505,7 @@
     window.renderEditWaitCart = () => {
         const list = document.getElementById('editWaitItems');
         if(STATE.editCart.length === 0) list.innerHTML = '<p class="text-xs text-center text-gray-500 italic">Produk kosong</p>';
-        else list.innerHTML = STATE.editCart.map((item, index) => `<div class="flex justify-between items-center bg-gray-50 border border-black p-2"><div class="text-sm font-bold flex-1 truncate">${escapeHTML(item.name)}</div><div class="flex items-center gap-1"><button type="button" onclick="window.changeEditWaitQty(${index}, -1)" class="w-6 h-6 font-bold border border-black bg-white">-</button><span class="w-6 text-center font-bold">${item.qty}</span><button type="button" onclick="window.changeEditWaitQty(${index}, 1)" class="w-6 h-6 font-bold border border-black bg-main">+</button><button type="button" onclick="window.changeEditWaitQty(${index}, -999)" class="w-6 h-6 font-bold border border-black bg-danger text-white ml-2">X</button></div></div>`).join('');
+        else list.innerHTML = STATE.editCart.map((item, index) => `<div class="flex justify-between items-center bg-gray-50 border border-black p-2"><div class="text-sm font-bold flex-1 truncate">${escapeHTML(item.name)}</div><div class="flex items-center gap-1"><button type="button" onclick="window.changeEditWaitQty(${index}, -1)" class="w-6 h-6 font-bold border border-black bg-white">-</button><input type="number" min="1" inputmode="numeric" value="${item.qty}" onchange="window.setEditWaitQty(${index}, this.value)" onclick="this.select()" class="w-11 text-center font-bold border border-black bg-white py-0.5"><button type="button" onclick="window.changeEditWaitQty(${index}, 1)" class="w-6 h-6 font-bold border border-black bg-main">+</button><button type="button" onclick="window.changeEditWaitQty(${index}, -999)" class="w-6 h-6 font-bold border border-black bg-danger text-white ml-2">X</button></div></div>`).join('');
         document.getElementById('editWaitTotal').textContent = formatWon(STATE.editCart.reduce((sum, item) => sum + (item.price * item.qty), 0));
     };
 
@@ -4485,6 +4513,12 @@
         STATE.editCart[index].qty += delta; 
         if(STATE.editCart[index].qty <= 0) STATE.editCart.splice(index, 1); 
         window.renderEditWaitCart(); 
+    };
+    window.setEditWaitQty = (index, val) => {
+        const n = Math.floor(Number(val));
+        if (!isFinite(n) || n <= 0) { STATE.editCart.splice(index, 1); }
+        else { STATE.editCart[index].qty = n; }
+        window.renderEditWaitCart();
     };
     
     window.addWaitItem = () => { 
@@ -4644,16 +4678,37 @@
     window.deleteCashierAccount = async id => {
         const c = (STATE.data.cashiers || []).find(x => x.id === id);
         if (!c) return;
-        if (!(await window.customConfirm(`Hapus akun kasir "${c.username}"?\n\nAkun yang dihapus tidak bisa login lagi. Riwayat transaksinya tetap tersimpan.`, 'Hapus Akun Kasir'))) return;
+        if (!(await window.customConfirm(`Hapus akun kasir "${c.username}"?\n\nAkun yang dihapus tidak bisa login lagi, dan seluruh riwayat transaksinya akan ikut terhapus permanen.`, 'Hapus Akun Kasir'))) return;
         showLoad();
         try {
             await persistCashiers(list => list.filter(x => x.id !== id));
+            await window.wipeCashierOrders(id);
             window.renderAdminCashier();
             hideLoad();
+            await window.customAlert('Akun kasir dan seluruh riwayat transaksinya berhasil dihapus permanen.', 'Sukses');
         } catch (err) {
             hideLoad();
             await window.customAlert(err.message, 'Gagal');
         }
+    };
+
+    // Hapus permanen semua transaksi yang tercatat atas akun kasir tertentu
+    window.wipeCashierOrders = async cashierId => {
+        const toRemove = STATE.data.orders.filter(o => o.cashierId === cashierId);
+        if (!IS_PREVIEW && db) {
+            try {
+                const snap = await db.collection('orders').where('cashier_id', '==', cashierId).get();
+                if (!snap.empty) {
+                    const batch = db.batch();
+                    snap.docs.forEach(d => batch.delete(db.collection('orders').doc(d.id)));
+                    await batch.commit();
+                }
+            } catch (e) {
+                for (const o of toRemove) { await db.collection('orders').doc(o.id).delete().catch(() => {}); }
+            }
+        }
+        STATE.data.orders = STATE.data.orders.filter(o => o.cashierId !== cashierId);
+        if (document.getElementById('admin_history') && !document.getElementById('admin_history').classList.contains('d-none')) window.renderAdminHistory();
     };
 
     window.renderAdminCashier = () => {
