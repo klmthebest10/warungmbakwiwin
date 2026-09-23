@@ -130,7 +130,7 @@
             #pageAdminMgmt .admin-grid-wide { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.5rem; align-items: start; }
         }
         /* Menu Tab Admin Melayang / Mengambang (Sticky saat scroll) */
-        #pageAdminMgmt > div:first-child {
+        #adminTabBar {
             position: sticky;
             top: 59px;
             z-index: 30;
@@ -140,7 +140,7 @@
             padding-bottom: 0.75rem;
         }
         @media (min-width: 768px) {
-            #pageAdminMgmt > div:first-child {
+            #adminTabBar {
                 top: 69px;
             }
         }
@@ -397,9 +397,9 @@
                                 <textarea id="custSetAddress" class="brutal-input bg-white" rows="2" required></textarea>
                             </div>
                             <div class="mb-6">
-                                <label class="block font-bold mb-1">Password Baru (Sandi Anda)</label>
+                                <label class="block font-bold mb-1">Ganti Password (kosongkan jika tidak diubah)</label>
                                 <div class="relative">
-                                    <input type="password" id="custSetPass" class="brutal-input pr-10 bg-white" required>
+                                    <input type="password" id="custSetPass" class="brutal-input pr-10 bg-white">
                                     <button type="button" class="absolute inset-y-0 right-0 flex items-center pr-3" onclick="window.togglePassword('custSetPass', 'iconCustSetPass')" id="iconCustSetPass">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path><circle cx="12" cy="12" r="3"></circle></svg>
                                     </button>
@@ -469,7 +469,7 @@
                     <h2 class="text-xl md:text-3xl font-bold uppercase bg-main px-2 border-2 border-black border-l-8 border-l-dark">⚙️ Kelola Aplikasi</h2>
                     <button onclick="window.showPage('pageAdminPOS')" class="brutal-btn bg-white px-3 sm:px-4 py-2 text-sm text-black border-2 border-black whitespace-nowrap">← POS<span class="hidden sm:inline"> Kasir</span></button>
                 </div>
-                <div class="flex overflow-x-auto lg:overflow-visible gap-2 md:gap-3 mb-6 border-b-4 border-black pb-3 no-scrollbar flex-nowrap lg:flex-wrap">
+                <div id="adminTabBar" class="flex overflow-x-auto lg:overflow-visible gap-2 md:gap-3 mb-6 border-b-4 border-black pb-3 no-scrollbar flex-nowrap lg:flex-wrap">
                     <button onclick="window.switchAdminTab('products')" id="tab_products" class="admin-tab brutal-btn bg-white px-4 py-2 whitespace-nowrap">Produk</button>
                     <button onclick="window.switchAdminTab('categories')" id="tab_categories" class="admin-tab brutal-btn bg-white px-4 py-2 whitespace-nowrap">Kategori</button>
                     <button onclick="window.switchAdminTab('tables')" id="tab_tables" class="admin-tab brutal-btn bg-white px-4 py-2 whitespace-nowrap d-none">Meja</button>
@@ -900,7 +900,7 @@
                                         <div>
                                             <label class="block font-bold mb-1 text-sm">Password (Sandi Login Owner)</label>
                                             <div class="relative">
-                                                <input type="password" id="setOwnerPass" class="brutal-input pr-10 bg-white" required>
+                                                <input type="password" id="setOwnerPass" class="brutal-input pr-10 bg-white">
                                                 <button type="button" class="absolute inset-y-0 right-0 flex items-center pr-3" onclick="window.togglePassword('setOwnerPass', 'iconSetOwnerPass')" id="iconSetOwnerPass">
                                                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12s3-7 10-7 10 7-3 7-10 7-10-7-10-7Z"></path><circle cx="12" cy="12" r="3"></circle></svg>
                                                 </button>
@@ -1083,10 +1083,10 @@
                 <button onclick="window.saveToWaitList()" class="brutal-btn bg-white text-black py-2 md:py-3 text-[10px] md:text-sm uppercase flex flex-col items-center justify-center aspect-square gap-1">
                     <span class="text-xl md:text-2xl leading-none">💾</span> <span class="font-bold">Simpan</span>
                 </button>
-                <button onclick="window.processCheckout(false)" class="brutal-btn bg-success text-black py-2 md:py-3 text-[10px] md:text-sm uppercase flex flex-col items-center justify-center aspect-square gap-1">
+                <button id="btnCheckoutProcess" onclick="window.processCheckout(false)" class="brutal-btn bg-success text-black py-2 md:py-3 text-[10px] md:text-sm uppercase flex flex-col items-center justify-center aspect-square gap-1">
                     <span class="text-xl md:text-2xl leading-none">✅</span> <span class="font-bold">Proses</span>
                 </button>
-                <button onclick="window.processCheckout(true)" class="brutal-btn bg-accent text-black py-2 md:py-3 text-[10px] md:text-sm uppercase flex flex-col items-center justify-center aspect-square gap-1">
+                <button id="btnCheckoutPrint" onclick="window.processCheckout(true)" class="brutal-btn bg-accent text-black py-2 md:py-3 text-[10px] md:text-sm uppercase flex flex-col items-center justify-center aspect-square gap-1">
                     <span class="text-xl md:text-2xl leading-none">🖨️</span> <span class="font-bold">Nota</span>
                 </button>
             </div>
@@ -1344,7 +1344,8 @@
                 </div>
                 <div class="mb-3">
                     <label class="block font-bold mb-1 text-sm">Password Kasir</label>
-                    <input type="text" id="cashierSetPass" class="brutal-input bg-white" required>
+                    <input type="text" id="cashierSetPass" class="brutal-input bg-white" placeholder="Wajib diisi untuk akun baru">
+                    <p id="cashierSetPassHint" class="text-[10px] text-gray-500 mt-1 d-none">Kosongkan jika tidak ingin mengubah password lama.</p>
                 </div>
                 <div class="mb-3">
                     <label class="block font-bold mb-1 text-sm">No Telp / WhatsApp</label>
@@ -1517,6 +1518,18 @@
     const showLoad = () => document.getElementById('globalLoader').classList.remove('d-none');
     const hideLoad = () => document.getElementById('globalLoader').classList.add('d-none');
     const escapeHTML = str => !str ? '' : String(str).replace(/[&<>'"]/g, tag => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;'}[tag]));
+
+    // Hash satu arah (SHA-256) untuk password. Password TIDAK PERNAH disimpan mentah lagi ke Firestore/localStorage;
+    // yang tersimpan hanya hash-nya, sehingga kalaupun dokumen settings/customers/cashier_config bisa terbaca
+    // oleh pihak luar (misal aturan keamanan Firestore kurang ketat), yang bocor bukan password asli.
+    async function sha256Hex(text) {
+        const enc = new TextEncoder().encode(String(text == null ? '' : text));
+        const buf = await crypto.subtle.digest('SHA-256', enc);
+        return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
+    }
+    // Generator ID acak yang tahan tabrakan (timestamp + random), dipakai untuk semua ID baru
+    // supaya dua data yang dibuat pada milidetik yang sama tidak saling menimpa.
+    const genId = prefix => prefix + Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
     const formatWon = num => '₩' + parseInt(num || 0).toLocaleString('ko-KR');
 
     // Suara Bel Panggilan Pelayan (Chime Controller)
@@ -1614,8 +1627,11 @@
     window.handleCallAudioSelect = (e) => {
         const file = e.target.files[0];
         if (!file) return;
-        if (file.size > 2 * 1024 * 1024) {
-            window.customAlert("Ukuran file audio maksimal 2MB!", "Peringatan");
+        // Batas diperkecil dari 2MB ke 250KB: audio ini disimpan sebagai teks base64 (lebih besar ~33%)
+        // di dalam SATU dokumen Firestore yang sama dengan seluruh pengaturan toko lain, dan satu dokumen
+        // Firestore maksimal 1MB. File 2MB base64 (≈2.7MB) sudah pasti gagal disimpan.
+        if (file.size > 250 * 1024) {
+            window.customAlert("Ukuran file audio maksimal 250KB (supaya muat disimpan bersama pengaturan lain).", "Peringatan");
             e.target.value = '';
             return;
         }
@@ -1721,7 +1737,7 @@
                     bank_name: "BCA",
                     bank_acc: "123456789 (Warung Indonesia)",
                     owner_name: "admin",
-                    owner_pass: "admin123",
+                    owner_pass_hash: await sha256Hex("admin123"),
                     pos_enabled: false,
                     card_enabled: false,
                     customer_enabled: false,
@@ -1758,7 +1774,11 @@
                     bankAcc: s.bank_acc || "",
                     logoUrl: s.logo_url || "",
                     ownerName: s.owner_name || "admin",
-                    ownerPass: s.owner_pass || "admin123",
+                    // Password admin TIDAK disimpan ke cache lokal (lihat saveLocalDataCache) dan idealnya
+                    // hanya dipakai sesaat saat proses login. ownerPassLegacy hanya ada untuk migrasi otomatis
+                    // dari instalasi lama yang masih menyimpan password mentah.
+                    ownerPassHash: s.owner_pass_hash || '',
+                    ownerPassLegacy: s.owner_pass || '',
                     posEnabled: Boolean(s.pos_enabled),
                     cardEnabled: Boolean(s.card_enabled),
                     customerEnabled: Boolean(s.customer_enabled),
@@ -1785,8 +1805,10 @@
                 window.updateStoreStatusDisplay();
             }
 
-            const cashDoc = await db.collection('settings').doc('cashier_config').get();
-            STATE.data.cashiers = cashDoc.exists ? normalizeCashiers(cashDoc.data()) : [];
+            // CATATAN KEAMANAN: daftar akun kasir (berisi password) SENGAJA TIDAK dimuat di sini lagi,
+            // karena fetchPublicData() ini berjalan untuk SETIAP pengunjung (termasuk yang belum login).
+            // Daftar akun kasir hanya dimuat lewat window.loadCashierAccounts(), yaitu tepat saat
+            // proses login diperiksa, atau saat admin/kasir membuka halaman "Kelola Akun Kasir".
 
             const cSnap = await db.collection('categories').get();
             if (!cSnap.empty) {
@@ -1901,39 +1923,58 @@
         showLoad();
         try {
             await fetchPublicData();
-            
-            const custSnap = await db.collection('customers').get();
-            if (!custSnap.empty) {
-                STATE.data.customers = custSnap.docs.map(doc => {
+            const role = STATE.user && STATE.user.role;
+            const isStaff = role === 'admin' || role === 'cashier';
+
+            if (isStaff) {
+                // Admin & kasir butuh daftar akun kasir (untuk nama di riwayat & kelola akun).
+                await window.loadCashierAccounts();
+
+                const custSnap = await db.collection('customers').get();
+                STATE.data.customers = custSnap.empty ? [] : custSnap.docs.map(doc => {
                     const c = doc.data();
-                    return {
-                        id: doc.id,
-                        name: c.name,
-                        wa: c.wa,
-                        address: c.address,
-                        pass: c.pass,
-                        debt: Number(c.debt || 0)
-                    };
+                    return { id: doc.id, name: c.name, wa: c.wa, address: c.address, pass: c.pass, passHash: c.pass_hash, debt: Number(c.debt || 0) };
                 });
+            } else if (role === 'customer' && STATE.user) {
+                // KEAMANAN: pelanggan HANYA boleh mengambil datanya sendiri (bukan seluruh koleksi customers),
+                // supaya satu pelanggan tidak bisa membaca nama/WA/alamat/password pelanggan lain lewat console.
+                try {
+                    const myDoc = await db.collection('customers').doc(STATE.user.id).get();
+                    STATE.data.customers = myDoc.exists ? [{ id: myDoc.id, ...myDoc.data() }] : [];
+                } catch(e) { STATE.data.customers = []; }
+            } else {
+                STATE.data.customers = [];
             }
 
-            const ordSnap = await db.collection('orders').get();
+            // KEAMANAN: pelanggan hanya mengambil pesanan miliknya sendiri, bukan seluruh riwayat toko
+            // (sebelumnya SELURUH koleksi orders ikut terunduh ke browser setiap pelanggan yang login).
+            let ordQuery = db.collection('orders');
+            if (role === 'customer' && STATE.user) ordQuery = ordQuery.where('cust_id', '==', STATE.user.id);
+            const ordSnap = await ordQuery.get();
+
             if (!ordSnap.empty) {
                 const mappedOrders = ordSnap.docs.map(mapOrderDoc);
-
-                const cutoffDate = getOrderCutoffDate();
-                const cashierCutoff = getCashierHistoryCutoffDate();
-                const validOrders = [];
-                for (const o of mappedOrders) {
-                    const expired = new Date(o.date) < cutoffDate;
-                    const cashierExpired = o.cashierId && new Date(o.date) < cashierCutoff;
-                    if (expired || cashierExpired) {
-                        db.collection('orders').doc(o.id).delete().catch(()=>{});
-                    } else {
-                        validOrders.push(o);
+                if (isStaff) {
+                    // Pembersihan otomatis pesanan kedaluwarsa hanya dilakukan saat admin/kasir login,
+                    // supaya sesi pelanggan tidak pernah memicu operasi hapus data toko.
+                    const cutoffDate = getOrderCutoffDate();
+                    const cashierCutoff = getCashierHistoryCutoffDate();
+                    const validOrders = [];
+                    for (const o of mappedOrders) {
+                        const expired = new Date(o.date) < cutoffDate;
+                        const cashierExpired = o.cashierId && new Date(o.date) < cashierCutoff;
+                        if (expired || cashierExpired) {
+                            db.collection('orders').doc(o.id).delete().catch(err => console.warn('Gagal hapus pesanan kedaluwarsa:', o.id, err));
+                        } else {
+                            validOrders.push(o);
+                        }
                     }
+                    STATE.data.orders = validOrders;
+                } else {
+                    STATE.data.orders = mappedOrders;
                 }
-                STATE.data.orders = validOrders;
+            } else {
+                STATE.data.orders = [];
             }
             if (window.refreshBestSellers) window.refreshBestSellers();
         } catch(e) { console.error(e); } finally { hideLoad(); }
@@ -1995,9 +2036,34 @@
                     }
                 }
                 
-                if (!isAdminLogin && STATE.data.settings && username === STATE.data.settings.ownerName && password === STATE.data.settings.ownerPass) {
-                    isAdminLogin = true;
-                    STATE.user = { id: 'owner_' + username, role: 'admin', name: 'Admin Warung' };
+                if (!isAdminLogin && STATE.data.settings && username === STATE.data.settings.ownerName) {
+                    const s = STATE.data.settings;
+                    if (s.ownerPassHash && (await sha256Hex(password)) === s.ownerPassHash) {
+                        isAdminLogin = true;
+                        STATE.user = { id: 'owner_' + username, role: 'admin', name: 'Admin Warung' };
+                    } else if (!s.ownerPassHash && s.ownerPassLegacy && password === s.ownerPassLegacy) {
+                        // Migrasi otomatis: instalasi lama masih menyimpan password admin mentah.
+                        // Begitu berhasil login satu kali, langsung ganti ke hash & hapus versi mentahnya.
+                        isAdminLogin = true;
+                        STATE.user = { id: 'owner_' + username, role: 'admin', name: 'Admin Warung' };
+                        try {
+                            const newHash = await sha256Hex(password);
+                            await db.collection('settings').doc('app_config').update({ owner_pass_hash: newHash, owner_pass: firebase.firestore.FieldValue.delete() });
+                            STATE.data.settings.ownerPassHash = newHash;
+                            STATE.data.settings.ownerPassLegacy = '';
+                        } catch (migErr) { console.warn('Migrasi password admin gagal (akan dicoba lagi saat login berikutnya):', migErr); }
+                    } else if (!s.ownerPassHash && !s.ownerPassLegacy && password === 'admin123') {
+                        // PEMULIHAN DARURAT: kalau admin lupa password, hapus manual field "owner_pass_hash"
+                        // pada dokumen settings/app_config lewat Firebase Console -> login sekali pakai
+                        // password default "admin123" ini, lalu SEGERA ganti lewat menu Pengaturan.
+                        isAdminLogin = true;
+                        STATE.user = { id: 'owner_' + username, role: 'admin', name: 'Admin Warung' };
+                        try {
+                            const newHash = await sha256Hex(password);
+                            await db.collection('settings').doc('app_config').update({ owner_pass_hash: newHash });
+                            STATE.data.settings.ownerPassHash = newHash;
+                        } catch (recErr) { console.warn('Gagal menyimpan hash pemulihan darurat:', recErr); }
+                    }
                 }
             }
 
@@ -2019,7 +2085,18 @@
                     await window.customAlert("kasir off", "Peringatan");
                     return;
                 }
-                if (cashAcc.password !== password) {
+                let cashPassOk = false;
+                if (cashAcc.passwordHash) {
+                    cashPassOk = (await sha256Hex(password)) === cashAcc.passwordHash;
+                } else if (cashAcc.passwordLegacy && password === cashAcc.passwordLegacy) {
+                    cashPassOk = true;
+                    // Migrasi otomatis dari password mentah lama ke hash, sekali saja saat pertama kali berhasil login.
+                    try {
+                        const newHash = await sha256Hex(password);
+                        await persistCashiers(list => list.map(c => c.id === cashAcc.id ? { ...c, passwordHash: newHash, passwordLegacy: '' } : c));
+                    } catch (migErr) { console.warn('Migrasi password kasir gagal (akan dicoba lagi saat login berikutnya):', migErr); }
+                }
+                if (!cashPassOk) {
                     hideLoad();
                     await window.customAlert("Username atau Password salah!", "Gagal");
                     return;
@@ -2060,7 +2137,18 @@
                 }
                 STATE.user = { id: foundCust.id, role: 'customer', name: foundCust.name };
             } else {
-                const custSnap = await db.collection('customers').where('name', '==', username).where('pass', '==', password).limit(1).get();
+                const passHash = await sha256Hex(password);
+                let custSnap = await db.collection('customers').where('name', '==', username).where('pass_hash', '==', passHash).limit(1).get();
+                if (custSnap.empty) {
+                    // Coba jalur lama (akun terdaftar sebelum password di-hash) demi migrasi otomatis
+                    const legacySnap = await db.collection('customers').where('name', '==', username).where('pass', '==', password).limit(1).get();
+                    if (!legacySnap.empty) {
+                        try {
+                            await legacySnap.docs[0].ref.update({ pass_hash: passHash, pass: firebase.firestore.FieldValue.delete() });
+                        } catch (migErr) { console.warn('Migrasi password pelanggan gagal (akan dicoba lagi saat login berikutnya):', migErr); }
+                        custSnap = legacySnap;
+                    }
+                }
                 if (custSnap.empty) {
                     hideLoad();
                     await window.customAlert('Username atau Password salah!', 'Gagal');
@@ -2090,12 +2178,12 @@
             return;
         }
 
+        const rawPass = document.getElementById('regPass').value;
         const payload = { 
-            id: 'cust_' + Date.now(), 
+            id: genId('cust_'), 
             name: document.getElementById('regName').value.trim(), 
             wa: document.getElementById('regWA').value, 
             address: document.getElementById('regAddress').value, 
-            pass: document.getElementById('regPass').value, 
             debt: 0 
         };
         showLoad();
@@ -2103,12 +2191,12 @@
             if(!IS_PREVIEW && db) { 
                 const checkExist = await db.collection('customers').where('name', '==', payload.name).limit(1).get();
                 if(!checkExist.empty) throw new Error("Nama sudah terdaftar. Gunakan nama lain."); 
-                await db.collection('customers').doc(payload.id).set(payload);
+                await db.collection('customers').doc(payload.id).set({ ...payload, pass_hash: await sha256Hex(rawPass) });
             } else {
                 if (STATE.data.customers.some(c => c.name.toLowerCase() === payload.name.toLowerCase())) {
                     throw new Error("Nama sudah terdaftar. Gunakan nama lain.");
                 }
-                STATE.data.customers.push(payload);
+                STATE.data.customers.push({ ...payload, pass: rawPass });
             }
             hideLoad();
             await window.customAlert(`Berhasil mendaftar! Silakan login.`, "Sukses"); 
@@ -2214,7 +2302,7 @@
     function updateHeader() {
         const sName = STATE.data.settings.storeName || "Warung Indonesia";
         const parts = sName.split(' ');
-        document.getElementById('headerTitle').innerHTML = parts[0] + (parts.length > 1 ? '<br><span class="text-[10px] md:text-xs text-gray-600 leading-none">' + escapeHTML(parts.slice(1).join(' ')) + '</span>' : '');
+        document.getElementById('headerTitle').innerHTML = escapeHTML(parts[0]) + (parts.length > 1 ? '<br><span class="text-[10px] md:text-xs text-gray-600 leading-none">' + escapeHTML(parts.slice(1).join(' ')) + '</span>' : '');
         
         if(STATE.data.settings.logoUrl) document.getElementById('headerLogo').src = STATE.data.settings.logoUrl;
         
@@ -2322,7 +2410,7 @@
         const tbody = document.getElementById('custHistoryTable'); 
         const myOrders = STATE.data.orders.filter(x=>x.custId===STATE.user.id).sort((a,b) => new Date(b.date) - new Date(a.date)); 
         if(myOrders.length === 0) return tbody.innerHTML = `<tr><td colspan="5" class="p-4 text-center font-bold">Belum ada pesanan.</td></tr>`; 
-        tbody.innerHTML = myOrders.map(o => `<tr class="border-b-2 border-black hover:bg-yellow-50"><td class="p-2 border-r-2 border-black text-xs md:text-sm">${safeDate(o.date)}</td><td class="p-2 border-r-2 border-black text-xs md:text-sm">${o.items.map(i => `${i.qty}x ${i.name}`).join('<br>')}</td><td class="p-2 border-r-2 border-black font-bold">${formatWon(o.total)}</td><td class="p-2 border-r-2 border-black"><span class="px-2 py-1 text-[10px] md:text-xs font-bold text-white ${o.type === 'Hutang' ? 'bg-danger' : 'bg-black'}">${o.type}</span></td><td class="p-2 text-xs md:text-sm font-bold">${o.type === 'Hutang' && o.paymentStatus === 'Unpaid' ? '<span class="text-danger">Belum Lunas</span>' : '<span class="text-success">Lunas</span>'}</td></tr>`).join(''); 
+        tbody.innerHTML = myOrders.map(o => `<tr class="border-b-2 border-black hover:bg-yellow-50"><td class="p-2 border-r-2 border-black text-xs md:text-sm">${safeDate(o.date)}</td><td class="p-2 border-r-2 border-black text-xs md:text-sm">${o.items.map(i => `${i.qty}x ${escapeHTML(i.name)}`).join('<br>')}</td><td class="p-2 border-r-2 border-black font-bold">${formatWon(o.total)}</td><td class="p-2 border-r-2 border-black"><span class="px-2 py-1 text-[10px] md:text-xs font-bold text-white ${o.type === 'Hutang' ? 'bg-danger' : 'bg-black'}">${o.type}</span></td><td class="p-2 text-xs md:text-sm font-bold">${o.type === 'Hutang' && o.paymentStatus === 'Unpaid' ? '<span class="text-danger">Belum Lunas</span>' : '<span class="text-success">Lunas</span>'}</td></tr>`).join(''); 
     };
     
     window.renderCustomerSettings = () => { 
@@ -2332,7 +2420,7 @@
         setCustTabActive('tabCustSettings'); 
         const cust = STATE.data.customers.find(c => c.id === STATE.user.id); 
         if(cust) { 
-            document.getElementById('custSetPass').value = cust.pass || ''; 
+            document.getElementById('custSetPass').value = ''; 
             document.getElementById('custSetWA').value = cust.wa || ''; 
             document.getElementById('custSetAddress').value = cust.address || ''; 
         } 
@@ -2340,19 +2428,21 @@
     
     window.saveCustSettings = async (e) => { 
         e.preventDefault(); 
+        const rawPass = document.getElementById('custSetPass').value;
         showLoad(); 
         try { 
             if(!IS_PREVIEW && db){ 
-                await db.collection('customers').doc(STATE.user.id).update({ 
-                    pass: document.getElementById('custSetPass').value, 
+                const updateData = { 
                     wa: document.getElementById('custSetWA').value, 
                     address: document.getElementById('custSetAddress').value 
-                });
+                };
+                if (rawPass) { updateData.pass_hash = await sha256Hex(rawPass); updateData.pass = firebase.firestore.FieldValue.delete(); }
+                await db.collection('customers').doc(STATE.user.id).update(updateData);
                 await fetchAllData(); 
             } else {
                 const c = STATE.data.customers.find(x => x.id === STATE.user.id);
                 if (c) {
-                    c.pass = document.getElementById('custSetPass').value;
+                    if (rawPass) c.pass = rawPass;
                     c.wa = document.getElementById('custSetWA').value;
                     c.address = document.getElementById('custSetAddress').value;
                 }
@@ -2648,6 +2738,12 @@
 
     window.processCheckout = async (isPrint) => {
         if(STATE.cart.length === 0) return await window.customAlert('Keranjang kosong!', 'Peringatan');
+        // Mencegah pesanan terkirim dobel kalau tombol Proses/Nota diklik berkali-kali (koneksi lambat, dsb).
+        if (STATE.isCheckingOut) return;
+        STATE.isCheckingOut = true;
+        const btnA = document.getElementById('btnCheckoutProcess'), btnB = document.getElementById('btnCheckoutPrint');
+        if (btnA) btnA.disabled = true; if (btnB) btnB.disabled = true;
+        try {
         const isCustOn = Boolean(STATE.data.settings.customerEnabled);
         const orderType = document.querySelector('input[name="orderType"]:checked')?.value || 'DineInTakeaway';
         const method = document.querySelector('input[name="payMethod"]:checked')?.value || 'Cash';
@@ -2679,7 +2775,7 @@
 
         const orderDate = document.getElementById('customOrderDate').value ? new Date(document.getElementById('customOrderDate').value).toISOString() : new Date().toISOString();
         const payload = { 
-            id: 'INV' + new Date().getTime(), 
+            id: genId('INV'), 
             date: orderDate, 
             cust_id: custId, 
             order_type: orderType, 
@@ -2750,6 +2846,11 @@
             hideLoad();
             await window.customAlert(e.message, 'Gagal'); 
         }
+        } finally {
+            STATE.isCheckingOut = false;
+            const bA = document.getElementById('btnCheckoutProcess'), bB = document.getElementById('btnCheckoutPrint');
+            if (bA) bA.disabled = false; if (bB) bB.disabled = false;
+        }
     };
 
     window.saveToWaitList = async () => {
@@ -2763,7 +2864,7 @@
         const tableName = document.getElementById('posCartTable')?.value || '';
 
         const payload = { 
-            id: 'WAIT' + new Date().getTime(), 
+            id: genId('WAIT'), 
             date: new Date().toISOString(), 
             buyer_name: nama.trim(), 
             notes: note, 
@@ -2817,7 +2918,7 @@
         if(receiptType === 'DEBT_RECAP') {
             const cust = STATE.data.customers.find(c => c.id === order.custId); 
             const hutangOrders = STATE.data.orders.filter(o => o.custId === order.custId && o.type === 'Hutang' && o.paymentStatus === 'Unpaid');
-            let html = `<div class="receipt-88mm" id="printReceiptCore"><div style="text-align:center; border-bottom:2px dashed black; padding-bottom:12px; margin-bottom:12px;"><h2 style="margin:0; font-size:18px; font-weight:bold; text-transform:uppercase;">${STATE.data.settings.storeName||'WARUNG INDONESIA'}</h2><p style="margin:4px 0 0; font-size:12px; font-weight:bold;">NOTA HUTANG - ${escapeHTML(cust?.name || '-')}</p></div>`;
+            let html = `<div class="receipt-88mm" id="printReceiptCore"><div style="text-align:center; border-bottom:2px dashed black; padding-bottom:12px; margin-bottom:12px;"><h2 style="margin:0; font-size:18px; font-weight:bold; text-transform:uppercase;">${escapeHTML(STATE.data.settings.storeName||'WARUNG INDONESIA')}</h2><p style="margin:4px 0 0; font-size:12px; font-weight:bold;">NOTA HUTANG - ${escapeHTML(cust?.name || '-')}</p></div>`;
             if(hutangOrders.length === 0) html += `<div style="text-align:center; font-size:12px; font-weight:bold;">Tidak ada hutang belum lunas.</div>`;
             else { 
                 html += hutangOrders.map(o => `<div style="border-bottom:1px dashed #aaa; padding-bottom:8px; margin-bottom:8px; font-size:12px;"><div style="font-weight:bold;">Tgl: ${safeDate(o.date)} (Inv: ${o.id})</div>${o.items.map(i => `<div style="display:flex;justify-content:space-between;"><span>- ${i.qty}x ${escapeHTML(i.name)}</span><span>${formatWon(i.price*i.qty)}</span></div>`).join('')}<div style="text-align:right; font-weight:bold; margin-top:4px;">Sub: ${formatWon(o.total)}</div></div>`).join(''); 
@@ -2831,7 +2932,7 @@
         const tableRow = order.table ? `<div style="display:flex; justify-content:space-between;"><span>Meja:</span> <span style="font-weight:bold;">${escapeHTML(order.table)}</span></div>` : '';
 
         const html = `<div class="receipt-88mm" id="printReceiptCore">
-                <div style="text-align:center; border-bottom:2px dashed black; padding-bottom:12px; margin-bottom:12px;"><h2 style="margin:0; font-size:18px; font-weight:bold; text-transform:uppercase;">${STATE.data.settings.storeName||'WARUNG INDONESIA'}</h2><p style="margin:4px 0 0; font-size:12px; color:#555;">${safeDate(order.date)}</p></div>
+                <div style="text-align:center; border-bottom:2px dashed black; padding-bottom:12px; margin-bottom:12px;"><h2 style="margin:0; font-size:18px; font-weight:bold; text-transform:uppercase;">${escapeHTML(STATE.data.settings.storeName||'WARUNG INDONESIA')}</h2><p style="margin:4px 0 0; font-size:12px; color:#555;">${safeDate(order.date)}</p></div>
                 <div style="font-size:12px; margin-bottom:12px; display:flex; flex-direction:column; gap:4px;"><div style="display:flex; justify-content:space-between;"><span>No:</span> <span style="font-weight:bold">${order.id}</span></div><div style="display:flex; justify-content:space-between;"><span>Plg:</span> <span style="font-weight:bold">${escapeHTML(custName)}</span></div>${tableRow}<div style="display:flex; justify-content:space-between;"><span>Tipe:</span> <span>${order.orderType === 'Delivery'?'Delivery':'Dine In/TA'}</span></div>${addressRow}<div style="display:flex; justify-content:space-between;"><span>Bayar:</span> <span style="font-weight:bold">${order.type}</span></div><div style="display:flex; justify-content:space-between;"><span>Status:</span> <span style="font-weight:bold">${order.paymentStatus === 'Paid' ? 'LUNAS' : 'BELUM LUNAS'}</span></div></div>
                 <div style="font-size:12px; border-bottom:2px dashed black; padding-bottom:12px; margin-bottom:12px;">${itemsHtml}</div>
                 <div style="font-size:13px; font-weight:bold;"><div style="display:flex; justify-content:space-between; margin-bottom:4px;"><span>Subtotal:</span> <span>${formatWon(order.subtotal)}</span></div>${order.ongkir > 0 ? `<div style="display:flex; justify-content:space-between; margin-bottom:4px;"><span>Ongkir:</span> <span>${formatWon(order.ongkir)}</span></div>` : ''}<div style="display:flex; justify-content:space-between; font-size:16px; margin-top:8px; border-top:2px solid black; padding-top:8px;"><span>TOTAL:</span> <span>${formatWon(order.total)}</span></div></div>
@@ -2999,7 +3100,7 @@
         showLoad();
         const prodIdVal = document.getElementById('prodId').value;
         const payload = { 
-            id: prodIdVal ? prodIdVal : ('prod_' + Date.now()), 
+            id: prodIdVal ? prodIdVal : genId('prod_'), 
             name: document.getElementById('prodName').value.trim(), 
             cat: document.getElementById('prodCat').value, 
             price: parseInt(document.getElementById('prodPrice').value) || 0, 
@@ -3221,7 +3322,7 @@
         if (!name || !name.trim()) return;
 
         const payload = {
-            id: 'tbl_' + Date.now(),
+            id: genId('tbl_'),
             name: name.trim()
         };
 
@@ -3299,12 +3400,8 @@
             <tr class="border-b-2 border-black hover:bg-gray-100">
                 <td class="p-2 border-r-2 border-black w-1/4">
                     <div class="font-bold text-sm">${escapeHTML(c.name)}</div>
-                    <div class="flex items-center gap-1 mt-1 text-[10px] text-gray-600">
-                        <span>Pass:</span>
-                        <input type="password" id="adminCustPass_${c.id}" value="${escapeHTML(c.pass)}" class="bg-transparent border-none outline-none w-12 md:w-16 pointer-events-none" readonly autocomplete="off">
-                        <button type="button" onclick="window.toggleAdminCustPass('${c.id}')" class="cursor-pointer text-gray-800">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle></svg>
-                        </button>
+                    <div class="flex items-center gap-1 mt-1 text-[10px]">
+                        <button type="button" onclick="window.resetCustomerPassword('${c.id}')" class="underline text-blue-700 font-bold">🔑 Reset Password</button>
                     </div>
                 </td>
                 <td class="p-2 border-r-2 border-black font-bold text-sm ${c.debt > 0 ? 'text-danger' : 'text-success'}">${formatWon(c.debt)}</td>
@@ -3323,6 +3420,30 @@
                     </div>
                 </td>
             </tr>`).join('');
+    };
+
+    // Admin/kasir bisa mengganti password pelanggan yang lupa sandi (tanpa perlu melihat password lamanya).
+    window.resetCustomerPassword = async (id) => {
+        const c = STATE.data.customers.find(x => x.id === id);
+        if (!c) return;
+        const newPass = await window.customPrompt(`Masukkan password BARU untuk pelanggan "${c.name}" (untuk mengatasi lupa password):`, 'Reset Password Pelanggan');
+        if (newPass === null || newPass === undefined) return;
+        const trimmed = String(newPass).trim();
+        if (!trimmed) return await window.customAlert('Password baru tidak boleh kosong.', 'Peringatan');
+        showLoad();
+        try {
+            if (!IS_PREVIEW && db) {
+                const hash = await sha256Hex(trimmed);
+                await db.collection('customers').doc(id).update({ pass_hash: hash, pass: firebase.firestore.FieldValue.delete() });
+            } else {
+                c.pass = trimmed;
+            }
+            hideLoad();
+            await window.customAlert(`Password pelanggan "${c.name}" berhasil diganti menjadi:\n\n${trimmed}\n\nSegera sampaikan password baru ini ke pelanggan yang bersangkutan.`, 'Sukses');
+        } catch (err) {
+            hideLoad();
+            await window.customAlert(err.message, 'Gagal');
+        }
     };
 
     window.showAddressModal = id => { 
@@ -3676,7 +3797,8 @@
         document.getElementById('setBankName').value = STATE.data.settings.bankName || '';
         document.getElementById('setBankAcc').value = STATE.data.settings.bankAcc || ''; 
         document.getElementById('setOwnerName').value = STATE.data.settings.ownerName || 'admin';
-        document.getElementById('setOwnerPass').value = STATE.data.settings.ownerPass || 'admin123';
+        document.getElementById('setOwnerPass').value = '';
+        document.getElementById('setOwnerPass').placeholder = 'Kosongkan jika tidak ingin mengubah password';
         
         // Seluruh switch default OFF
         if(document.getElementById('setCashierEnabled')) document.getElementById('setCashierEnabled').checked = Boolean(STATE.data.settings.cashierEnabled);
@@ -3751,13 +3873,13 @@
         const isCallEnabled = isTableEnabled && document.getElementById('setCallEnabled').checked;
         const isCardEnabled = document.getElementById('setCardEnabled').checked;
 
+        const rawOwnerPass = document.getElementById('setOwnerPass').value;
         const payload = { 
             store_name: document.getElementById('setStoreName').value, 
             bank_name: document.getElementById('setBankName').value, 
             bank_acc: document.getElementById('setBankAcc').value, 
             owner_name: document.getElementById('setOwnerName').value, 
             logo_url: STATE.tempLogoBase64, 
-            owner_pass: document.getElementById('setOwnerPass').value, 
             pos_enabled: document.getElementById('setPosEnabled').checked, 
             card_enabled: isCardEnabled,
             customer_enabled: isCustEnabled,
@@ -3782,6 +3904,22 @@
             cashier_enabled: document.getElementById('setCashierEnabled') ? document.getElementById('setCashierEnabled').checked : Boolean(STATE.data.settings.cashierEnabled),
             finance_enabled: document.getElementById('setFinanceEnabled') ? document.getElementById('setFinanceEnabled').checked : Boolean(STATE.data.settings.financeEnabled)
         };
+        // Password admin hanya ikut disimpan/di-hash kalau kolomnya benar-benar diisi ulang.
+        // Kalau dikosongkan, password lama (hash-nya) tidak disentuh sama sekali.
+        if (rawOwnerPass) payload.owner_pass_hash = await sha256Hex(rawOwnerPass);
+        // Bersihkan sisa password mentah lama (kalau masih ada) supaya tidak nyangkut di database.
+        if (!IS_PREVIEW && db && typeof firebase !== 'undefined') payload.owner_pass = firebase.firestore.FieldValue.delete();
+
+        // Cek ukuran total dokumen SEBELUM dikirim ke Firestore, supaya errornya jelas & ramah
+        // (bukan pesan teknis "document too large" dari Firestore kalau logo+audio kegedean).
+        try {
+            const approxSize = new Blob([JSON.stringify({ ...payload, owner_pass: undefined })]).size;
+            if (approxSize > 950000) {
+                hideLoad();
+                await window.customAlert('Data pengaturan terlalu besar untuk disimpan (kemungkinan logo toko atau file audio panggilan kegedean). Perkecil ukurannya lalu coba lagi.', 'Gagal');
+                return;
+            }
+        } catch(sizeErr) { /* pengecekan ukuran gagal, lanjut saja & biarkan Firestore yang validasi */ }
 
         try { 
             STATE.data.settings = {
@@ -3791,7 +3929,8 @@
                 bankAcc: payload.bank_acc,
                 ownerName: payload.owner_name, 
                 logoUrl: payload.logo_url, 
-                ownerPass: payload.owner_pass,
+                ownerPassHash: payload.owner_pass_hash || STATE.data.settings.ownerPassHash,
+                ownerPassLegacy: '',
                 posEnabled: payload.pos_enabled, 
                 cardEnabled: payload.card_enabled, 
                 customerEnabled: payload.customer_enabled,
@@ -3974,7 +4113,7 @@
         if(!(await window.customConfirm('Apakah pesanan sudah benar? Pesan dan Tunggu sekarang?'))) return;
 
         const payload = { 
-            id: 'WAIT' + new Date().getTime(), 
+            id: genId('WAIT'), 
             date: new Date().toISOString(), 
             buyer_name: nama, 
             notes: document.getElementById('custOrderNotes').value, 
@@ -4373,7 +4512,7 @@
         if (!tableName) return await window.customAlert("Silakan pilih meja Anda terlebih dahulu!", "Peringatan");
 
         const payload = {
-            id: 'call_' + Date.now(),
+            id: genId('call_'),
             table_name: tableName,
             reason: reason,
             date: new Date().toISOString()
@@ -4563,7 +4702,10 @@
         const clean = (a, fallbackId) => ({
             id: a.id || fallbackId,
             username: String(a.username || '').trim(),
-            password: String(a.password || ''),
+            passwordHash: String(a.passwordHash || ''),
+            // passwordLegacy hanya dipakai sekali untuk migrasi otomatis dari akun lama yang password-nya masih mentah.
+            // Tidak pernah ditampilkan ke UI.
+            passwordLegacy: String(a.password || ''),
             phone: a.phone || '',
             address: a.address || '',
             photo: a.photo || ''
@@ -4629,7 +4771,8 @@
         document.getElementById('cashierSetId').value = c ? c.id : '';
         document.getElementById('cashierModalTitle').textContent = c ? 'Edit Akun Kasir' : 'Tambah Akun Kasir';
         document.getElementById('cashierSetUser').value = c ? c.username : '';
-        document.getElementById('cashierSetPass').value = c ? c.password : '';
+        document.getElementById('cashierSetPass').value = '';
+        document.getElementById('cashierSetPassHint').classList.toggle('d-none', !c);
         document.getElementById('cashierSetPhone').value = c ? c.phone : '';
         document.getElementById('cashierSetAddress').value = c ? c.address : '';
         document.getElementById('cashierSetPhotoFile').value = '';
@@ -4641,16 +4784,18 @@
     window.saveCashierAccount = async e => {
         e.preventDefault();
         const id = document.getElementById('cashierSetId').value;
+        const rawPass = document.getElementById('cashierSetPass').value;
         const data = {
             username: document.getElementById('cashierSetUser').value.trim(),
-            password: document.getElementById('cashierSetPass').value,
             phone: document.getElementById('cashierSetPhone').value.trim(),
             address: document.getElementById('cashierSetAddress').value.trim(),
             photo: STATE.tempCashierPhotoBase64 || ''
         };
-        if (!data.username || !data.password) return await window.customAlert('Username dan password kasir wajib diisi.', 'Peringatan');
+        if (!data.username) return await window.customAlert('Username kasir wajib diisi.', 'Peringatan');
+        if (!id && !rawPass) return await window.customAlert('Password kasir wajib diisi untuk akun baru.', 'Peringatan');
         const ownerName = String((STATE.data.settings && STATE.data.settings.ownerName) || '').toLowerCase();
         if (ownerName && data.username.toLowerCase() === ownerName) return await window.customAlert('Username tersebut dipakai oleh admin. Gunakan username lain.', 'Peringatan');
+        if (rawPass) { data.passwordHash = await sha256Hex(rawPass); data.passwordLegacy = ''; }
 
         showLoad();
         try {
@@ -4661,7 +4806,7 @@
                     if (i === -1) throw new Error('Akun kasir tidak ditemukan (mungkin sudah dihapus).');
                     list[i] = { ...list[i], ...data };
                 } else {
-                    list.push({ id: 'cashier_' + Date.now().toString(36) + Math.random().toString(36).slice(2, 5), ...data });
+                    list.push({ id: genId('cashier_'), ...data });
                 }
                 return list;
             });
@@ -4704,7 +4849,7 @@
                     await batch.commit();
                 }
             } catch (e) {
-                for (const o of toRemove) { await db.collection('orders').doc(o.id).delete().catch(() => {}); }
+                for (const o of toRemove) { await db.collection('orders').doc(o.id).delete().catch(err => console.warn('Gagal hapus pesanan', o.id, err)); }
             }
         }
         STATE.data.orders = STATE.data.orders.filter(o => o.cashierId !== cashierId);
@@ -4726,7 +4871,7 @@
                 <img src="${c.photo || 'https://placehold.co/100x100?text=Kasir'}" class="w-16 h-16 sm:w-20 sm:h-20 object-cover border-2 border-black shrink-0">
                 <div class="flex-1 min-w-0 space-y-1">
                     <div class="font-bold text-base sm:text-lg uppercase break-words leading-tight">${escapeHTML(c.username)}</div>
-                    <div class="text-xs"><span class="font-bold text-gray-500">PASSWORD</span> <span class="bg-black text-white px-2 py-0.5 font-mono break-all">${escapeHTML(c.password)}</span></div>
+                    <div class="text-xs"><span class="font-bold text-gray-500">PASSWORD</span> <span class="bg-black text-white px-2 py-0.5 font-mono break-all">•••••• (klik Edit untuk reset)</span></div>
                     <div class="text-xs break-words">📞 ${escapeHTML(c.phone || '-')}</div>
                     <div class="text-xs break-words">📍 ${escapeHTML(c.address || '-')}</div>
                 </div>
@@ -4786,7 +4931,7 @@
     window.renderCashierSelfSettings = () => {
         const wrap = document.getElementById('cashierSelfSettingsWrap');
         if (!wrap) return;
-        const me = findMyCashier() || (IS_PREVIEW || !db ? { username: STATE.user.name, password: '', phone: '', address: '', photo: '' } : null);
+        const me = findMyCashier() || (IS_PREVIEW || !db ? { username: STATE.user.name, phone: '', address: '', photo: '' } : null);
         if (!me) {
             wrap.innerHTML = `<div class="brutal-box bg-white p-6 text-center font-bold">Data akun kasir tidak ditemukan. Hubungi admin.</div>`;
             return;
@@ -4806,9 +4951,9 @@
                 </div>
                 <form onsubmit="window.saveCashierSelfSettings(event)">
                     <div class="mb-3">
-                        <label class="block font-bold mb-1 text-sm">Password Login</label>
+                        <label class="block font-bold mb-1 text-sm">Ganti Password Login</label>
                         <div class="flex gap-2">
-                            <input type="password" id="cashierSelfPass" autocomplete="new-password" class="brutal-input bg-white" value="${escapeHTML(me.password || '')}" required>
+                            <input type="password" id="cashierSelfPass" autocomplete="new-password" class="brutal-input bg-white" placeholder="Kosongkan jika tidak ingin mengubah">
                             <button type="button" onclick="window.togglePassVisibility('cashierSelfPass', this)" class="brutal-btn bg-white px-3" aria-label="Lihat password">👁</button>
                         </div>
                     </div>
@@ -4831,18 +4976,18 @@
         const newPass = document.getElementById('cashierSelfPass').value;
         const newPhone = document.getElementById('cashierSelfPhone').value.trim();
         const newAddress = document.getElementById('cashierSelfAddress').value.trim();
-        if (!newPass) return await window.customAlert('Password tidak boleh kosong.', 'Peringatan');
         const myId = STATE.user.id;
         showLoad();
         try {
+            const newHash = newPass ? await sha256Hex(newPass) : null;
             await persistCashiers(list => {
                 const i = list.findIndex(c => c.id === myId);
                 if (i === -1) throw new Error('Akun kasir tidak ditemukan. Mungkin sudah dihapus admin.');
-                list[i] = { ...list[i], password: newPass, phone: newPhone, address: newAddress };
+                list[i] = { ...list[i], ...(newHash ? { passwordHash: newHash, passwordLegacy: '' } : {}), phone: newPhone, address: newAddress };
                 return list;
             });
             hideLoad();
-            await window.customAlert('Password, no. telp, dan alamat berhasil diperbarui!', 'Sukses');
+            await window.customAlert((newPass ? 'Password, ' : '') + 'no. telp, dan alamat berhasil diperbarui!', 'Sukses');
         } catch (err) {
             hideLoad();
             await window.customAlert(err.message, 'Gagal');
