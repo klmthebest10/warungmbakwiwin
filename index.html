@@ -147,6 +147,21 @@
         .table-seat-dot { width: 8px; height: 8px; border-radius: 9999px; background-color: #000; }
         .pulse-call { animation: pulseWarning 1s infinite alternate; }
         @keyframes pulseWarning { from { transform: scale(1); } to { transform: scale(1.06); } }
+        /* Ikon "mulai memasak" bundar di kartu Incoming Order: tepinya berputar selagi status = sedang dimasak */
+        .cook-icon-btn {
+            position: relative; flex-shrink: 0; width: 56px; height: 56px; border-radius: 9999px;
+            background: #000; border: 3px solid #000; display: flex; align-items: center; justify-content: center;
+            cursor: pointer; z-index: 1;
+        }
+        .cook-icon-btn .cook-icon-emoji { font-size: 22px; line-height: 1; position: relative; z-index: 2; }
+        .cook-icon-btn .cook-icon-ring {
+            position: absolute; inset: -5px; border-radius: 9999px; border: 4px solid transparent; opacity: 0;
+        }
+        .cook-icon-btn.is-cooking .cook-icon-ring {
+            opacity: 1; border-top-color: #22c55e; border-right-color: #22c55e;
+            animation: cookIconSpin 0.9s linear infinite;
+        }
+        @keyframes cookIconSpin { to { transform: rotate(360deg); } }
     #posProductsCol > div:nth-child(1),
         #posProductsCol > div:nth-child(2) {
             position: sticky;
@@ -456,8 +471,8 @@
                     <button onclick="window.setAdminWaitTab('incoming')" id="waitTab_incoming" class="wait-tab brutal-btn bg-black text-white px-1.5 sm:px-4 py-3 text-[11px] sm:text-sm whitespace-nowrap flex items-center justify-center gap-1.5 sm:gap-2">
                         <span>📥 Incoming Order</span><span id="waitTabCount_incoming" class="bg-main text-black border-2 border-black px-1.5 min-w-[1.5rem] text-center text-xs font-bold">0</span>
                     </button>
-                    <button onclick="window.setAdminWaitTab('cooking')" id="waitTab_cooking" class="wait-tab brutal-btn bg-white text-black px-1.5 sm:px-4 py-3 text-[11px] sm:text-sm whitespace-nowrap flex items-center justify-center gap-1.5 sm:gap-2">
-                        <span>🔥 Diterima</span><span id="waitTabCount_cooking" class="bg-main text-black border-2 border-black px-1.5 min-w-[1.5rem] text-center text-xs font-bold">0</span>
+                    <button onclick="window.setAdminWaitTab('ready')" id="waitTab_ready" class="wait-tab brutal-btn bg-white text-black px-1.5 sm:px-4 py-3 text-[11px] sm:text-sm whitespace-nowrap flex items-center justify-center gap-1.5 sm:gap-2">
+                        <span>💳 Awaiting Payment</span><span id="waitTabCount_ready" class="bg-main text-black border-2 border-black px-1.5 min-w-[1.5rem] text-center text-xs font-bold">0</span>
                     </button>
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="adminWaitListAreaPage"></div>
@@ -920,7 +935,7 @@
     <!-- Modal Keranjang Pelanggan/Umum -->
     <div id="modalCustCart" class="fixed inset-0 modal-backdrop d-none z-50 flex items-center justify-center p-2 md:p-4">
         <div class="brutal-box bg-white w-full max-w-lg max-h-[95vh] flex flex-col relative overflow-hidden">
-            <button onclick="window.closeModal('modalCustCart')" class="absolute top-2 right-2 md:-top-4 md:-right-4 bg-danger text-white border-2 border-black w-10 h-10 font-bold text-xl hover:bg-black transition-colors rounded-full z-30 shadow-brutal-sm">X</button>
+            <button onclick="window.closeModal('modalCustCart')" class="absolute top-2 right-2 md:-top-4 md:-right-4 bg-danger text-white border-2 border-black w-10 h-10 font-bold text-xl hover:bg-black transition-colors rounded-full z-30 shadow-brutal-sm inline-flex items-center justify-center"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" class="pointer-events-none"><line x1="5" y1="5" x2="19" y2="19"></line><line x1="19" y1="5" x2="5" y2="19"></line></svg></button>
             <div class="p-4 border-b-4 border-black bg-accent shrink-0"><h2 class="text-xl md:text-2xl font-bold uppercase">Keranjang Anda</h2></div>
             <div class="p-4 overflow-y-auto flex-1 bg-white">
                 <div id="custCartItemsList" class="mb-4 border-b-2 border-black pb-4"></div>
@@ -949,7 +964,7 @@
     <!-- Modal Edit Waiting List -->
     <div id="modalEditWait" class="fixed inset-0 modal-backdrop d-none z-50 flex items-center justify-center p-2 md:p-4">
         <div class="brutal-box bg-white w-full max-w-md max-h-[95vh] flex flex-col relative overflow-hidden">
-            <button onclick="window.closeModal('modalEditWait')" class="absolute top-2 right-2 bg-danger text-white border-2 border-black w-8 h-8 font-bold text-sm">X</button>
+            <button onclick="window.closeModal('modalEditWait')" class="absolute top-2 right-2 bg-danger text-white border-2 border-black w-8 h-8 font-bold text-sm inline-flex items-center justify-center"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" class="pointer-events-none"><line x1="5" y1="5" x2="19" y2="19"></line><line x1="19" y1="5" x2="5" y2="19"></line></svg></button>
             <div class="p-4 border-b-4 border-black bg-accent shrink-0"><h2 class="text-xl font-bold uppercase">Edit Pesanan Masuk</h2></div>
             <div class="p-4 overflow-y-auto flex-1 bg-white">
                 <input type="hidden" id="editWaitId">
@@ -971,7 +986,7 @@
     <!-- Modal Cart Admin POS -->
     <div id="modalCart" class="fixed inset-0 modal-backdrop d-none z-50 flex items-center justify-center p-2 md:p-4">
         <div id="cartPanelCard" class="brutal-box bg-white w-full max-w-2xl max-h-[95vh] flex flex-col relative overflow-hidden">
-            <button onclick="window.closeModal('modalCart')" class="cart-close-btn absolute top-2 right-2 md:-top-4 md:-right-4 bg-danger text-white border-2 border-black w-10 h-10 font-bold text-xl hover:bg-black transition-colors rounded-full z-30 shadow-brutal-sm">X</button>
+            <button onclick="window.closeModal('modalCart')" class="cart-close-btn absolute top-2 right-2 md:-top-4 md:-right-4 bg-danger text-white border-2 border-black w-10 h-10 font-bold text-xl hover:bg-black transition-colors rounded-full z-30 shadow-brutal-sm inline-flex items-center justify-center"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" class="pointer-events-none"><line x1="5" y1="5" x2="19" y2="19"></line><line x1="19" y1="5" x2="5" y2="19"></line></svg></button>
             <div class="p-4 border-b-4 border-black bg-main shrink-0">
                 <h2 class="text-xl md:text-2xl font-bold uppercase">Keranjang Kasir</h2>
             </div>
@@ -1096,7 +1111,7 @@
     <!-- Modal Add / Edit Product -->
     <div id="modalAddProduct" class="fixed inset-0 modal-backdrop d-none z-50 flex items-center justify-center p-4">
         <div class="brutal-box bg-white w-full max-w-md relative p-6 max-h-[90vh] overflow-y-auto">
-            <button onclick="window.closeModal('modalAddProduct')" class="absolute top-2 right-2 font-bold px-2 py-1 hover:bg-red-500 hover:text-white border-2 border-black">X</button>
+            <button onclick="window.closeModal('modalAddProduct')" class="absolute top-2 right-2 font-bold px-2 py-1 hover:bg-red-500 hover:text-white border-2 border-black inline-flex items-center justify-center"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" class="pointer-events-none"><line x1="5" y1="5" x2="19" y2="19"></line><line x1="19" y1="5" x2="5" y2="19"></line></svg></button>
             <h2 class="text-2xl font-bold mb-4 uppercase border-b-2 border-black pb-2" id="modalProductTitle">Tambah Produk</h2>
             <form id="formProduct" onsubmit="window.saveProduct(event)">
                 <input type="hidden" id="prodId">
@@ -1130,7 +1145,7 @@
     <!-- Modal Edit Transaksi -->
     <div id="modalEditTransaction" class="fixed inset-0 modal-backdrop d-none z-50 flex items-center justify-center p-4">
         <div class="brutal-box bg-white w-full max-w-md relative p-6 h-[90vh] md:h-auto overflow-y-auto">
-            <button onclick="window.closeModal('modalEditTransaction')" class="absolute top-2 right-2 font-bold px-2 py-1 hover:bg-red-500 hover:text-white border-2 border-black">X</button>
+            <button onclick="window.closeModal('modalEditTransaction')" class="absolute top-2 right-2 font-bold px-2 py-1 hover:bg-red-500 hover:text-white border-2 border-black inline-flex items-center justify-center"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" class="pointer-events-none"><line x1="5" y1="5" x2="19" y2="19"></line><line x1="19" y1="5" x2="5" y2="19"></line></svg></button>
             <h2 class="text-xl font-bold mb-4 uppercase border-b-2 border-black pb-1">Edit Transaksi</h2>
             <form id="formEditTrx" onsubmit="window.saveEditTransaction(event)">
                 <input type="hidden" id="editTrxId">
@@ -1192,7 +1207,7 @@
     <!-- Modal Multi-Receipt Popup -->
     <div id="modalReceiptPopup" class="fixed inset-0 modal-backdrop d-none z-50 flex items-center justify-center p-4">
         <div class="brutal-box bg-gray-200 w-full max-w-sm relative flex flex-col max-h-[90vh] overflow-hidden">
-            <button onclick="window.closeModal('modalReceiptPopup')" class="absolute top-2 right-2 font-bold px-2 py-1 hover:bg-red-500 hover:text-white border-2 border-black bg-white z-20" title="Tutup Nota">X</button>
+            <button onclick="window.closeModal('modalReceiptPopup')" class="absolute top-2 right-2 font-bold px-2 py-1 hover:bg-red-500 hover:text-white border-2 border-black bg-white z-20 inline-flex items-center justify-center" title="Tutup Nota"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" class="pointer-events-none"><line x1="5" y1="5" x2="19" y2="19"></line><line x1="19" y1="5" x2="5" y2="19"></line></svg></button>
             <div class="p-3 bg-main border-b-4 border-black font-bold uppercase text-center text-lg shadow-sm z-10 pr-10">Nota Transaksi</div>
             <div class="p-4 overflow-y-auto flex-1 flex justify-center items-start bg-gray-300" id="receiptCaptureWrapper">
                 <div id="actualReceiptPrint" class="shadow-md"></div>
@@ -1208,7 +1223,7 @@
     <!-- Modal Lihat Alamat -->
     <div id="modalAddress" class="fixed inset-0 modal-backdrop d-none z-50 flex items-center justify-center p-4">
         <div class="brutal-box bg-white w-full max-w-sm relative p-6">
-            <button onclick="window.closeModal('modalAddress')" class="absolute top-2 right-2 font-bold px-2 py-1 hover:bg-red-500 hover:text-white border-2 border-black">X</button>
+            <button onclick="window.closeModal('modalAddress')" class="absolute top-2 right-2 font-bold px-2 py-1 hover:bg-red-500 hover:text-white border-2 border-black inline-flex items-center justify-center"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" class="pointer-events-none"><line x1="5" y1="5" x2="19" y2="19"></line><line x1="19" y1="5" x2="5" y2="19"></line></svg></button>
             <h2 class="text-xl font-bold mb-4 uppercase border-b-2 border-black pb-1">Detail Alamat</h2>
             <div id="addressFullText" class="p-3 bg-gray-100 border-2 border-black mb-4 text-sm whitespace-pre-wrap break-words min-h-[80px]"></div>
             <button onclick="window.copyAddressText()" class="brutal-btn w-full bg-accent py-3 flex items-center justify-center gap-2">📄 Copy Alamat</button>
@@ -1218,7 +1233,7 @@
     <!-- Modal Share Link -->
     <div id="modalShareLink" class="fixed inset-0 modal-backdrop d-none z-50 flex items-center justify-center p-4">
         <div class="brutal-box bg-white w-full max-w-sm relative p-6">
-            <button onclick="window.closeModal('modalShareLink')" class="absolute top-2 right-2 font-bold px-2 py-1 hover:bg-red-500 hover:text-white border-2 border-black">X</button>
+            <button onclick="window.closeModal('modalShareLink')" class="absolute top-2 right-2 font-bold px-2 py-1 hover:bg-red-500 hover:text-white border-2 border-black inline-flex items-center justify-center"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" class="pointer-events-none"><line x1="5" y1="5" x2="19" y2="19"></line><line x1="19" y1="5" x2="5" y2="19"></line></svg></button>
             <h2 class="text-xl font-bold mb-4 uppercase border-b-2 border-black pb-1">Bagikan Link</h2>
             <p class="text-sm mb-2 font-bold">Link Pendaftaran Pelanggan:</p>
             <input type="text" id="shareUrlInput" class="brutal-input text-xs bg-gray-100 mb-4" readonly>
@@ -1232,7 +1247,7 @@
     <!-- Modal Catatan Keuangan -->
     <div id="modalFinanceNote" class="fixed inset-0 modal-backdrop d-none z-50 flex items-center justify-center p-4">
         <div class="brutal-box bg-white w-full max-w-md relative p-5 md:p-6 max-h-[95vh] overflow-y-auto">
-            <button onclick="window.closeModal('modalFinanceNote')" class="absolute top-2 right-2 font-bold px-2 py-1 hover:bg-red-500 hover:text-white border-2 border-black">X</button>
+            <button onclick="window.closeModal('modalFinanceNote')" class="absolute top-2 right-2 font-bold px-2 py-1 hover:bg-red-500 hover:text-white border-2 border-black inline-flex items-center justify-center"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" class="pointer-events-none"><line x1="5" y1="5" x2="19" y2="19"></line><line x1="19" y1="5" x2="5" y2="19"></line></svg></button>
             <h2 id="finModalTitle" class="text-xl font-bold mb-4 uppercase border-b-2 border-black pb-2 pr-10">Tambah Catatan</h2>
             <form id="formFinance" onsubmit="window.saveFinanceNote(event)">
                 <input type="hidden" id="finId">
@@ -1278,7 +1293,7 @@
     <!-- Modal Tambah Kategori -->
     <div id="modalAddCategory" class="fixed inset-0 modal-backdrop d-none z-50 flex items-center justify-center p-4">
         <div class="brutal-box bg-white w-full max-w-sm relative p-6">
-            <button onclick="window.closeModal('modalAddCategory')" class="absolute top-2 right-2 font-bold px-2 py-1 hover:bg-red-500 hover:text-white border-2 border-black">X</button>
+            <button onclick="window.closeModal('modalAddCategory')" class="absolute top-2 right-2 font-bold px-2 py-1 hover:bg-red-500 hover:text-white border-2 border-black inline-flex items-center justify-center"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" class="pointer-events-none"><line x1="5" y1="5" x2="19" y2="19"></line><line x1="19" y1="5" x2="5" y2="19"></line></svg></button>
             <h2 id="modalCategoryTitle" class="text-xl font-bold mb-4 uppercase">Kategori Baru</h2>
             <form onsubmit="window.saveCategory(event)">
                 <input type="hidden" id="oldCatName">
@@ -1291,7 +1306,7 @@
     <!-- Modal Panggil Pelayan (Publik / Pelanggan) -->
     <div id="modalCallWaiter" class="fixed inset-0 modal-backdrop d-none z-50 flex items-center justify-center p-4">
         <div class="brutal-box bg-white w-full max-w-sm relative p-6">
-            <button onclick="window.closeModal('modalCallWaiter')" class="absolute top-2 right-2 font-bold px-2 py-1 hover:bg-red-500 hover:text-white border-2 border-black">X</button>
+            <button onclick="window.closeModal('modalCallWaiter')" class="absolute top-2 right-2 font-bold px-2 py-1 hover:bg-red-500 hover:text-white border-2 border-black inline-flex items-center justify-center"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" class="pointer-events-none"><line x1="5" y1="5" x2="19" y2="19"></line><line x1="19" y1="5" x2="5" y2="19"></line></svg></button>
             <h2 class="text-xl font-bold mb-4 uppercase border-b-2 border-black pb-2 flex items-center gap-2">
                 <span>🔔</span> Panggil Pelayan
             </h2>
@@ -1314,7 +1329,7 @@
         <div class="brutal-box bg-white w-full max-w-md relative flex flex-col max-h-[90vh] overflow-hidden">
             <div class="p-4 border-b-4 border-black bg-danger text-white flex justify-between items-center shrink-0">
                 <h2 class="text-xl font-bold uppercase flex items-center gap-2"><span>🔔</span> Panggilan Meja</h2>
-                <button onclick="window.closeModal('modalAdminCalls')" class="bg-white text-black font-bold px-2 py-1 border-2 border-black text-sm">X</button>
+                <button onclick="window.closeModal('modalAdminCalls')" class="bg-white text-black font-bold px-2 py-1 border-2 border-black text-sm inline-flex items-center justify-center"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" class="pointer-events-none"><line x1="5" y1="5" x2="19" y2="19"></line><line x1="19" y1="5" x2="5" y2="19"></line></svg></button>
             </div>
             <div class="p-4 overflow-y-auto flex-1 bg-gray-100" id="adminCallsList"></div>
         </div>
@@ -1334,7 +1349,7 @@
 <!-- Modal Setup Kasir (Admin) -->
     <div id="modalCashierSetup" class="fixed inset-0 modal-backdrop d-none z-50 flex items-center justify-center p-4">
         <div class="brutal-box bg-white w-full max-w-md relative p-6 max-h-[90vh] overflow-y-auto">
-            <button onclick="window.closeModal('modalCashierSetup')" class="absolute top-2 right-2 font-bold px-2 py-1 hover:bg-red-500 hover:text-white border-2 border-black">X</button>
+            <button onclick="window.closeModal('modalCashierSetup')" class="absolute top-2 right-2 font-bold px-2 py-1 hover:bg-red-500 hover:text-white border-2 border-black inline-flex items-center justify-center"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" class="pointer-events-none"><line x1="5" y1="5" x2="19" y2="19"></line><line x1="19" y1="5" x2="5" y2="19"></line></svg></button>
             <h2 id="cashierModalTitle" class="text-2xl font-bold mb-4 uppercase border-b-2 border-black pb-2 pr-10">Tambah Akun Kasir</h2>
             <form id="formCashierSetup" onsubmit="window.saveCashierAccount(event)">
                 <input type="hidden" id="cashierSetId">
@@ -2576,7 +2591,7 @@
             list.innerHTML = '<p class="font-bold text-center p-4">Keranjang kosong</p>'; 
             noteWrap.classList.add('d-none'); 
         } else { 
-            list.innerHTML = STATE.cart.map((item, index) => `<div class="flex justify-between items-center mb-2 bg-gray-50 p-2 border-2 border-black"><div class="flex-1"><h4 class="font-bold text-xs md:text-sm leading-tight">${escapeHTML(item.name)}</h4><div class="text-xs md:text-sm">${formatWon(item.price)}</div></div><div class="flex items-center gap-1 md:gap-2"><button onclick="window.changeQty(${index}, -1)" class="w-6 h-6 md:w-8 md:h-8 font-bold bg-white border-2 border-black">-</button><input type="number" min="1" inputmode="numeric" value="${item.qty}" onchange="window.setCartQty(${index}, this.value)" onclick="this.select()" class="w-11 md:w-12 text-center font-bold text-sm md:text-base border-2 border-black bg-white py-0.5"><button onclick="window.changeQty(${index}, 1)" class="w-6 h-6 md:w-8 md:h-8 font-bold bg-main border-2 border-black">+</button><button onclick="window.changeQty(${index}, -999)" class="w-6 h-6 md:w-8 md:h-8 font-bold bg-danger text-white border-2 border-black ml-1 md:ml-2">X</button></div></div>`).join(''); 
+            list.innerHTML = STATE.cart.map((item, index) => `<div class="flex justify-between items-center mb-2 bg-gray-50 p-2 border-2 border-black"><div class="flex-1"><h4 class="font-bold text-xs md:text-sm leading-tight">${escapeHTML(item.name)}</h4><div class="text-xs md:text-sm">${formatWon(item.price)}</div></div><div class="flex items-center gap-1 md:gap-2"><button onclick="window.changeQty(${index}, -1)" class="w-6 h-6 md:w-8 md:h-8 font-bold bg-white border-2 border-black">-</button><input type="number" min="1" inputmode="numeric" value="${item.qty}" onchange="window.setCartQty(${index}, this.value)" onclick="this.select()" class="w-11 md:w-12 text-center font-bold text-sm md:text-base border-2 border-black bg-white py-0.5"><button onclick="window.changeQty(${index}, 1)" class="w-6 h-6 md:w-8 md:h-8 font-bold bg-main border-2 border-black">+</button><button onclick="window.changeQty(${index}, -999)" class="w-6 h-6 md:w-8 md:h-8 font-bold bg-danger text-white border-2 border-black ml-1 md:ml-2 inline-flex items-center justify-center"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" class="pointer-events-none"><line x1="5" y1="5" x2="19" y2="19"></line><line x1="19" y1="5" x2="5" y2="19"></line></svg></button></div></div>`).join(''); 
             noteWrap.classList.remove('d-none'); 
         }
 
@@ -3037,7 +3052,7 @@
                         <span class="whitespace-nowrap">${escapeHTML(p.name)}</span>
                         <div class="flex items-center shrink-0 md:hidden">
                             <button onclick="window.toggleProductAvail('${p.id}')" class="font-bold text-[10px] px-2 py-1 border-2 border-black mr-1 ${p.available ? 'bg-success text-black' : 'bg-gray-300 text-gray-600'}">${p.available ? 'ON' : 'OFF'}</button>
-                            ${!isCashier ? `<button onclick="window.editProduct('${p.id}')" class="bg-main border-2 border-black px-2 py-1 text-[10px] font-bold mr-1">Edit</button><button onclick="window.deleteProduct('${p.id}')" class="bg-danger text-white border-2 border-black px-2 py-1 text-[10px] font-bold">X</button>` : ''}
+                            ${!isCashier ? `<button onclick="window.editProduct('${p.id}')" class="bg-main border-2 border-black px-2 py-1 text-[10px] font-bold mr-1">Edit</button><button onclick="window.deleteProduct('${p.id}')" class="bg-danger text-white border-2 border-black px-2 py-1 text-[10px] font-bold inline-flex items-center justify-center"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" class="pointer-events-none"><line x1="5" y1="5" x2="19" y2="19"></line><line x1="19" y1="5" x2="5" y2="19"></line></svg></button>` : ''}
                         </div>
                     </div>
                 </td>
@@ -3047,7 +3062,7 @@
                     <button onclick="window.toggleProductAvail('${p.id}')" class="font-bold text-[10px] md:text-xs px-2 py-1 border-2 border-black ${p.available ? 'bg-success text-black' : 'bg-gray-300 text-gray-600'}">${p.available ? 'ON' : 'OFF'}</button>
                 </td>
                 <td class="p-2 text-center hidden md:table-cell">
-                    ${!isCashier ? `<button onclick="window.editProduct('${p.id}')" class="bg-main border-2 border-black px-2 py-1 text-[10px] font-bold mr-1">Edit</button><button onclick="window.deleteProduct('${p.id}')" class="bg-danger text-white border-2 border-black px-2 py-1 text-[10px] font-bold mt-1 md:mt-0">X</button>` : '<span class="text-xs text-gray-400 font-bold">-</span>'}
+                    ${!isCashier ? `<button onclick="window.editProduct('${p.id}')" class="bg-main border-2 border-black px-2 py-1 text-[10px] font-bold mr-1">Edit</button><button onclick="window.deleteProduct('${p.id}')" class="bg-danger text-white border-2 border-black px-2 py-1 text-[10px] font-bold mt-1 md:mt-0 inline-flex items-center justify-center"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" class="pointer-events-none"><line x1="5" y1="5" x2="19" y2="19"></line><line x1="19" y1="5" x2="5" y2="19"></line></svg></button>` : '<span class="text-xs text-gray-400 font-bold">-</span>'}
                 </td>
             </tr>`).join('');
     };
@@ -3310,7 +3325,7 @@
                     </div>
                     <div class="flex gap-1 mt-2 w-full">
                         <button onclick="window.editTable('${t.id}')" class="brutal-btn bg-main text-[9px] font-bold py-0.5 flex-1" title="Ubah Nama Meja">Edit</button>
-                        <button onclick="window.deleteTable('${t.id}')" class="brutal-btn bg-danger text-white text-[9px] font-bold py-0.5 px-1.5" title="Hapus Meja">X</button>
+                        <button onclick="window.deleteTable('${t.id}')" class="brutal-btn bg-danger text-white text-[9px] font-bold py-0.5 px-1.5 inline-flex items-center justify-center" title="Hapus Meja"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" class="pointer-events-none"><line x1="5" y1="5" x2="19" y2="19"></line><line x1="19" y1="5" x2="5" y2="19"></line></svg></button>
                     </div>
                 </div>
             `;
@@ -3645,7 +3660,7 @@
     window.renderEditTrxCart = () => {
         const list = document.getElementById('editTrxItemsList');
         if(STATE.editCart.length === 0) list.innerHTML = '<p class="text-xs text-center text-gray-500 italic">Produk kosong</p>';
-        else list.innerHTML = STATE.editCart.map((item, index) => `<div class="flex justify-between items-center bg-white border border-black p-1"><div class="text-xs font-bold w-1/2 truncate">${escapeHTML(item.name)}</div><div class="flex items-center gap-1"><button type="button" onclick="window.changeEditQty(${index}, -1)" class="w-5 h-5 font-bold border border-black bg-gray-200 text-xs">-</button><input type="number" min="1" inputmode="numeric" value="${item.qty}" onchange="window.setEditQty(${index}, this.value)" onclick="this.select()" class="w-9 text-center font-bold text-xs border border-black bg-white py-0.5"><button type="button" onclick="window.changeEditQty(${index}, 1)" class="w-5 h-5 font-bold border border-black bg-main text-xs">+</button><button type="button" onclick="window.changeEditQty(${index}, -999)" class="w-5 h-5 font-bold border border-black bg-danger text-white text-xs ml-1">X</button></div></div>`).join('');
+        else list.innerHTML = STATE.editCart.map((item, index) => `<div class="flex justify-between items-center bg-white border border-black p-1"><div class="text-xs font-bold w-1/2 truncate">${escapeHTML(item.name)}</div><div class="flex items-center gap-1"><button type="button" onclick="window.changeEditQty(${index}, -1)" class="w-5 h-5 font-bold border border-black bg-gray-200 text-xs">-</button><input type="number" min="1" inputmode="numeric" value="${item.qty}" onchange="window.setEditQty(${index}, this.value)" onclick="this.select()" class="w-9 text-center font-bold text-xs border border-black bg-white py-0.5"><button type="button" onclick="window.changeEditQty(${index}, 1)" class="w-5 h-5 font-bold border border-black bg-main text-xs">+</button><button type="button" onclick="window.changeEditQty(${index}, -999)" class="w-5 h-5 font-bold border border-black bg-danger text-white text-xs ml-1 inline-flex items-center justify-center"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" class="pointer-events-none"><line x1="5" y1="5" x2="19" y2="19"></line><line x1="19" y1="5" x2="5" y2="19"></line></svg></button></div></div>`).join('');
         
         const subtotal = STATE.editCart.reduce((sum, item) => sum + (item.price * item.qty), 0);
         document.getElementById('editTrxSubtotal').value = subtotal; 
@@ -4173,7 +4188,7 @@
             list = STATE.waitingList.filter(x => gw.includes(x.id));
         }
 
-        document.getElementById('custWaitListAreaPage').innerHTML = list.length ? list.map(w => `<div class="brutal-box p-4 bg-white border-l-8 ${w.status === 'cooking' ? 'border-l-success' : 'border-l-main'}"><div class="font-bold border-b-2 border-black pb-2 mb-2 flex justify-between text-lg flex-wrap"><span>${safeDate(w.date)}</span><span>${escapeHTML(w.buyerName)}</span></div>${w.table ? `<div class="mb-2 inline-block font-bold text-xs bg-purple-100 border-2 border-black px-2 py-0.5">🪑 ${escapeHTML(w.table)}</div>` : ''}<div class="flex-1">${w.items.map(i=>`<div class="text-sm font-bold">- ${i.qty}x ${escapeHTML(i.name)}</div>`).join('')}</div><div class="mt-4 font-bold bg-yellow-200 p-2 text-lg border-2 border-black">Total: ${formatWon(w.total)}</div><div class="mt-2 text-sm font-bold p-2 border-2 border-black text-center ${w.status === 'cooking' ? 'bg-success text-black' : 'bg-gray-200 text-gray-700'}">Status: ${w.status === 'cooking' ? '✔ DITERIMA (Sedang Dimasak)' : '⏳ Menunggu Kasir'}</div></div>`).join('') : '<p class="font-bold text-center col-span-full">Pesanan sudah diproses kasir atau kosong.</p>';
+        document.getElementById('custWaitListAreaPage').innerHTML = list.length ? list.map(w => `<div class="brutal-box p-4 bg-white border-l-8 ${w.status === 'ready' ? 'border-l-accent' : (w.status === 'cooking' ? 'border-l-success' : 'border-l-main')}"><div class="font-bold border-b-2 border-black pb-2 mb-2 flex justify-between text-lg flex-wrap"><span>${safeDate(w.date)}</span><span>${escapeHTML(w.buyerName)}</span></div>${w.table ? `<div class="mb-2 inline-block font-bold text-xs bg-purple-100 border-2 border-black px-2 py-0.5">🪑 ${escapeHTML(w.table)}</div>` : ''}<div class="flex-1">${w.items.map(i=>`<div class="text-sm font-bold">- ${i.qty}x ${escapeHTML(i.name)}</div>`).join('')}</div><div class="mt-4 font-bold bg-yellow-200 p-2 text-lg border-2 border-black">Total: ${formatWon(w.total)}</div><div class="mt-2 text-sm font-bold p-2 border-2 border-black text-center ${w.status === 'ready' ? 'bg-accent text-black' : (w.status === 'cooking' ? 'bg-success text-black' : 'bg-gray-200 text-gray-700')}">Status: ${w.status === 'ready' ? '✅ SIAP DISAJIKAN' : (w.status === 'cooking' ? '🔥 SEDANG DIMASAK' : '⏳ Menunggu Kasir')}</div></div>`).join('') : '<p class="font-bold text-center col-span-full">Pesanan sudah diproses kasir atau kosong.</p>';
         window.showPage('pageCustWaitList');
     };
 
@@ -4192,7 +4207,7 @@
                         return {
                             id: doc.id, date: w.date, buyerName: w.buyer_name, notes: w.notes,
                             items: w.items || [], total: Number(w.total || 0), status: w.status, userId: w.user_id,
-                            table: w.table_name || w.table || '', cookingAt: w.cooking_at || ''
+                            table: w.table_name || w.table || '', cookingAt: w.cooking_at || '', readyAt: w.ready_at || ''
                         };
                     });
                 } else {
@@ -4203,7 +4218,7 @@
         if(STATE.user && STATE.user.role === 'admin') {
             const btn = document.getElementById('btnAdminWaiting'); 
             const c = STATE.waitingList.length;
-            const uncooked = STATE.waitingList.filter(w => w.status !== 'cooking').length;
+            const uncooked = STATE.waitingList.filter(w => w.status !== 'ready').length;
             if(btn) { 
                 btn.classList.toggle('d-none', c === 0); 
                 document.getElementById('adminWaitCount').textContent = c; 
@@ -4390,20 +4405,27 @@
     };
 
     window.setAdminWaitTab = tab => {
-        STATE.adminWaitTab = tab === 'cooking' ? 'cooking' : 'incoming';
+        STATE.adminWaitTab = tab === 'ready' ? 'ready' : 'incoming';
         window.filterAdminWaitList();
     };
 
-    const adminWaitCardHtml = (w, isCooking) => {
+    const adminWaitCardHtml = (w, isReadyTab) => {
+        const isCooking = w.status === 'cooking';
         const timeChip = isCooking
-            ? (w.cookingAt
-                ? `<div class="mt-1.5 inline-flex items-center gap-1 flex-wrap text-[11px] font-bold border-2 border-black px-2 py-0.5 bg-green-100">🔥 Mulai dimasak ${awClock(w.cookingAt)} <span class="font-normal text-gray-600">· ${awAgo(w.cookingAt)}</span></div>`
-                : `<div class="mt-1.5 inline-flex items-center gap-1 flex-wrap text-[11px] font-bold border-2 border-black px-2 py-0.5 bg-green-100">🕐 Masuk ${awClock(w.date)} <span class="font-normal text-gray-600">· waktu mulai masak tidak tercatat</span></div>`)
+            ? `<div class="mt-1.5 inline-flex items-center gap-1 flex-wrap text-[11px] font-bold border-2 border-black px-2 py-0.5 bg-green-100">🔥 Mulai dimasak ${awClock(w.cookingAt)} <span class="font-normal text-gray-600">· ${awAgo(w.cookingAt)}</span></div>`
             : `<div class="mt-1.5 inline-flex items-center gap-1 flex-wrap text-[11px] font-bold border-2 border-black px-2 py-0.5 bg-yellow-100">🕐 Masuk ${awClock(w.date)} <span class="font-normal text-gray-600">· ${awAgo(w.date)}</span></div>`;
-        const cookBtn = isCooking
-            ? `<div class="text-center text-sm font-bold border-2 border-black bg-green-100 py-2 w-full">✔ Sedang Dimasak (Diterima)</div>`
-            : `<button onclick="window.startCooking('${w.id}')" class="brutal-btn bg-black text-white px-3 py-2 text-sm font-bold w-full">🔥 Mulai Memasak</button>`;
-        return `<div class="brutal-box bg-white p-4 flex flex-col border-l-8 ${isCooking ? 'border-l-success' : 'border-l-main'}"><div class="flex justify-between items-start gap-2 border-b-2 border-black pb-2 mb-2"><div class="min-w-0"><div class="font-bold text-lg uppercase break-words">${escapeHTML(w.buyerName)} <span class="text-[10px] bg-black text-white px-1">${w.userId ? 'Pelanggan' : 'Tamu'}</span></div>${w.table ? `<div class="mt-1 font-bold text-xs bg-purple-100 border-2 border-black px-2 py-0.5 inline-block">🪑 ${escapeHTML(w.table)}</div>` : ''}<div>${timeChip}</div></div><button onclick="window.editWaitList('${w.id}')" class="brutal-btn bg-accent px-2 py-1 text-xs font-bold shrink-0">✏️ Edit</button></div><div class="flex-1">${w.items.map(i => `<div class="text-sm font-bold">${i.qty}x ${escapeHTML(i.name)}</div>`).join('')}</div>${w.notes ? `<div class="mt-2 p-2 bg-gray-100 text-xs italic border-2 border-black">Catatan: ${escapeHTML(w.notes)}</div>` : ''}<div class="mt-4 flex flex-col gap-2">${cookBtn}<button onclick="window.pullToCart('${w.id}')" class="brutal-btn bg-success px-3 py-2 text-sm font-bold w-full">🛒 Kirim ke Keranjang</button></div></div>`;
+        // Baris aksi: di tab Incoming Order ada ikon "mulai memasak" (tepinya berputar kalau sedang dimasak)
+        // berdampingan dengan tombol "Siap Disajikan". Di tab Awaiting Payment, aksi ini sudah selesai,
+        // jadi diganti label status "Siap Saji" + total nominal pesanan.
+        const actionRow = isReadyTab
+            ? `<div class="text-center text-sm font-bold border-2 border-black bg-green-100 py-2 w-full">✅ Siap Saji</div><div class="text-center text-sm font-bold border-2 border-black bg-yellow-100 py-2 w-full mt-2">Total: ${formatWon(w.total)}</div>`
+            : `<div class="flex items-stretch">
+                    <button onclick="window.toggleCooking('${w.id}')" class="cook-icon-btn ${isCooking ? 'is-cooking' : ''}" aria-label="Mulai memasak" title="Tandai sedang dimasak">
+                        <span class="cook-icon-ring"></span><span class="cook-icon-emoji">🍳</span>
+                    </button>
+                    <button onclick="window.markReadyToServe('${w.id}')" class="brutal-btn bg-black text-white flex-1 py-2 pl-6 pr-3 text-sm font-bold -ml-3 z-0">✅ Siap Disajikan</button>
+                </div>`;
+        return `<div class="brutal-box bg-white p-4 flex flex-col border-l-8 ${isReadyTab ? 'border-l-accent' : (isCooking ? 'border-l-success' : 'border-l-main')}"><div class="flex justify-between items-start gap-2 border-b-2 border-black pb-2 mb-2"><div class="min-w-0"><div class="font-bold text-lg uppercase break-words">${escapeHTML(w.buyerName)} <span class="text-[10px] bg-black text-white px-1">${w.userId ? 'Pelanggan' : 'Tamu'}</span></div>${w.table ? `<div class="mt-1 font-bold text-xs bg-purple-100 border-2 border-black px-2 py-0.5 inline-block">🪑 ${escapeHTML(w.table)}</div>` : ''}<div>${timeChip}</div></div><button onclick="window.editWaitList('${w.id}')" class="brutal-btn bg-accent px-2 py-1 text-xs font-bold shrink-0">✏️ Edit</button></div><div class="flex-1">${w.items.map(i => `<div class="text-sm font-bold">${i.qty}x ${escapeHTML(i.name)}</div>`).join('')}</div>${w.notes ? `<div class="mt-2 p-2 bg-gray-100 text-xs italic border-2 border-black">Catatan: ${escapeHTML(w.notes)}</div>` : ''}<div class="mt-4 flex flex-col gap-2">${actionRow}<button onclick="window.pullToCart('${w.id}')" class="brutal-btn bg-success px-3 py-2 text-sm font-bold w-full">🛒 Kirim ke Keranjang</button></div></div>`;
     };
 
     window.filterAdminWaitList = () => {
@@ -4417,39 +4439,64 @@
                 (w.table || '').toLowerCase().includes(query)
             );
         }
-        // Terlama di atas: Incoming berdasarkan waktu pesanan dibuat, Diterima berdasarkan waktu mulai memasak
-        const incoming = all.filter(w => w.status !== 'cooking').sort((a, b) => new Date(a.date) - new Date(b.date));
-        const cooking = all.filter(w => w.status === 'cooking').sort((a, b) => new Date(a.cookingAt || a.date) - new Date(b.cookingAt || b.date));
+        // Terlama di atas: Incoming (termasuk yang sedang dimasak) berdasarkan waktu pesanan dibuat,
+        // Awaiting Payment berdasarkan waktu ditandai "Siap Disajikan".
+        const incoming = all.filter(w => w.status !== 'ready').sort((a, b) => new Date(a.date) - new Date(b.date));
+        const ready = all.filter(w => w.status === 'ready').sort((a, b) => new Date(a.readyAt || a.date) - new Date(b.readyAt || b.date));
 
-        const tab = STATE.adminWaitTab === 'cooking' ? 'cooking' : 'incoming';
+        const tab = STATE.adminWaitTab === 'ready' ? 'ready' : 'incoming';
         document.getElementById('waitTabCount_incoming').textContent = incoming.length;
-        document.getElementById('waitTabCount_cooking').textContent = cooking.length;
+        document.getElementById('waitTabCount_ready').textContent = ready.length;
         document.querySelectorAll('.wait-tab').forEach(btn => {
             const active = btn.id === 'waitTab_' + tab;
             btn.classList.toggle('bg-black', active); btn.classList.toggle('text-white', active);
             btn.classList.toggle('bg-white', !active); btn.classList.toggle('text-black', !active);
         });
 
-        const list = tab === 'cooking' ? cooking : incoming;
+        const list = tab === 'ready' ? ready : incoming;
         if (list.length === 0) {
             const emptyMsg = query
-                ? `Tidak ada pesanan yang cocok dengan "${escapeHTML(query)}" di ${tab === 'cooking' ? 'Diterima' : 'Incoming Order'}.`
-                : (tab === 'cooking' ? 'Belum ada pesanan yang diterima / sedang dimasak.' : 'Tidak ada incoming order.');
+                ? `Tidak ada pesanan yang cocok dengan "${escapeHTML(query)}" di ${tab === 'ready' ? 'Awaiting Payment' : 'Incoming Order'}.`
+                : (tab === 'ready' ? 'Belum ada pesanan yang siap disajikan.' : 'Tidak ada incoming order.');
             container.innerHTML = `<div class="p-6 text-center font-bold text-gray-600 bg-white border-2 border-black col-span-full">${emptyMsg}</div>`;
             return;
         }
-        container.innerHTML = list.map(w => adminWaitCardHtml(w, tab === 'cooking')).join('');
+        container.innerHTML = list.map(w => adminWaitCardHtml(w, tab === 'ready')).join('');
     };
 
-    window.startCooking = async (waitId) => {
-        const cookingAt = new Date().toISOString();
+    // Klik ikon 🍳 = tandai/batalkan "sedang dimasak" (tepi lingkaran berputar). Pesanan TETAP di tab
+    // Incoming Order sampai admin menekan "Siap Disajikan".
+    window.toggleCooking = async (waitId) => {
+        const w = STATE.waitingList.find(x => x.id === waitId);
+        if (!w) return;
+        const goingToCook = w.status !== 'cooking';
+        const cookingAt = goingToCook ? new Date().toISOString() : '';
         showLoad();
         try {
             if(!IS_PREVIEW && db) {
-                await db.collection('waiting_list').doc(waitId).update({ status: 'cooking', cooking_at: cookingAt });
+                await db.collection('waiting_list').doc(waitId).update({ status: goingToCook ? 'cooking' : firebase.firestore.FieldValue.delete(), cooking_at: cookingAt });
+            }
+            w.status = goingToCook ? 'cooking' : '';
+            w.cookingAt = cookingAt;
+            window.filterAdminWaitList();
+        } catch(e) { 
+            await window.customAlert("Gagal update: " + e.message, "Gagal"); 
+        } finally { 
+            hideLoad(); 
+        }
+    };
+
+    // Klik "Siap Disajikan" = pesanan pindah dari tab Incoming Order ke tab Awaiting Payment.
+    window.markReadyToServe = async (waitId) => {
+        const readyAt = new Date().toISOString();
+        showLoad();
+        try {
+            if(!IS_PREVIEW && db) {
+                await db.collection('waiting_list').doc(waitId).update({ status: 'ready', ready_at: readyAt });
             }
             const w = STATE.waitingList.find(x => x.id === waitId); 
-            if(w) { w.status = 'cooking'; w.cookingAt = cookingAt; }
+            if(w) { w.status = 'ready'; w.readyAt = readyAt; }
+            STATE.adminWaitTab = 'ready';
             window.openAdminWaitingList();
         } catch(e) { 
             await window.customAlert("Gagal update: " + e.message, "Gagal"); 
@@ -4644,7 +4691,7 @@
     window.renderEditWaitCart = () => {
         const list = document.getElementById('editWaitItems');
         if(STATE.editCart.length === 0) list.innerHTML = '<p class="text-xs text-center text-gray-500 italic">Produk kosong</p>';
-        else list.innerHTML = STATE.editCart.map((item, index) => `<div class="flex justify-between items-center bg-gray-50 border border-black p-2"><div class="text-sm font-bold flex-1 truncate">${escapeHTML(item.name)}</div><div class="flex items-center gap-1"><button type="button" onclick="window.changeEditWaitQty(${index}, -1)" class="w-6 h-6 font-bold border border-black bg-white">-</button><input type="number" min="1" inputmode="numeric" value="${item.qty}" onchange="window.setEditWaitQty(${index}, this.value)" onclick="this.select()" class="w-11 text-center font-bold border border-black bg-white py-0.5"><button type="button" onclick="window.changeEditWaitQty(${index}, 1)" class="w-6 h-6 font-bold border border-black bg-main">+</button><button type="button" onclick="window.changeEditWaitQty(${index}, -999)" class="w-6 h-6 font-bold border border-black bg-danger text-white ml-2">X</button></div></div>`).join('');
+        else list.innerHTML = STATE.editCart.map((item, index) => `<div class="flex justify-between items-center bg-gray-50 border border-black p-2"><div class="text-sm font-bold flex-1 truncate">${escapeHTML(item.name)}</div><div class="flex items-center gap-1"><button type="button" onclick="window.changeEditWaitQty(${index}, -1)" class="w-6 h-6 font-bold border border-black bg-white">-</button><input type="number" min="1" inputmode="numeric" value="${item.qty}" onchange="window.setEditWaitQty(${index}, this.value)" onclick="this.select()" class="w-11 text-center font-bold border border-black bg-white py-0.5"><button type="button" onclick="window.changeEditWaitQty(${index}, 1)" class="w-6 h-6 font-bold border border-black bg-main">+</button><button type="button" onclick="window.changeEditWaitQty(${index}, -999)" class="w-6 h-6 font-bold border border-black bg-danger text-white ml-2 inline-flex items-center justify-center"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" class="pointer-events-none"><line x1="5" y1="5" x2="19" y2="19"></line><line x1="19" y1="5" x2="5" y2="19"></line></svg></button></div></div>`).join('');
         document.getElementById('editWaitTotal').textContent = formatWon(STATE.editCart.reduce((sum, item) => sum + (item.price * item.qty), 0));
     };
 
