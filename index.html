@@ -147,21 +147,40 @@
         .table-seat-dot { width: 8px; height: 8px; border-radius: 9999px; background-color: #000; }
         .pulse-call { animation: pulseWarning 1s infinite alternate; }
         @keyframes pulseWarning { from { transform: scale(1); } to { transform: scale(1.06); } }
-        /* Ikon "mulai memasak" bundar di kartu Incoming Order: tepinya berputar selagi status = sedang dimasak */
-        .cook-icon-btn {
-            position: relative; flex-shrink: 0; width: 56px; height: 56px; border-radius: 9999px;
-            background: #000; border: 3px solid #000; display: flex; align-items: center; justify-content: center;
-            cursor: pointer; z-index: 1;
+        /* Kombo tombol "Siap Disajikan" + "Kirim ke Keranjang" dengan ikon panci bundar besar menumpuk di kiri */
+        .cook-combo { position: relative; display: flex; align-items: stretch; }
+        .cook-icon-wrap {
+            position: relative; flex-shrink: 0; width: 84px; z-index: 2; margin-right: -34px;
+            display: flex; align-items: center; justify-content: center; cursor: pointer;
         }
-        .cook-icon-btn .cook-icon-emoji { font-size: 22px; line-height: 1; position: relative; z-index: 2; }
-        .cook-icon-btn .cook-icon-ring {
-            position: absolute; inset: -5px; border-radius: 9999px; border: 4px solid transparent; opacity: 0;
-        }
-        .cook-icon-btn.is-cooking .cook-icon-ring {
-            opacity: 1; border-top-color: #22c55e; border-right-color: #22c55e;
-            animation: cookIconSpin 0.9s linear infinite;
-        }
+        .cook-ring-svg { position: absolute; inset: 0; width: 100%; height: 100%; transform-origin: 50% 50%; }
+        .cook-ring-svg.is-spinning { animation: cookIconSpin 1.1s linear infinite; }
         @keyframes cookIconSpin { to { transform: rotate(360deg); } }
+        .cook-icon-circle {
+            position: relative; width: 66px; height: 66px; border-radius: 9999px; background: #000;
+            display: flex; align-items: center; justify-content: center; overflow: hidden;
+        }
+        .cook-icon-emoji { font-size: 28px; line-height: 1; }
+        .cook-icon-flame { position: absolute; left: 8px; bottom: 6px; font-size: 16px; }
+        .cook-combo-bars { flex: 1; display: flex; flex-direction: column; gap: 6px; padding-left: 44px; min-width: 0; }
+        .siap-disajikan-btn {
+            background: #000; color: #fff; font-family: Georgia, 'Times New Roman', serif; font-style: italic; font-weight: bold;
+            font-size: 15px; text-align: center; border-radius: 10px; border: 2px solid #000; padding: 14px 10px 14px 34px;
+            cursor: pointer;
+        }
+        .siap-disajikan-btn.is-cooking { background: #FFD500; color: #000; border-color: #000; }
+        .kirim-keranjang-btn {
+            background: #2ee66b; color: #000; font-weight: 800; font-size: 12px; letter-spacing: 0.02em; text-transform: uppercase;
+            border-radius: 10px; border: 2px solid #000; padding: 10px 10px 10px 34px; display: flex; align-items: center; gap: 8px;
+            cursor: pointer;
+        }
+        @media (min-width: 768px) {
+            .cook-icon-wrap { width: 96px; margin-right: -40px; }
+            .cook-icon-circle { width: 76px; height: 76px; }
+            .cook-icon-emoji { font-size: 32px; }
+            .cook-combo-bars { padding-left: 50px; }
+            .siap-disajikan-btn { font-size: 17px; padding: 16px 12px 16px 40px; }
+        }
     #posProductsCol > div:nth-child(1),
         #posProductsCol > div:nth-child(2) {
             position: sticky;
@@ -3114,6 +3133,8 @@
         e.preventDefault(); 
         showLoad();
         const prodIdVal = document.getElementById('prodId').value;
+        const oldProduct = prodIdVal ? STATE.data.products.find(x => x.id === prodIdVal) : null;
+        const oldPrice = oldProduct ? Number(oldProduct.price || 0) : null;
         const payload = { 
             id: prodIdVal ? prodIdVal : genId('prod_'), 
             name: document.getElementById('prodName').value.trim(), 
@@ -3137,6 +3158,11 @@
             } else {
                 STATE.data.products.push(payload);
             }
+            // Kalau harga produk diubah, samakan juga nominalnya di hutang pelanggan yang BELUM lunas
+            // (pesanan yang sudah lunas tidak disentuh, supaya riwayat pembayaran tetap akurat).
+            if (oldProduct && oldPrice !== null && oldPrice !== Number(payload.price)) {
+                await window.propagateProductPriceToUnpaidDebts(payload.id, Number(payload.price));
+            }
             STATE.tempProdImgBase64 = '';
             saveLocalDataCache();
             window.closeModal('modalAddProduct'); 
@@ -3152,6 +3178,76 @@
             hideLoad();
             await window.customAlert(e.message, 'Gagal'); 
         }
+    };
+
+    // Menyamakan nominal harga produk di semua pesanan Hutang yang MASIH BELUM LUNAS dengan harga terbaru,
+    // lalu menyesuaikan ulang total hutang pelanggan yang terdampak. Pesanan yang sudah Lunas tidak diubah.
+    window.propagateProductPriceToUnpaidDebts = async (productId, newPrice) => {
+        try {
+            if (!IS_PREVIEW && db) {
+                const unpaidSnap = await db.collection('orders')
+                    .where('type', '==', 'Hutang')
+                    .where('payment_status', '==', 'Unpaid')
+                    .get();
+                if (unpaidSnap.empty) return;
+                const batch = db.batch();
+                const affectedCustIds = new Set();
+                let touched = false;
+                unpaidSnap.forEach(doc => {
+                    const o = doc.data();
+                    if (!Array.isArray(o.items)) return;
+                    let changed = false;
+                    const newItems = o.items.map(it => {
+                        if (it.id === productId && Number(it.price) !== Number(newPrice)) {
+                            changed = true;
+                            return { ...it, price: newPrice };
+                        }
+                        return it;
+                    });
+                    if (changed) {
+                        const newSubtotal = newItems.reduce((s, it) => s + (Number(it.price) || 0) * (Number(it.qty) || 0), 0);
+                        const newTotal = newSubtotal + Number(o.ongkir || 0);
+                        batch.update(doc.ref, { items: newItems, subtotal: newSubtotal, total: newTotal });
+                        if (o.cust_id) affectedCustIds.add(o.cust_id);
+                        touched = true;
+                    }
+                });
+                if (touched) {
+                    await batch.commit();
+                    for (const cid of affectedCustIds) { await window.syncCustomerDebt(cid); }
+                    await fetchAllData();
+                }
+            } else {
+                let touched = false;
+                const affectedCustIds = new Set();
+                STATE.data.orders.forEach(o => {
+                    if (o.type !== 'Hutang' || o.paymentStatus !== 'Unpaid' || !Array.isArray(o.items)) return;
+                    let changed = false;
+                    o.items.forEach(it => {
+                        if (it.id === productId && Number(it.price) !== Number(newPrice)) {
+                            it.price = newPrice;
+                            changed = true;
+                        }
+                    });
+                    if (changed) {
+                        o.subtotal = o.items.reduce((s, it) => s + (Number(it.price) || 0) * (Number(it.qty) || 0), 0);
+                        o.total = o.subtotal + Number(o.ongkir || 0);
+                        touched = true;
+                        if (o.custId) affectedCustIds.add(o.custId);
+                    }
+                });
+                if (touched) {
+                    affectedCustIds.forEach(cid => {
+                        const c = STATE.data.customers.find(x => x.id === cid);
+                        if (c) {
+                            c.debt = STATE.data.orders
+                                .filter(o => o.custId === cid && o.type === 'Hutang' && o.paymentStatus === 'Unpaid')
+                                .reduce((s, o) => s + Number(o.total || 0), 0);
+                        }
+                    });
+                }
+            }
+        } catch (e) { console.warn('Gagal menyinkronkan harga baru ke hutang pelanggan:', e); }
     };
 
     window.deleteProduct = async id => {
@@ -4417,15 +4513,28 @@
         // Baris aksi: di tab Incoming Order ada ikon "mulai memasak" (tepinya berputar kalau sedang dimasak)
         // berdampingan dengan tombol "Siap Disajikan". Di tab Awaiting Payment, aksi ini sudah selesai,
         // jadi diganti label status "Siap Saji" + total nominal pesanan.
+        // Baris aksi: di tab Incoming Order ada ikon panci bundar besar yang menumpuk di sisi kiri
+        // dua baris tombol ("Siap Disajikan" & "Kirim ke Keranjang"). Tepi ikon berputar kalau sedang dimasak.
+        // Di tab Awaiting Payment, aksi ini sudah selesai, jadi diganti label status "Siap Saji" + total nominal.
         const actionRow = isReadyTab
-            ? `<div class="text-center text-sm font-bold border-2 border-black bg-green-100 py-2 w-full">✅ Siap Saji</div><div class="text-center text-sm font-bold border-2 border-black bg-yellow-100 py-2 w-full mt-2">Total: ${formatWon(w.total)}</div>`
-            : `<div class="flex items-stretch">
-                    <button onclick="window.toggleCooking('${w.id}')" class="cook-icon-btn ${isCooking ? 'is-cooking' : ''}" aria-label="Mulai memasak" title="Tandai sedang dimasak">
-                        <span class="cook-icon-ring"></span><span class="cook-icon-emoji">🍳</span>
+            ? `<div class="text-center text-sm font-bold border-2 border-black bg-green-100 py-2 w-full rounded-lg">✅ Siap Saji</div><div class="text-center text-sm font-bold border-2 border-black bg-yellow-100 py-2 w-full mt-2 rounded-lg">Total: ${formatWon(w.total)}</div><button onclick="window.pullToCart('${w.id}')" class="brutal-btn bg-success px-3 py-2 text-sm font-bold w-full rounded-lg mt-2">🛒 Kirim ke Keranjang</button>`
+            : `<div class="cook-combo">
+                    <button onclick="window.toggleCooking('${w.id}')" class="cook-icon-wrap" aria-label="Tandai sedang dimasak" title="Tandai sedang dimasak">
+                        <svg class="cook-ring-svg ${isCooking ? 'is-spinning' : ''}" viewBox="0 0 100 100"><circle cx="50" cy="50" r="44" fill="none" stroke="#00FF66" stroke-width="9" stroke-linecap="round" stroke-dasharray="40 25 40 25"></circle></svg>
+                        <span class="cook-icon-circle">
+                            <span class="cook-icon-emoji">🍲</span>
+                            <span class="cook-icon-flame">🔥</span>
+                        </span>
                     </button>
-                    <button onclick="window.markReadyToServe('${w.id}')" class="brutal-btn bg-black text-white flex-1 py-2 pl-6 pr-3 text-sm font-bold -ml-3 z-0">✅ Siap Disajikan</button>
+                    <div class="cook-combo-bars">
+                        <button onclick="window.markReadyToServe('${w.id}')" class="siap-disajikan-btn ${isCooking ? 'is-cooking' : ''}">Siap Disajikan</button>
+                        <button onclick="window.pullToCart('${w.id}')" class="kirim-keranjang-btn">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
+                            <span>KIRIM KE KERANJANG</span>
+                        </button>
+                    </div>
                 </div>`;
-        return `<div class="brutal-box bg-white p-4 flex flex-col border-l-8 ${isReadyTab ? 'border-l-accent' : (isCooking ? 'border-l-success' : 'border-l-main')}"><div class="flex justify-between items-start gap-2 border-b-2 border-black pb-2 mb-2"><div class="min-w-0"><div class="font-bold text-lg uppercase break-words">${escapeHTML(w.buyerName)} <span class="text-[10px] bg-black text-white px-1">${w.userId ? 'Pelanggan' : 'Tamu'}</span></div>${w.table ? `<div class="mt-1 font-bold text-xs bg-purple-100 border-2 border-black px-2 py-0.5 inline-block">🪑 ${escapeHTML(w.table)}</div>` : ''}<div>${timeChip}</div></div><button onclick="window.editWaitList('${w.id}')" class="brutal-btn bg-accent px-2 py-1 text-xs font-bold shrink-0">✏️ Edit</button></div><div class="flex-1">${w.items.map(i => `<div class="text-sm font-bold">${i.qty}x ${escapeHTML(i.name)}</div>`).join('')}</div>${w.notes ? `<div class="mt-2 p-2 bg-gray-100 text-xs italic border-2 border-black">Catatan: ${escapeHTML(w.notes)}</div>` : ''}<div class="mt-4 flex flex-col gap-2">${actionRow}<button onclick="window.pullToCart('${w.id}')" class="brutal-btn bg-success px-3 py-2 text-sm font-bold w-full">🛒 Kirim ke Keranjang</button></div></div>`;
+        return `<div class="brutal-box bg-white p-4 flex flex-col border-l-8 ${isReadyTab ? 'border-l-accent' : (isCooking ? 'border-l-success' : 'border-l-main')}"><div class="flex justify-between items-start gap-2 border-b-2 border-black pb-2 mb-2"><div class="min-w-0"><div class="font-bold text-lg uppercase break-words">${escapeHTML(w.buyerName)} <span class="text-[10px] bg-black text-white px-1">${w.userId ? 'Pelanggan' : 'Tamu'}</span></div>${w.table ? `<div class="mt-1 font-bold text-xs bg-purple-100 border-2 border-black px-2 py-0.5 inline-block">🪑 ${escapeHTML(w.table)}</div>` : ''}<div>${timeChip}</div></div><button onclick="window.editWaitList('${w.id}')" class="brutal-btn bg-accent px-2 py-1 text-xs font-bold shrink-0">✏️ Edit</button></div><div class="flex-1">${w.items.map(i => `<div class="text-sm font-bold">${i.qty}x ${escapeHTML(i.name)}</div>`).join('')}</div>${w.notes ? `<div class="mt-2 p-2 bg-gray-100 text-xs italic border-2 border-black">Catatan: ${escapeHTML(w.notes)}</div>` : ''}<div class="mt-4">${actionRow}</div></div>`;
     };
 
     window.filterAdminWaitList = () => {
