@@ -490,7 +490,7 @@
                             <span class="absolute inset-y-0 left-0 flex items-center pl-2.5 text-sm pointer-events-none">🔍</span>
                             <input type="text" id="adminWaitSearch" autocomplete="off" onkeyup="window.filterAdminWaitList()" placeholder="Cari nama..." class="brutal-input bg-white py-1.5 pl-8 pr-2 text-sm w-full">
                         </div>
-                        <button onclick="window.showPage('pageAdminPOS')" class="brutal-btn bg-white px-4 py-2 text-sm text-black border-2 border-black whitespace-nowrap">Kembali ke POS</button>
+                        <button onclick="window.showPage('pageAdminPOS')" id="btnWaitBackToPos" class="brutal-btn bg-white px-4 py-2 text-sm text-black border-2 border-black whitespace-nowrap">Kembali ke POS</button>
                     </div>
                 </div>
                 <div class="grid grid-cols-2 gap-2 sm:gap-3 mb-4">
@@ -913,6 +913,39 @@
                                             <span id="callAudioStatus" class="text-[11px] font-bold text-gray-600 italic">Default: Telepon Kring-Kring (2x)</span>
                                         </div>
                                     </div>
+                                </div>
+                            </div>
+
+                            <!-- Alarm Pesanan Masuk & Akun Dapur -->
+                            <div class="mb-4 mt-4 border-t-2 border-black pt-4">
+                                <h4 class="font-bold mb-2">Alarm Pesanan Masuk</h4>
+                                <p class="text-[10px] md:text-xs text-gray-600 italic leading-tight mb-2">
+                                    Bunyi ini otomatis diputar di setiap perangkat yang sedang login sebagai Admin/Kasir/Dapur ketika ada pesanan baru masuk ke halaman Incoming Order (dari pengunjung/pelanggan, maupun yang dibuat admin/kasir sendiri).
+                                </p>
+                                <div class="bg-gray-50 border-2 border-black p-3 mb-2">
+                                    <label class="block font-bold mb-1 text-sm">Nada Alarm Pesanan Masuk</label>
+                                    <input type="file" id="setOrderAlarmFile" class="brutal-input bg-white text-xs mb-2" accept="audio/*" onchange="window.handleOrderAlarmSelect(event)">
+                                    <div class="flex items-center gap-2 flex-wrap">
+                                        <button type="button" onclick="window.testOrderAlarm()" class="brutal-btn bg-white px-2 py-1 text-xs">🔊 Tes Bunyi</button>
+                                        <button type="button" onclick="window.resetOrderAlarm()" class="brutal-btn bg-danger text-white px-2 py-1 text-xs">Reset ke Default</button>
+                                        <span id="orderAlarmStatus" class="text-[11px] font-bold text-gray-600 italic">Default: Bunyi Alarm Bawaan</span>
+                                    </div>
+                                    <p class="text-[10px] text-gray-500 mt-1">*Ukuran file maksimal 200KB.</p>
+                                </div>
+                            </div>
+
+                            <!-- Akun Dapur -->
+                            <div class="mb-4 mt-4 border-t-2 border-black pt-4">
+                                <h4 class="font-bold mb-2">Akun Dapur</h4>
+                                <label class="flex items-center gap-2 font-bold cursor-pointer bg-orange-100 p-3 border-2 border-black w-full">
+                                    <input type="checkbox" id="setKitchenEnabled" class="w-5 h-5 accent-black"> Aktifkan Akun Dapur
+                                </label>
+                                <p class="text-[10px] md:text-xs text-gray-600 italic leading-tight mt-1 mb-2">
+                                    *Status Default: <b>OFF</b>. Jika ON, staf dapur bisa login dengan username <b>Dapur</b> dan hanya melihat halaman Incoming Order / Awaiting Payment saja (tidak bisa akses data lain).
+                                </p>
+                                <div class="bg-gray-50 border-2 border-black p-3">
+                                    <label class="block font-bold mb-1 text-sm">Password Akun Dapur</label>
+                                    <input type="text" id="setKitchenPass" class="brutal-input bg-white" placeholder="Kosongkan jika tidak ingin mengubah (default: 123456)">
                                 </div>
                             </div>
 
@@ -1489,7 +1522,7 @@
         user: null, cart: [], ongkir: 0, editCart: [], custCart: [], waitingList: [],
         activeCategoryPOS: null, activeCategoryPub: null, activeCategoryCust: null,
         historyFilter: 'day', tempProdImgBase64: '', tempLogoBase64: '', tempCallAudioBase64: '', currentReceiptId: null,
-        lastCallCount: 0, calls: [], adminCartTable: '',
+        lastCallCount: 0, calls: [], adminCartTable: '', lastWaitCount: null,
         data: { 
             settings: { 
                 storeName: "Warung Indonesia", 
@@ -1504,6 +1537,9 @@
                 tableEnabled: false,
                 callEnabled: false,
                 customCallAudio: '',
+                orderAlarmAudio: '',
+                kitchenEnabled: false,
+                kitchenPass: "123456",
                 autoReset: false,
                 resetPeriod: "12",
                 productGridMobile: "2",
@@ -1534,8 +1570,11 @@
 
     function saveLocalDataCache() {
         try {
+            // ownerPassHash, ownerPassLegacy, dan kitchenPassHash SENGAJA tidak ikut disimpan ke localStorage,
+            // supaya hash password admin/dapur tidak "menetap" selamanya di penyimpanan browser pengunjung.
+            const { ownerPassHash, ownerPassLegacy, kitchenPassHash, ...safeSettings } = STATE.data.settings || {};
             localStorage.setItem('wi_cached_data', JSON.stringify({
-                settings: STATE.data.settings,
+                settings: safeSettings,
                 products: STATE.data.products,
                 categories: STATE.data.categories,
                 tables: STATE.data.tables
@@ -1668,11 +1707,10 @@
     window.handleCallAudioSelect = (e) => {
         const file = e.target.files[0];
         if (!file) return;
-        // Batas diperkecil dari 2MB ke 250KB: audio ini disimpan sebagai teks base64 (lebih besar ~33%)
-        // di dalam SATU dokumen Firestore yang sama dengan seluruh pengaturan toko lain, dan satu dokumen
-        // Firestore maksimal 1MB. File 2MB base64 (≈2.7MB) sudah pasti gagal disimpan.
-        if (file.size > 250 * 1024) {
-            window.customAlert("Ukuran file audio maksimal 250KB (supaya muat disimpan bersama pengaturan lain).", "Peringatan");
+        // Batas 200KB: audio ini disimpan sebagai teks base64 (lebih besar ~33%) di dalam SATU dokumen
+        // Firestore yang sama dengan seluruh pengaturan toko lain, dan satu dokumen Firestore maksimal 1MB.
+        if (file.size > 200 * 1024) {
+            window.customAlert("Ukuran file audio maksimal 200KB (supaya muat disimpan bersama pengaturan lain).", "Peringatan");
             e.target.value = '';
             return;
         }
@@ -1699,6 +1737,115 @@
         if (statusEl) statusEl.textContent = 'Default: Telepon Kring-Kring (2x)';
         playCallChime('');
         await window.customAlert("Suara panggilan dikembalikan ke nada telepon default (Kring-Kring). Klik 'Simpan Pengaturan' untuk menyimpan perubahan permanen.", "Reset Suara");
+    };
+
+    // ===== Alarm Pesanan Masuk (terpisah dari nada Panggil Pelayan) =====
+    let activeOrderAlarmSource = null;
+
+    function stopOrderAlarm() {
+        if (activeOrderAlarmSource) {
+            try {
+                if (activeOrderAlarmSource instanceof HTMLAudioElement) {
+                    activeOrderAlarmSource.pause();
+                    activeOrderAlarmSource.currentTime = 0;
+                } else if (activeOrderAlarmSource.close) {
+                    activeOrderAlarmSource.close();
+                }
+            } catch(e) {}
+            activeOrderAlarmSource = null;
+        }
+    }
+
+    function playOrderAlarmChime(overrideAudioSrc = null) {
+        stopOrderAlarm();
+        const customAudio = overrideAudioSrc !== null ? overrideAudioSrc : (STATE.data.settings && STATE.data.settings.orderAlarmAudio);
+
+        if (customAudio) {
+            try {
+                const audio = new Audio(customAudio);
+                activeOrderAlarmSource = audio;
+                audio.play().catch(err => console.warn('Audio play warning:', err));
+                audio.onended = () => {
+                    if (activeOrderAlarmSource === audio) activeOrderAlarmSource = null;
+                };
+                return;
+            } catch(e) {
+                console.warn('Custom order alarm playback error, fallback to default:', e);
+            }
+        }
+
+        // Nada default alarm pesanan masuk: 3x beep pendek (berbeda dari nada panggil pelayan)
+        try {
+            const AudioCtx = window.AudioContext || window.webkitAudioContext;
+            if (!AudioCtx) return;
+            const ctx = new AudioCtx();
+            if (ctx.state === 'suspended') ctx.resume();
+            activeOrderAlarmSource = ctx;
+
+            const masterGain = ctx.createGain();
+            masterGain.gain.setValueAtTime(0.4, ctx.currentTime);
+            masterGain.connect(ctx.destination);
+
+            const createBeep = (startTime) => {
+                const osc = ctx.createOscillator();
+                const toneGain = ctx.createGain();
+                osc.type = 'square';
+                osc.frequency.setValueAtTime(1046, startTime);
+                toneGain.gain.setValueAtTime(0.001, startTime);
+                toneGain.gain.exponentialRampToValueAtTime(0.35, startTime + 0.02);
+                toneGain.gain.setValueAtTime(0.35, startTime + 0.14);
+                toneGain.gain.exponentialRampToValueAtTime(0.001, startTime + 0.18);
+                osc.connect(toneGain);
+                toneGain.connect(masterGain);
+                osc.start(startTime);
+                osc.stop(startTime + 0.2);
+            };
+
+            const now = ctx.currentTime;
+            createBeep(now);
+            createBeep(now + 0.25);
+            createBeep(now + 0.5);
+
+            setTimeout(() => {
+                if (activeOrderAlarmSource === ctx) {
+                    try { ctx.close(); } catch(e) {}
+                    activeOrderAlarmSource = null;
+                }
+            }, 900);
+        } catch(e) { console.warn('Order alarm chime warning:', e); }
+    }
+
+    window.handleOrderAlarmSelect = (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+        if (file.size > 200 * 1024) {
+            window.customAlert("Ukuran file audio maksimal 200KB (supaya muat disimpan bersama pengaturan lain).", "Peringatan");
+            e.target.value = '';
+            return;
+        }
+        const reader = new FileReader();
+        reader.onload = (evt) => {
+            STATE.tempOrderAlarmBase64 = evt.target.result;
+            const statusEl = document.getElementById('orderAlarmStatus');
+            if (statusEl) statusEl.textContent = `File siap: ${file.name}`;
+            window.testOrderAlarm();
+        };
+        reader.readAsDataURL(file);
+    };
+
+    window.testOrderAlarm = () => {
+        const audioSrc = STATE.tempOrderAlarmBase64 || STATE.data.settings.orderAlarmAudio;
+        playOrderAlarmChime(audioSrc);
+    };
+
+    window.resetOrderAlarm = async () => {
+        STATE.tempOrderAlarmBase64 = '';
+        const fileInput = document.getElementById('setOrderAlarmFile');
+        if (fileInput) fileInput.value = '';
+        const statusEl = document.getElementById('orderAlarmStatus');
+        if (statusEl) statusEl.textContent = 'Default: Bunyi Alarm Bawaan';
+        playOrderAlarmChime('');
+        await window.customAlert("Alarm pesanan masuk dikembalikan ke bunyi bawaan. Klik 'Simpan Pengaturan' untuk menyimpan perubahan permanen.", "Reset Suara");
     };
     
     // Custom Dialog Replacements
@@ -1786,6 +1933,9 @@
                     table_enabled: false,
                     call_enabled: false,
                     custom_call_audio: '',
+                    order_alarm_audio: '',
+                    kitchen_enabled: false,
+                    kitchen_pass_hash: await sha256Hex("123456"),
                     auto_reset: false,
                     reset_period: "12",
                     product_grid_mobile: "2",
@@ -1827,6 +1977,10 @@
                     tableEnabled: Boolean(s.table_enabled),
                     callEnabled: Boolean(s.call_enabled),
                     customCallAudio: s.custom_call_audio || '',
+                    orderAlarmAudio: s.order_alarm_audio || '',
+                    kitchenEnabled: Boolean(s.kitchen_enabled),
+                    // Password akun Dapur di-hash (lihat catatan ownerPassHash) & TIDAK ikut ke localStorage.
+                    kitchenPassHash: s.kitchen_pass_hash || '',
                     autoReset: Boolean(s.auto_reset),
                     resetPeriod: s.reset_period || "12",
                     productGridMobile: s.product_grid_mobile === "3" ? "3" : "2",
@@ -1967,6 +2121,18 @@
             const role = STATE.user && STATE.user.role;
             const isStaff = role === 'admin' || role === 'cashier';
 
+            if (role === 'kitchen') {
+                // KEAMANAN: akun Dapur hanya boleh melihat Incoming Order/Awaiting Payment (waiting_list,
+                // diambil terpisah lewat checkAdminWaitList), jadi TIDAK perlu & TIDAK diberi akses ke
+                // data pelanggan, akun kasir, atau seluruh riwayat pesanan/transaksi toko.
+                STATE.data.customers = [];
+                STATE.data.orders = [];
+                STATE.data.cashiers = [];
+                await window.checkAdminWaitList();
+                hideLoad();
+                return;
+            }
+
             if (isStaff) {
                 // Admin & kasir butuh daftar akun kasir (untuk nama di riwayat & kelola akun).
                 await window.loadCashierAccounts();
@@ -2032,6 +2198,10 @@
             STATE.user = JSON.parse(savedUser); 
             await fetchAllData(); 
             if (STATE.user && STATE.user.role === 'customer' && !STATE.data.settings.customerEnabled) {
+                STATE.user = null;
+                localStorage.removeItem('wi_user');
+            }
+            if (STATE.user && STATE.user.role === 'kitchen' && !STATE.data.settings.kitchenEnabled) {
                 STATE.user = null;
                 localStorage.removeItem('wi_user');
             }
@@ -2151,6 +2321,42 @@
                 return;
             }
 
+            // Validasi Login Akun Dapur (username tetap "Dapur", password bisa diubah admin di Pengaturan)
+            if (username.toLowerCase() === 'dapur') {
+                if (!STATE.data.settings.kitchenEnabled) {
+                    hideLoad();
+                    await window.customAlert("Akun Dapur belum diaktifkan admin.", "Peringatan");
+                    return;
+                }
+                let kitchenPassOk = false;
+                if (IS_PREVIEW || !db) {
+                    kitchenPassOk = password === (STATE.data.settings.kitchenPass || '123456');
+                } else if (STATE.data.settings.kitchenPassHash) {
+                    kitchenPassOk = (await sha256Hex(password)) === STATE.data.settings.kitchenPassHash;
+                } else if (password === '123456') {
+                    // Jaga-jaga: hash belum ke-set (instalasi lama) -> izinkan password default lalu simpan hash-nya.
+                    kitchenPassOk = true;
+                    try {
+                        const newHash = await sha256Hex(password);
+                        await db.collection('settings').doc('app_config').update({ kitchen_pass_hash: newHash });
+                        STATE.data.settings.kitchenPassHash = newHash;
+                    } catch (kErr) { console.warn('Gagal menyimpan hash default Dapur:', kErr); }
+                }
+                if (!kitchenPassOk) {
+                    hideLoad();
+                    await window.customAlert("Username atau Password salah!", "Gagal");
+                    return;
+                }
+                STATE.user = { id: 'kitchen', role: 'kitchen', name: 'Dapur' };
+                localStorage.setItem('wi_user', JSON.stringify(STATE.user));
+                STATE.lastWaitCount = null;
+                await fetchAllData();
+                hideLoad();
+                await window.customAlert("Berhasil Login sebagai Dapur!", "Sukses");
+                route();
+                return;
+            }
+
             if (!isCustEnabled) {
                 let existsInCustomer = false;
                 if (IS_PREVIEW || !db) {
@@ -2256,6 +2462,7 @@
         } 
         STATE.user = null; 
         STATE.cart = []; 
+        STATE.lastWaitCount = null;
         localStorage.removeItem('wi_user'); 
         await fetchPublicData(); 
         route(); 
@@ -2264,6 +2471,10 @@
     function hideAllPages() { document.querySelectorAll('.app-page').forEach(p => p.classList.add('d-none')); }
     
     window.showPage = async (pageId) => { 
+        // Akun Dapur dikunci hanya di halaman Incoming Order/Awaiting Payment, apapun halaman yang diminta.
+        if (STATE.user && STATE.user.role === 'kitchen' && pageId !== 'pageAdminWaitList') {
+            pageId = 'pageAdminWaitList';
+        }
         if (pageId === 'pageRegister' && !STATE.data.settings.customerEnabled) {
             await window.customAlert("Pendaftaran pelanggan dinonaktifkan.", "Peringatan");
             window.showPage('pageLogin');
@@ -2312,6 +2523,15 @@
 
         if(!STATE.user) { window.renderPublicCatalog(); window.showPage('pagePublic'); }
         else if (STATE.user.role === 'admin' || STATE.user.role === 'cashier') { startOrdersListener(); window.renderAdminPOS(); window.showPage('pageAdminPOS'); }
+        else if (STATE.user.role === 'kitchen') {
+            if (!STATE.data.settings.kitchenEnabled) {
+                window.logout();
+                return;
+            }
+            // Akun Dapur selalu diarahkan ke halaman Incoming Order/Awaiting Payment saja, kosong ataupun terisi.
+            window.showPage('pageAdminWaitList');
+            window.filterAdminWaitList();
+        }
         else if (STATE.user.role === 'customer') { 
             if (!STATE.data.settings.customerEnabled) {
                 window.logout();
@@ -2371,6 +2591,8 @@
             nav.innerHTML = `<button onclick="window.showPage('pageAdminPOS')" class="${iconClasses} !bg-main hidden sm:block">POS Kasir</button><button onclick="window.showPage('pageAdminMgmt'); window.renderAdminProducts();" class="${iconClasses}">Kelola Admin</button><button onclick="window.logout()" class="${iconClasses} !bg-danger !text-white">Keluar</button>`; 
         } else if (STATE.user.role === 'cashier') { 
             nav.innerHTML = `<span class="font-bold text-xs md:text-sm mr-2 hidden sm:inline-block">Hi, ${escapeHTML(STATE.user.name)}</span><button onclick="window.showPage('pageAdminPOS')" class="${iconClasses} !bg-main hidden sm:block">POS Kasir</button><button onclick="window.openCashierManage()" id="navBtnManage" class="${iconClasses}">Kelola Aplikasi</button><button onclick="window.logout()" id="navBtnLogout" class="${iconClasses} !bg-danger !text-white">Keluar</button>`; 
+        } else if (STATE.user.role === 'kitchen') {
+            nav.innerHTML = `<span class="font-bold text-xs md:text-sm mr-2">👨‍🍳 Dapur</span><button onclick="window.logout()" id="navBtnLogout" class="${iconClasses} !bg-danger !text-white">Keluar</button>`;
         } else { 
             nav.innerHTML = `<span class="font-bold text-xs md:text-sm mr-2 hidden sm:inline-block">Hi, ${escapeHTML(STATE.user.name)}</span>${posMenu}<button onclick="window.logout()" id="navBtnLogout" class="${iconClasses} !bg-danger !text-white">Keluar</button>`; 
         }
@@ -3965,6 +4187,20 @@
             statusEl.textContent = STATE.tempCallAudioBase64 ? 'Suara Custom Aktif' : 'Default: Telepon Kring-Kring (2x)';
         }
 
+        STATE.tempOrderAlarmBase64 = STATE.data.settings.orderAlarmAudio || '';
+        const orderAlarmInput = document.getElementById('setOrderAlarmFile');
+        if (orderAlarmInput) orderAlarmInput.value = '';
+        const orderAlarmStatusEl = document.getElementById('orderAlarmStatus');
+        if (orderAlarmStatusEl) {
+            orderAlarmStatusEl.textContent = STATE.tempOrderAlarmBase64 ? 'Suara Custom Aktif' : 'Default: Bunyi Alarm Bawaan';
+        }
+
+        if (document.getElementById('setKitchenEnabled')) document.getElementById('setKitchenEnabled').checked = Boolean(STATE.data.settings.kitchenEnabled);
+        if (document.getElementById('setKitchenPass')) {
+            document.getElementById('setKitchenPass').value = '';
+            document.getElementById('setKitchenPass').placeholder = 'Kosongkan jika tidak ingin mengubah (default: 123456)';
+        }
+
         document.getElementById('setAutoReset').checked = Boolean(STATE.data.settings.autoReset);
         document.getElementById('setResetPeriod').value = STATE.data.settings.resetPeriod || '12';
         const gridMobile = STATE.data.settings.productGridMobile === '3' ? '3' : '2';
@@ -3992,6 +4228,7 @@
         const isCardEnabled = document.getElementById('setCardEnabled').checked;
 
         const rawOwnerPass = document.getElementById('setOwnerPass').value;
+        const rawKitchenPass = document.getElementById('setKitchenPass') ? document.getElementById('setKitchenPass').value : '';
         const payload = { 
             store_name: document.getElementById('setStoreName').value, 
             bank_name: document.getElementById('setBankName').value, 
@@ -4005,6 +4242,8 @@
             table_enabled: isTableEnabled,
             call_enabled: isCallEnabled,
             custom_call_audio: STATE.tempCallAudioBase64,
+            order_alarm_audio: STATE.tempOrderAlarmBase64 || '',
+            kitchen_enabled: document.getElementById('setKitchenEnabled') ? document.getElementById('setKitchenEnabled').checked : Boolean(STATE.data.settings.kitchenEnabled),
             auto_reset: document.getElementById('setAutoReset').checked, 
             reset_period: document.getElementById('setResetPeriod').value,
             hide_store_status_badge: document.getElementById('setHideStoreStatusBadge') ? document.getElementById('setHideStoreStatusBadge').checked : false,
@@ -4025,6 +4264,7 @@
         // Password admin hanya ikut disimpan/di-hash kalau kolomnya benar-benar diisi ulang.
         // Kalau dikosongkan, password lama (hash-nya) tidak disentuh sama sekali.
         if (rawOwnerPass) payload.owner_pass_hash = await sha256Hex(rawOwnerPass);
+        if (rawKitchenPass) payload.kitchen_pass_hash = await sha256Hex(rawKitchenPass);
         // Bersihkan sisa password mentah lama (kalau masih ada) supaya tidak nyangkut di database.
         if (!IS_PREVIEW && db && typeof firebase !== 'undefined') payload.owner_pass = firebase.firestore.FieldValue.delete();
 
@@ -4056,6 +4296,9 @@
                 tableEnabled: payload.table_enabled,
                 callEnabled: payload.call_enabled, 
                 customCallAudio: payload.custom_call_audio,
+                orderAlarmAudio: payload.order_alarm_audio,
+                kitchenEnabled: payload.kitchen_enabled,
+                kitchenPassHash: payload.kitchen_pass_hash || STATE.data.settings.kitchenPassHash,
                 autoReset: payload.auto_reset, 
                 resetPeriod: payload.reset_period,
                 productGridMobile: payload.product_grid_mobile,
@@ -4318,7 +4561,19 @@
                 }
             } catch(e){} 
         }
-        if(STATE.user && STATE.user.role === 'admin') {
+
+        // Alarm pesanan masuk: berbunyi di semua perangkat yang login sebagai Admin/Kasir/Dapur begitu
+        // jumlah pesanan di waiting_list bertambah (dari pengunjung/pelanggan, ATAU dari admin/kasir sendiri).
+        // STATE.lastWaitCount === null artinya baru saja login/buka app -> jangan langsung bunyi untuk data lama.
+        if (STATE.user && ['admin', 'cashier', 'kitchen'].includes(STATE.user.role)) {
+            const total = STATE.waitingList.length;
+            if (STATE.lastWaitCount !== null && total > STATE.lastWaitCount) {
+                playOrderAlarmChime();
+            }
+            STATE.lastWaitCount = total;
+        }
+
+        if(STATE.user && (STATE.user.role === 'admin' || STATE.user.role === 'cashier')) {
             const btn = document.getElementById('btnAdminWaiting'); 
             const c = STATE.waitingList.length;
             const uncooked = STATE.waitingList.filter(w => w.status !== 'ready').length;
@@ -4330,6 +4585,9 @@
             window.renderAdminTables();
             const waitPage = document.getElementById('pageAdminWaitList');
             if (waitPage && !waitPage.classList.contains('d-none')) window.filterAdminWaitList();
+        } else if (STATE.user && STATE.user.role === 'kitchen') {
+            // Akun Dapur: selalu di halaman Incoming Order/Awaiting Payment, kosong ataupun ada isinya.
+            window.filterAdminWaitList();
         } else {
             const btnWait = document.getElementById('navBtnCustWait');
             let myWaits = 0;
@@ -4481,7 +4739,7 @@
             checkClose('posSearchWrap', 'adminPosProductGrid', 'posInlineSearch', 'togglePosSearch');
         }
     });
-    setInterval(window.checkAdminWaitList, 15000);
+    setInterval(window.checkAdminWaitList, 5000);
 
     window.openAdminWaitingList = () => {
         window.showPage('pageAdminWaitList');
@@ -4521,12 +4779,14 @@
             : isCooking
                 ? `<div class="mt-1.5 inline-flex items-center gap-1 flex-wrap text-[11px] font-bold border-2 border-black px-2 py-0.5 bg-green-100">🔥 Mulai dimasak ${awClock(w.cookingAt)} <span class="font-normal text-gray-600">· ${awAgo(w.cookingAt)}</span></div>`
                 : `<div class="mt-1.5 inline-flex items-center gap-1 flex-wrap text-[11px] font-bold border-2 border-black px-2 py-0.5 bg-yellow-100">🕐 Masuk ${awClock(w.date)} <span class="font-normal text-gray-600">· ${awAgo(w.date)}</span></div>`;
+        const isKitchen = Boolean(STATE.user && STATE.user.role === 'kitchen');
         // Baris aksi: di tab Incoming Order ada ikon panci bundar besar (gaya brutalism, selaras tombol lain)
         // yang menumpuk di sisi kiri dua baris tombol ("Siap Disajikan" & "Kirim ke Keranjang").
         // Di tab Awaiting Payment, keterangan "Siap Saji" sudah dipindah ke sebelah jam, jadi baris aksi
         // di sini cukup menampilkan total nominal pesanan + tombol Kirim ke Keranjang.
+        // Akun Dapur tidak diberi tombol "Kirim ke Keranjang" karena tujuannya (halaman POS) di luar akses Dapur.
         const actionRow = isReadyTab
-            ? `<div class="text-center text-base font-bold brutal-box bg-main py-2.5 w-full">TOTAL: ${formatWon(w.total)}</div><button onclick="window.pullToCart('${w.id}')" class="brutal-btn bg-success px-3 py-2.5 text-sm w-full mt-2">🛒 Kirim ke Keranjang</button>`
+            ? `<div class="text-center text-base font-bold brutal-box bg-main py-2.5 w-full">TOTAL: ${formatWon(w.total)}</div>${isKitchen ? '' : `<button onclick="window.pullToCart('${w.id}')" class="brutal-btn bg-success px-3 py-2.5 text-sm w-full mt-2">🛒 Kirim ke Keranjang</button>`}`
             : `<div class="cook-combo">
                     <button onclick="window.toggleCooking('${w.id}')" class="cook-icon-wrap" aria-label="Tandai sedang dimasak" title="Tandai sedang dimasak">
                         <span class="cook-ring-modern ${isCooking ? 'is-spinning' : ''}"></span>
@@ -4536,11 +4796,11 @@
                         </span>
                     </button>
                     <div class="cook-combo-bars">
-                        <button onclick="window.markReadyToServe('${w.id}')" class="siap-disajikan-btn brutal-btn">Siap Disajikan</button>
-                        <button onclick="window.pullToCart('${w.id}')" class="kirim-keranjang-btn brutal-btn">
+                        <button onclick="window.markReadyToServe('${w.id}')" class="siap-disajikan-btn brutal-btn">✓ Siap Disajikan</button>
+                        ${isKitchen ? '' : `<button onclick="window.pullToCart('${w.id}')" class="kirim-keranjang-btn brutal-btn">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
                             <span>KIRIM KE KERANJANG</span>
-                        </button>
+                        </button>`}
                     </div>
                 </div>`;
         return `<div class="brutal-box bg-white p-4 flex flex-col border-l-8 ${isReadyTab ? 'border-l-accent' : (isCooking ? 'border-l-success' : 'border-l-main')}"><div class="flex justify-between items-start gap-2 border-b-2 border-black pb-2 mb-2"><div class="min-w-0"><div class="font-bold text-lg uppercase break-words">${escapeHTML(w.buyerName)} <span class="text-[10px] bg-black text-white px-1">${w.userId ? 'Pelanggan' : 'Tamu'}</span></div>${w.table ? `<div class="mt-1 font-bold text-xs bg-purple-100 border-2 border-black px-2 py-0.5 inline-block">🪑 ${escapeHTML(w.table)}</div>` : ''}<div>${timeChip}</div></div><button onclick="window.editWaitList('${w.id}')" class="brutal-btn bg-accent px-2 py-1 text-xs font-bold shrink-0">✏️ Edit</button></div><div class="flex-1">${w.items.map(i => `<div class="text-sm font-bold">${i.qty}x ${escapeHTML(i.name)}</div>`).join('')}</div>${w.notes ? `<div class="mt-2 p-2 bg-gray-100 text-xs italic border-2 border-black">Catatan: ${escapeHTML(w.notes)}</div>` : ''}<div class="mt-4">${actionRow}</div></div>`;
@@ -4549,6 +4809,9 @@
     window.filterAdminWaitList = () => {
         const container = document.getElementById('adminWaitListAreaPage');
         if (!container) return;
+        // Akun Dapur tidak boleh akses halaman POS lain, jadi tombol "Kembali ke POS" disembunyikan.
+        const backBtn = document.getElementById('btnWaitBackToPos');
+        if (backBtn) backBtn.classList.toggle('d-none', Boolean(STATE.user && STATE.user.role === 'kitchen'));
         const query = (document.getElementById('adminWaitSearch')?.value || '').toLowerCase().trim();
         let all = [...STATE.waitingList];
         if (query) {
