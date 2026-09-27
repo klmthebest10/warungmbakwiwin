@@ -2,6 +2,16 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
+    <!-- Terapkan mode gelap/terang sedini mungkin (sebelum konten dirender) supaya tidak ada kedipan tema salah. -->
+    <script>
+        (function () {
+            try {
+                if (localStorage.getItem('wi_theme') === 'dark') {
+                    document.documentElement.setAttribute('data-theme', 'dark');
+                }
+            } catch (e) {}
+        })();
+    </script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Warung Mbak Wiwin</title>
     
@@ -281,7 +291,69 @@
             #custCatalogArea #custSearchWrap {
                 top: 126px;
             }
-        }   
+        }
+
+        /* ============================================================
+           DARK MODE — tema gelap ala brutalism, warna dasar teal gelap.
+           Diaktifkan lewat atribut [data-theme="dark"] pada #gasapp-root,
+           disimpan per-perangkat di localStorage (tidak disinkronkan ke server).
+           Aturan di bawah menimpa kelas-kelas Tailwind & custom yang paling
+           sering dipakai di seluruh halaman, supaya efeknya menyeluruh.
+           ============================================================ */
+        [data-theme="dark"] { --dk-bg: #0B3538; --dk-surface: #123F42; --dk-surface-2: #154A4D; --dk-border: #F2EFE6; --dk-text: #F2EFE6; --dk-text-muted: #B9DAD8; }
+        [data-theme="dark"] #gasapp-root { background: var(--dk-bg); color: var(--dk-text); }
+        [data-theme="dark"] .poster-slide-float { background: linear-gradient(to top, var(--dk-bg) 55%, transparent) !important; }
+
+        /* Permukaan kartu/kotak & border khas brutalism: putih->teal gelap, hitam->krem terang */
+        [data-theme="dark"] .brutal-box,
+        [data-theme="dark"] .bg-white { background-color: var(--dk-surface) !important; }
+        [data-theme="dark"] .brutal-box,
+        [data-theme="dark"] .brutal-btn,
+        [data-theme="dark"] .brutal-input,
+        [data-theme="dark"] .border-black,
+        [data-theme="dark"] .border-l-dark,
+        [data-theme="dark"] .border-t-black,
+        [data-theme="dark"] .border-b-black { border-color: var(--dk-border) !important; }
+        [data-theme="dark"] .brutal-box,
+        [data-theme="dark"] .brutal-btn:not(.bg-main):not(.bg-success):not(.bg-danger):not(.bg-accent) { box-shadow: 4px 4px 0px 0px var(--dk-border) !important; }
+        [data-theme="dark"] .brutal-btn:active:not(:disabled) { box-shadow: 2px 2px 0px 0px var(--dk-border) !important; }
+        [data-theme="dark"] .brutal-input { background-color: var(--dk-surface) !important; color: var(--dk-text) !important; }
+        [data-theme="dark"] .brutal-input:focus { background-color: var(--dk-surface-2) !important; }
+        [data-theme="dark"] .brutal-btn.bg-white,
+        [data-theme="dark"] .siap-disajikan-btn:not(.is-cooking) { background-color: var(--dk-surface) !important; color: var(--dk-text) !important; }
+
+        /* Teks gelap -> cerah, teks abu-abu (keterangan sekunder) -> abu-teal terang */
+        [data-theme="dark"] .text-black,
+        [data-theme="dark"] h1, [data-theme="dark"] h2, [data-theme="dark"] h3,
+        [data-theme="dark"] label, [data-theme="dark"] p, [data-theme="dark"] span,
+        [data-theme="dark"] div { color: var(--dk-text); }
+        [data-theme="dark"] .text-gray-400, [data-theme="dark"] .text-gray-500,
+        [data-theme="dark"] .text-gray-600, [data-theme="dark"] .text-gray-700 { color: var(--dk-text-muted) !important; }
+        [data-theme="dark"] input, [data-theme="dark"] textarea, [data-theme="dark"] select { color: var(--dk-text); }
+        [data-theme="dark"] ::placeholder { color: var(--dk-text-muted); opacity: 0.7; }
+
+        /* Latar abu-abu terang -> permukaan teal gelap kedua */
+        [data-theme="dark"] .bg-gray-50, [data-theme="dark"] .bg-gray-100,
+        [data-theme="dark"] .bg-gray-200, [data-theme="dark"] .bg-gray-300 { background-color: var(--dk-surface-2) !important; }
+
+        /* Tombol hitam pekat (mis. "Siap Disajikan" saat idle, tombol Kasir Dock, dsb) tetap kontras */
+        [data-theme="dark"] .bg-black:not(.cook-icon-circle) { background-color: #06181A !important; color: var(--dk-text) !important; }
+        [data-theme="dark"] .bg-dark { background-color: #06181A !important; }
+
+        /* Modal, loader & header tetap mengikuti tema */
+        [data-theme="dark"] #globalLoader { background: rgba(11,53,56,0.92) !important; color: var(--dk-text); }
+        [data-theme="dark"] .modal-backdrop { background: rgba(0,0,0,0.85); }
+        [data-theme="dark"] header.sticky, [data-theme="dark"] #adminTabBar {
+            background-color: rgba(11,53,56,0.95) !important;
+        }
+
+        /* Struk/nota (.receipt-88mm) & area cetak SENGAJA tetap putih-hitam meski dark mode aktif,
+           supaya hasil cetak/tangkapan layar struk tetap seperti kertas nota biasa. */
+        [data-theme="dark"] .receipt-88mm, [data-theme="dark"] .receipt-88mm * { background: white !important; color: black !important; }
+
+        /* Tombol sakelar mode terang/gelap */
+        .theme-toggle-btn { font-size: 16px; }
+        [data-theme="dark"] .theme-toggle-btn { background-color: var(--dk-surface) !important; }
     </style>
 </head>
 <body>
@@ -335,7 +407,10 @@
 
             <!-- PAGE: PUBLIC / CATALOG -->
             <section id="pagePublic" class="app-page d-none">
-                <div id="publicBankInfo" class="text-xs italic opacity-80 mb-1"></div>
+                <div class="flex justify-between items-center gap-2 mb-1">
+                    <div id="publicBankInfo" class="text-xs italic opacity-80"></div>
+                    <button onclick="window.toggleTheme()" class="theme-toggle-btn brutal-btn bg-white w-8 h-8 md:w-9 md:h-9 flex-shrink-0 flex items-center justify-center p-0" title="Ganti Mode Terang/Gelap" aria-label="Ganti Mode Terang/Gelap">🌙</button>
+                </div>
                 <div class="flex justify-between items-center mb-4">
                     <h2 class="text-2xl md:text-3xl font-bold uppercase border-l-8 border-main pl-3">Menu Tersedia</h2>
                     <div id="publicCallWrap" class="d-none">
@@ -432,7 +507,10 @@
 
             <!-- PAGE: CUSTOMER DASHBOARD -->
             <section id="pageCustomerDashboard" class="app-page d-none">
-                <div id="custBankInfo" class="text-xs italic opacity-80 mb-1"></div>
+                <div class="flex justify-between items-center gap-2 mb-1">
+                    <div id="custBankInfo" class="text-xs italic opacity-80"></div>
+                    <button onclick="window.toggleTheme()" class="theme-toggle-btn brutal-btn bg-white w-8 h-8 md:w-9 md:h-9 flex-shrink-0 flex items-center justify-center p-0" title="Ganti Mode Terang/Gelap" aria-label="Ganti Mode Terang/Gelap">🌙</button>
+                </div>
                 <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
                     <h2 class="text-2xl md:text-3xl font-bold uppercase border-l-8 border-accent pl-3">Halo, <span id="custNameDisplay" class="bg-main px-2 border-2 border-black"></span></h2>
                     <div class="brutal-box bg-danger text-white p-3 w-full md:w-auto flex items-center gap-4">
@@ -515,6 +593,9 @@
             <section id="pageAdminPOS" class="app-page d-none">
               <div id="posLayout">
                 <div id="posProductsCol">
+                <div class="flex justify-end mb-1">
+                    <button onclick="window.toggleTheme()" class="theme-toggle-btn brutal-btn bg-white w-8 h-8 md:w-9 md:h-9 flex-shrink-0 flex items-center justify-center p-0" title="Ganti Mode Terang/Gelap" aria-label="Ganti Mode Terang/Gelap">🌙</button>
+                </div>
                 <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 gap-4">
                     <div class="flex items-center gap-2 flex-wrap">
                         <h2 class="text-2xl md:text-3xl font-bold uppercase bg-main px-2 border-2 border-black border-l-8 border-l-dark">KASIR</h2>
@@ -1724,6 +1805,24 @@
     const hideLoad = () => document.getElementById('globalLoader').classList.add('d-none');
     const escapeHTML = str => !str ? '' : String(str).replace(/[&<>'"]/g, tag => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;'}[tag]));
 
+    // ===== Mode Terang / Gelap (per perangkat, disimpan di localStorage, TIDAK disinkron ke server) =====
+    window.updateThemeToggleIcons = () => {
+        let theme = 'light';
+        try { theme = localStorage.getItem('wi_theme') === 'dark' ? 'dark' : 'light'; } catch(e) {}
+        document.querySelectorAll('.theme-toggle-btn').forEach(btn => {
+            btn.textContent = theme === 'dark' ? '☀️' : '🌙';
+            btn.title = theme === 'dark' ? 'Ganti ke Mode Terang' : 'Ganti ke Mode Gelap';
+        });
+    };
+    window.toggleTheme = () => {
+        let current = 'light';
+        try { current = localStorage.getItem('wi_theme') === 'dark' ? 'dark' : 'light'; } catch(e) {}
+        const next = current === 'dark' ? 'light' : 'dark';
+        try { localStorage.setItem('wi_theme', next); } catch(e) {}
+        document.documentElement.setAttribute('data-theme', next === 'dark' ? 'dark' : 'light');
+        window.updateThemeToggleIcons();
+    };
+
     // Hash satu arah (SHA-256) untuk password. Password TIDAK PERNAH disimpan mentah lagi ke Firestore/localStorage;
     // yang tersimpan hanya hash-nya, sehingga kalaupun dokumen settings/customers/cashier_config bisa terbaca
     // oleh pihak luar (misal aturan keamanan Firestore kurang ketat), yang bocor bukan password asli.
@@ -2325,6 +2424,7 @@
     window.addEventListener('load', async () => {
         const root = document.getElementById('gasapp-root');
         if (root && root.parentElement !== document.body) document.body.appendChild(root);
+        window.updateThemeToggleIcons();
         
         loadLocalDataCache();
         await autoSetupDatabase();
