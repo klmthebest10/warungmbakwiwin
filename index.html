@@ -300,7 +300,7 @@
            Aturan di bawah menimpa kelas-kelas Tailwind & custom yang paling
            sering dipakai di seluruh halaman, supaya efeknya menyeluruh.
            ============================================================ */
-        [data-theme="dark"] { --dk-bg: #0B3538; --dk-surface: #123F42; --dk-surface-2: #154A4D; --dk-border: #F2EFE6; --dk-text: #F2EFE6; --dk-text-muted: #B9DAD8; }
+        [data-theme="dark"] { --dk-bg: #0B3538; --dk-surface: #123F42; --dk-surface-2: #154A4D; --dk-border: #F2EFE6; --dk-text: #F2EFE6; --dk-text-muted: #B9DAD8; --dk-main: #7A5C00; --dk-danger: #7A1F2B; }
         [data-theme="dark"] #gasapp-root { background: var(--dk-bg); color: var(--dk-text); }
         [data-theme="dark"] .poster-slide-float { background: linear-gradient(to top, var(--dk-bg) 55%, transparent) !important; }
 
@@ -354,6 +354,36 @@
         /* Tombol sakelar mode terang/gelap */
         .theme-toggle-btn { font-size: 16px; }
         [data-theme="dark"] .theme-toggle-btn { background-color: var(--dk-surface) !important; }
+
+        /* ===== Pelengkap cakupan dark mode (kolom pencarian, filter kategori, elemen form) ===== */
+        [data-theme="dark"] button, [data-theme="dark"] select { color: var(--dk-text); }
+        [data-theme="dark"] #publicCategoryFilter button, [data-theme="dark"] #custCategoryFilter button,
+        [data-theme="dark"] #adminPosCategoryFilter button { background-color: var(--dk-surface) !important; color: var(--dk-text) !important; }
+
+        /* Semua warna KUNING terang (bg-main / border-main) diredupkan jadi kuning gelap di dark mode,
+           termasuk pilihan (radio/checkbox) yang berubah kuning saat dicentang. */
+        [data-theme="dark"] .bg-main { background-color: var(--dk-main) !important; }
+        [data-theme="dark"] .border-main, [data-theme="dark"] .border-l-main { border-color: var(--dk-main) !important; }
+        [data-theme="dark"] .has-\[\:checked\]\:bg-main:has(:checked) { background-color: var(--dk-main) !important; color: var(--dk-text) !important; }
+        [data-theme="dark"] .hover\:bg-yellow-400:hover { background-color: var(--dk-main) !important; }
+
+        /* Semua warna MERAH terang (bg-danger / border-danger) diredupkan jadi merah gelap di dark mode,
+           termasuk pilihan (radio/checkbox) yang berubah merah saat dicentang. */
+        [data-theme="dark"] .bg-danger { background-color: var(--dk-danger) !important; }
+        [data-theme="dark"] .border-danger, [data-theme="dark"] .border-l-danger { border-color: var(--dk-danger) !important; }
+        [data-theme="dark"] .has-\[\:checked\]\:bg-danger:has(:checked) { background-color: var(--dk-danger) !important; color: var(--dk-text) !important; }
+
+        /* Varian pilihan lain (sukses/aksen/ungu) ikut diredupkan supaya konsisten & tidak menyilaukan */
+        [data-theme="dark"] .has-\[\:checked\]\:bg-success:has(:checked) { background-color: #0E6B3A !important; color: var(--dk-text) !important; }
+        [data-theme="dark"] .has-\[\:checked\]\:bg-accent:has(:checked) { background-color: #0E5F6B !important; color: var(--dk-text) !important; }
+        [data-theme="dark"] .has-\[\:checked\]\:bg-violet-300:has(:checked) { background-color: #4C2E7A !important; color: var(--dk-text) !important; }
+
+        /* Kotak-kotak pastel terang (highlight/toggle di halaman Pengaturan & lainnya) ikut menggelap
+           supaya tulisan di dalamnya tetap terlihat rapi & tidak menyilaukan di atas latar gelap. */
+        [data-theme="dark"] .bg-yellow-50, [data-theme="dark"] .bg-yellow-100, [data-theme="dark"] .bg-yellow-200,
+        [data-theme="dark"] .bg-orange-100, [data-theme="dark"] .bg-purple-50, [data-theme="dark"] .bg-purple-100,
+        [data-theme="dark"] .bg-blue-50, [data-theme="dark"] .bg-green-50, [data-theme="dark"] .bg-green-100,
+        [data-theme="dark"] .bg-red-50, [data-theme="dark"] .bg-red-100 { background-color: var(--dk-surface-2) !important; }
     </style>
 </head>
 <body>
