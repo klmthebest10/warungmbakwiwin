@@ -926,11 +926,16 @@
                             <!-- Tampilan Grid Produk -->
                             <div class="mb-4 mt-6 border-t-2 border-black pt-4">
                                 <h4 class="font-bold mb-2">Tampilan Produk di HP</h4>
-                                <p class="text-[10px] md:text-xs text-gray-600 italic leading-tight mb-2">Pilih jumlah kolom produk pada tampilan POS Admin, Umum, dan Pelanggan. Hanya berlaku di HP.</p>
+                                <p class="text-[10px] md:text-xs text-gray-600 italic leading-tight mb-2">Jumlah kolom produk untuk tampilan Umum (Katalog Publik) & Pelanggan. Hanya berlaku di HP.</p>
                                 <div class="grid grid-cols-3 gap-2">
                                     <label class="brutal-btn bg-white text-center py-3 cursor-pointer has-[:checked]:bg-success"><input type="radio" name="productGridMobile" value="1" id="setProductGrid1" class="hidden"><span class="font-bold">1 Kolom</span></label>
                                     <label class="brutal-btn bg-white text-center py-3 cursor-pointer has-[:checked]:bg-main"><input type="radio" name="productGridMobile" value="2" id="setProductGrid2" class="hidden"><span class="font-bold">2 Kolom</span></label>
                                     <label class="brutal-btn bg-white text-center py-3 cursor-pointer has-[:checked]:bg-accent"><input type="radio" name="productGridMobile" value="3" id="setProductGrid3" class="hidden"><span class="font-bold">3 Kolom</span></label>
+                                </div>
+                                <p class="text-[10px] md:text-xs text-gray-600 italic leading-tight mt-4 mb-2">Jumlah kolom produk untuk tampilan POS Admin & Kasir. Hanya berlaku di HP.</p>
+                                <div class="grid grid-cols-2 gap-2">
+                                    <label class="brutal-btn bg-white text-center py-3 cursor-pointer has-[:checked]:bg-main"><input type="radio" name="posGridMobile" value="2" id="setPosGrid2" class="hidden"><span class="font-bold">2 Kolom</span></label>
+                                    <label class="brutal-btn bg-white text-center py-3 cursor-pointer has-[:checked]:bg-accent"><input type="radio" name="posGridMobile" value="3" id="setPosGrid3" class="hidden"><span class="font-bold">3 Kolom</span></label>
                                 </div>
                             </div>
 
@@ -1662,6 +1667,7 @@
                 autoReset: false,
                 resetPeriod: "12",
                 productGridMobile: "2",
+                posGridMobile: "2",
                 cashierEnabled: false,
                 financeEnabled: false,
                 hideStoreStatusBadge: false,
@@ -2062,6 +2068,7 @@
                     auto_reset: false,
                     reset_period: "12",
                     product_grid_mobile: "2",
+                    pos_grid_mobile: "2",
                     cashier_enabled: false,
                     finance_enabled: false,
                     category_order: ["Makanan", "Minuman"]
@@ -2111,6 +2118,7 @@
                     autoReset: Boolean(s.auto_reset),
                     resetPeriod: s.reset_period || "12",
                     productGridMobile: ["1", "3"].includes(s.product_grid_mobile) ? s.product_grid_mobile : "2",
+                    posGridMobile: s.pos_grid_mobile === "3" ? "3" : "2",
                     cashierEnabled: Boolean(s.cashier_enabled),
                     financeEnabled: Boolean(s.finance_enabled),
                     hideStoreStatusBadge: Boolean(s.hide_store_status_badge),
@@ -4377,8 +4385,7 @@
 
     window.applyProductGridMobile = () => {
         const cols = ["1", "3"].includes(STATE.data.settings.productGridMobile) ? STATE.data.settings.productGridMobile : '2';
-        // Pengaturan 1/2/3 kolom ini KHUSUS untuk akses umum & pelanggan. Tampilan POS admin/kasir
-        // sengaja selalu dikunci 2 kolom, apapun pilihan admin, supaya layar kasir tetap ringkas.
+        // Pengaturan 1/2/3 kolom ini KHUSUS untuk akses umum & pelanggan.
         ['publicProductGrid', 'custProductGrid'].forEach(id => {
             const grid = document.getElementById(id);
             if (!grid) return;
@@ -4386,10 +4393,13 @@
             grid.classList.toggle('product-grid-mobile-2', cols === '2');
             grid.classList.toggle('product-grid-mobile-3', cols === '3');
         });
+        // Tampilan POS admin/kasir punya pengaturan sendiri, dan hanya boleh 2 atau 3 kolom (tidak ada 1 kolom).
+        const posCols = STATE.data.settings.posGridMobile === '3' ? '3' : '2';
         const posGrid = document.getElementById('adminPosProductGrid');
         if (posGrid) {
-            posGrid.classList.remove('product-grid-mobile-1', 'product-grid-mobile-3');
-            posGrid.classList.add('product-grid-mobile-2');
+            posGrid.classList.remove('product-grid-mobile-1');
+            posGrid.classList.toggle('product-grid-mobile-2', posCols === '2');
+            posGrid.classList.toggle('product-grid-mobile-3', posCols === '3');
         }
     };
 
@@ -4473,6 +4483,9 @@
         const gridMobile = ["1", "3"].includes(STATE.data.settings.productGridMobile) ? STATE.data.settings.productGridMobile : "2";
         const gridRadio = document.querySelector(`input[name="productGridMobile"][value="${gridMobile}"]`);
         if (gridRadio) gridRadio.checked = true;
+        const posGridMobile = STATE.data.settings.posGridMobile === "3" ? "3" : "2";
+        const posGridRadio = document.querySelector(`input[name="posGridMobile"][value="${posGridMobile}"]`);
+        if (posGridRadio) posGridRadio.checked = true;
         window.applyProductGridMobile();
         window.toggleAutoResetConfig();
 
@@ -4533,6 +4546,7 @@
                 ? null 
                 : (STATE.tempInstantOverride !== undefined ? STATE.tempInstantOverride : (STATE.data.settings.instantOverride || null)),
             product_grid_mobile: ["1", "3"].includes(document.querySelector('input[name="productGridMobile"]:checked')?.value) ? document.querySelector('input[name="productGridMobile"]:checked').value : '2',
+            pos_grid_mobile: document.querySelector('input[name="posGridMobile"]:checked')?.value === '3' ? '3' : '2',
             cashier_enabled: document.getElementById('setCashierEnabled') ? document.getElementById('setCashierEnabled').checked : Boolean(STATE.data.settings.cashierEnabled),
             finance_enabled: document.getElementById('setFinanceEnabled') ? document.getElementById('setFinanceEnabled').checked : Boolean(STATE.data.settings.financeEnabled)
         };
@@ -4581,6 +4595,7 @@
                 autoReset: payload.auto_reset, 
                 resetPeriod: payload.reset_period,
                 productGridMobile: payload.product_grid_mobile,
+                posGridMobile: payload.pos_grid_mobile,
                 cashierEnabled: payload.cashier_enabled,
                 financeEnabled: payload.finance_enabled,
                 hideStoreStatusBadge: payload.hide_store_status_badge,
