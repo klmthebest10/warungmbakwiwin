@@ -75,6 +75,15 @@
         @keyframes spin { to { transform: rotate(360deg); } }
 
         @media (max-width: 639px) {
+            .product-grid-mobile-1 { grid-template-columns: repeat(1, minmax(0, 1fr)) !important; }
+            /* Kartu 1 kolom: gambar tetap PERSEGI tapi memperbesar mengikuti lebar layar penuh (bukan lagi
+               thumbnail kecil di samping), lalu badan kartu memanjang ke bawah menampilkan keterangan produk
+               langsung (kalau fitur Informasi Produk ON & diisi) tanpa perlu tap ikon "i". */
+            .product-grid-mobile-1 .product-card { display: flex !important; flex-direction: column; align-items: stretch; text-align: left; }
+            .product-grid-mobile-1 .product-card-img { width: 100% !important; height: auto !important; aspect-ratio: 1 / 1; flex-shrink: 0; }
+            .product-grid-mobile-1 .product-card-body { flex: 1; display: flex; flex-direction: column; justify-content: flex-start; }
+            .product-grid-mobile-1 .product-card-name { font-size: 15px !important; }
+            .product-grid-mobile-1 .product-card-desc { display: block !important; }
             .product-grid-mobile-2 { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
             .product-grid-mobile-3 { grid-template-columns: repeat(3, minmax(0, 1fr)) !important; gap: 0.5rem !important; }
             .product-grid-mobile-3 .product-card-img { height: 4.5rem !important; }
@@ -83,6 +92,9 @@
             .product-grid-mobile-3 .product-card-name { font-size: 10px !important; margin-bottom: 0.35rem !important; }
             .product-grid-mobile-3 .product-card-btn { font-size: 9px !important; padding-top: 4px !important; padding-bottom: 4px !important; margin-top: 0.35rem !important; }
         }
+        /* Keterangan/informasi produk di dalam kartu: default disembunyikan, hanya tampil otomatis di
+           layout katalog 1 kolom (akses umum/pelanggan di HP) lewat aturan .product-grid-mobile-1 di atas. */
+        .product-card-desc { display: none; }
 
         /* ===== POS layout lebar (tablet landscape / PC): keranjang menempel di 1/4 kanan ===== */
         #posCartDock { display: none; }
@@ -188,6 +200,35 @@
             .cook-combo-bars { padding-left: 50px; }
             .siap-disajikan-btn { font-size: 16px; padding: 16px 12px 16px 40px; }
         }
+        /* Tombol geser (slide-to-open) di Poster Halaman Awal: dibuat melayang (fixed) supaya tetap
+           terjangkau walau daftar keterangan di atasnya panjang & di-scroll. */
+        .poster-slide-float {
+            position: fixed; left: 0; right: 0; bottom: 0; z-index: 40;
+            padding: 16px; padding-bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+            background: linear-gradient(to top, #f4f4f0 55%, transparent);
+        }
+        .poster-slide-track {
+            position: relative; max-width: 420px; margin: 0 auto; height: 64px; border-radius: 9999px;
+            background: #FFD500; display: flex; align-items: center; justify-content: center;
+            overflow: hidden; user-select: none;
+        }
+        .poster-slide-label { position: relative; z-index: 1; font-size: 13px; letter-spacing: 0.02em; pointer-events: none; }
+        .poster-slide-thumb {
+            position: absolute; left: 4px; top: 4px; bottom: 4px; width: 56px; border-radius: 9999px;
+            background: #000; color: #fff; display: flex; align-items: center; justify-content: center;
+            font-size: 22px; cursor: grab; touch-action: none; z-index: 2;
+            transition: left 0.25s ease;
+        }
+        .poster-slide-thumb.dragging { transition: none; cursor: grabbing; }
+        /* Ikon info "i" kecil di sebelah nama produk */
+        .product-info-badge {
+            width: 20px; height: 20px; min-width: 20px; border-radius: 9999px; flex-shrink: 0;
+            background: linear-gradient(135deg, #FFD500, #FF7A00);
+            display: inline-flex; align-items: center; justify-content: center;
+            font-style: italic; font-weight: 900; font-family: Georgia, 'Times New Roman', serif; font-size: 13px;
+            color: #000; border: 2px solid #fff; box-shadow: 0 0 0 1.5px #000;
+            cursor: pointer; line-height: 1; padding: 0;
+        }
     #posProductsCol > div:nth-child(1),
         #posProductsCol > div:nth-child(2) {
             position: sticky;
@@ -274,6 +315,24 @@
 
         <main class="flex-1 container mx-auto px-3 py-6 no-print max-w-full md:max-w-7xl">
             
+            <!-- PAGE: POSTER HALAMAN AWAL (khusus akses umum, sebelum katalog) -->
+            <section id="pagePosterSplash" class="app-page d-none">
+                <div class="flex flex-col items-center text-center" style="min-height: calc(100vh - 220px); padding-bottom: 110px;">
+                    <div class="brutal-box bg-white p-3 mt-4" style="width: 200px; height: 200px; border-radius: 24px;">
+                        <img id="posterLogoImg" src="" class="w-full h-full object-cover d-none" style="border-radius: 16px;" onerror="this.classList.add('d-none'); document.getElementById('posterLogoFallback').classList.remove('d-none');">
+                        <div id="posterLogoFallback" class="w-full h-full flex items-center justify-center text-7xl">🍽️</div>
+                    </div>
+                    <h1 id="posterStoreName" class="mt-6 text-2xl md:text-4xl font-black uppercase break-words px-4"></h1>
+                    <ul id="posterDescList" class="mt-6 text-left italic text-base md:text-lg space-y-2 w-full max-w-md px-6 mx-auto" style="list-style: disc; padding-left: 2.5rem;"></ul>
+                </div>
+                <div class="poster-slide-float">
+                    <div class="poster-slide-track brutal-box" id="posterSlideTrack">
+                        <span id="posterSlideLabel" class="poster-slide-label italic font-bold"></span>
+                        <div class="poster-slide-thumb" id="posterSlideThumb">➡️</div>
+                    </div>
+                </div>
+            </section>
+
             <!-- PAGE: PUBLIC / CATALOG -->
             <section id="pagePublic" class="app-page d-none">
                 <div id="publicBankInfo" class="text-xs italic opacity-80 mb-1"></div>
@@ -868,7 +927,8 @@
                             <div class="mb-4 mt-6 border-t-2 border-black pt-4">
                                 <h4 class="font-bold mb-2">Tampilan Produk di HP</h4>
                                 <p class="text-[10px] md:text-xs text-gray-600 italic leading-tight mb-2">Pilih jumlah kolom produk pada tampilan POS Admin, Umum, dan Pelanggan. Hanya berlaku di HP.</p>
-                                <div class="grid grid-cols-2 gap-2">
+                                <div class="grid grid-cols-3 gap-2">
+                                    <label class="brutal-btn bg-white text-center py-3 cursor-pointer has-[:checked]:bg-success"><input type="radio" name="productGridMobile" value="1" id="setProductGrid1" class="hidden"><span class="font-bold">1 Kolom</span></label>
                                     <label class="brutal-btn bg-white text-center py-3 cursor-pointer has-[:checked]:bg-main"><input type="radio" name="productGridMobile" value="2" id="setProductGrid2" class="hidden"><span class="font-bold">2 Kolom</span></label>
                                     <label class="brutal-btn bg-white text-center py-3 cursor-pointer has-[:checked]:bg-accent"><input type="radio" name="productGridMobile" value="3" id="setProductGrid3" class="hidden"><span class="font-bold">3 Kolom</span></label>
                                 </div>
@@ -948,6 +1008,39 @@
                                     <input type="text" id="setKitchenPass" class="brutal-input bg-white" placeholder="Kosongkan jika tidak ingin mengubah (default: 123456)">
                                 </div>
                             </div>
+
+                            <!-- Poster Halaman Awal -->
+                            <div class="mb-4 mt-4 border-t-2 border-black pt-4">
+                                <h4 class="font-bold mb-2">Poster Halaman Awal</h4>
+                                <label class="flex items-center gap-2 font-bold cursor-pointer bg-purple-100 p-3 border-2 border-black w-full">
+                                    <input type="checkbox" id="setPosterEnabled" class="w-5 h-5 accent-black" onchange="window.togglePosterConfig()"> Aktifkan Poster
+                                </label>
+                                <p class="text-[10px] md:text-xs text-gray-600 italic leading-tight mt-1 mb-2">
+                                    *Status Default: <b>OFF</b>. Jika ON, pengunjung umum (belum login) akan melihat poster ini dulu sebelum katalog produk, berisi logo & nama toko, daftar keterangan di bawah ini, dan tombol geser untuk masuk ke katalog.
+                                </p>
+                                <div id="posterConfigWrapper" class="d-none pl-2 border-l-4 border-black">
+                                    <div class="bg-gray-50 border-2 border-black p-3 mb-2">
+                                        <label class="block font-bold mb-1 text-sm">Daftar Keterangan (satu poin per baris)</label>
+                                        <textarea id="setPosterDesc" rows="4" class="brutal-input bg-white text-sm" placeholder="Menyediakan berbagai macam makanan indonesia&#10;Higienis&#10;Bisa memesan melalui aplikasi"></textarea>
+                                    </div>
+                                    <div class="bg-gray-50 border-2 border-black p-3">
+                                        <label class="block font-bold mb-1 text-sm">Teks Tombol Geser</label>
+                                        <input type="text" id="setPosterSlideText" class="brutal-input bg-white" placeholder="SLIDE UNTUK MEMBUKA KATALOG PRODUK">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Informasi Produk -->
+                            <div class="mb-4 mt-4 border-t-2 border-black pt-4">
+                                <h4 class="font-bold mb-2">Informasi Produk</h4>
+                                <label class="flex items-center gap-2 font-bold cursor-pointer bg-blue-50 p-3 border-2 border-black w-full">
+                                    <input type="checkbox" id="setProductInfoEnabled" class="w-5 h-5 accent-black"> Aktifkan Informasi Produk
+                                </label>
+                                <p class="text-[10px] md:text-xs text-gray-600 italic leading-tight mt-1 mb-2">
+                                    *Status Default: <b>OFF</b>. Jika ON, saat tambah/edit produk akan muncul kolom "Informasi Produk". Kalau diisi, ikon info "i" muncul di sebelah nama produk; jika ditekan, keterangan tersebut tampil dalam popup.
+                                </p>
+                            </div>
+
 
                             <div class="mb-4 mt-6 border-t-2 border-black pt-4">
                                 <h4 class="font-bold mb-2">Manajemen Data Riwayat</h4>
@@ -1196,6 +1289,10 @@
                         <input type="checkbox" id="prodAvail" class="w-5 h-5 accent-black" checked> Tersedia (ON)
                     </label>
                 </div>
+                <div id="prodInfoWrapper" class="mb-4 d-none">
+                    <label class="block font-bold mb-1">Informasi Produk <span class="font-normal text-[10px] text-gray-500">(opsional — tampil lewat ikon ⓘ di samping nama produk)</span></label>
+                    <textarea id="prodInfo" rows="3" class="brutal-input bg-white text-sm" placeholder="Contoh: Pedas level 3, mengandung kacang, dsb."></textarea>
+                </div>
                 <button type="submit" class="brutal-btn w-full bg-main py-3">Simpan</button>
             </form>
         </div>
@@ -1279,7 +1376,25 @@
         </div>
     </div>
 
-    <!-- Modal Lihat Alamat -->
+    <!-- Modal Info Produk (muncul saat ikon "i" pada kartu produk ditekan) -->
+    <div id="modalProductInfo" class="fixed inset-0 modal-backdrop d-none z-50 flex items-center justify-center p-4">
+        <div class="brutal-box bg-white w-full max-w-sm relative flex flex-col max-h-[90vh] overflow-hidden">
+            <button onclick="window.closeModal('modalProductInfo')" class="absolute top-2 right-2 font-bold px-2 py-1 hover:bg-red-500 hover:text-white border-2 border-black bg-white z-20 inline-flex items-center justify-center" title="Tutup"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" class="pointer-events-none"><line x1="5" y1="5" x2="19" y2="19"></line><line x1="19" y1="5" x2="5" y2="19"></line></svg></button>
+            <div id="productInfoImgWrap" class="w-full h-44 md:h-52 border-b-4 border-black overflow-hidden bg-gray-100 flex items-center justify-center">
+                <img id="productInfoImg" src="" class="w-full h-full object-cover d-none">
+                <div id="productInfoImgFallback" class="font-bold text-gray-400 text-sm">NO IMAGE</div>
+            </div>
+            <div class="p-4 overflow-y-auto flex-1">
+                <div class="flex justify-between items-start gap-2 mb-2">
+                    <h3 id="productInfoName" class="font-black text-lg uppercase leading-tight"></h3>
+                    <span id="productInfoPrice" class="brutal-box bg-main px-2 py-1 text-sm font-bold whitespace-nowrap"></span>
+                </div>
+                <p id="productInfoDesc" class="text-sm leading-relaxed border-t-2 border-black pt-2 mt-2"></p>
+            </div>
+        </div>
+    </div>
+
+
     <div id="modalAddress" class="fixed inset-0 modal-backdrop d-none z-50 flex items-center justify-center p-4">
         <div class="brutal-box bg-white w-full max-w-sm relative p-6">
             <button onclick="window.closeModal('modalAddress')" class="absolute top-2 right-2 font-bold px-2 py-1 hover:bg-red-500 hover:text-white border-2 border-black inline-flex items-center justify-center"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" class="pointer-events-none"><line x1="5" y1="5" x2="19" y2="19"></line><line x1="19" y1="5" x2="5" y2="19"></line></svg></button>
@@ -1522,7 +1637,7 @@
         user: null, cart: [], ongkir: 0, editCart: [], custCart: [], waitingList: [],
         activeCategoryPOS: null, activeCategoryPub: null, activeCategoryCust: null,
         historyFilter: 'day', tempProdImgBase64: '', tempLogoBase64: '', tempCallAudioBase64: '', currentReceiptId: null,
-        lastCallCount: 0, calls: [], adminCartTable: '', lastWaitCount: null,
+        lastCallCount: 0, calls: [], adminCartTable: '', lastWaitCount: null, posterDismissed: false,
         data: { 
             settings: { 
                 storeName: "Warung Indonesia", 
@@ -1540,6 +1655,10 @@
                 orderAlarmAudio: '',
                 kitchenEnabled: false,
                 kitchenPass: "123456",
+                posterEnabled: false,
+                posterDesc: "Menyediakan berbagai macam makanan indonesia\nHigienis\nBisa memesan melalui aplikasi\nMenyediakan berbagai macam metode transaksi",
+                posterSlideText: "SLIDE UNTUK MEMBUKA KATALOG PRODUK",
+                productInfoEnabled: false,
                 autoReset: false,
                 resetPeriod: "12",
                 productGridMobile: "2",
@@ -1936,6 +2055,10 @@
                     order_alarm_audio: '',
                     kitchen_enabled: false,
                     kitchen_pass_hash: await sha256Hex("123456"),
+                    poster_enabled: false,
+                    poster_desc: "Menyediakan berbagai macam makanan indonesia\nHigienis\nBisa memesan melalui aplikasi\nMenyediakan berbagai macam metode transaksi",
+                    poster_slide_text: "SLIDE UNTUK MEMBUKA KATALOG PRODUK",
+                    product_info_enabled: false,
                     auto_reset: false,
                     reset_period: "12",
                     product_grid_mobile: "2",
@@ -1981,9 +2104,13 @@
                     kitchenEnabled: Boolean(s.kitchen_enabled),
                     // Password akun Dapur di-hash (lihat catatan ownerPassHash) & TIDAK ikut ke localStorage.
                     kitchenPassHash: s.kitchen_pass_hash || '',
+                    posterEnabled: Boolean(s.poster_enabled),
+                    posterDesc: s.poster_desc || '',
+                    posterSlideText: s.poster_slide_text || 'SLIDE UNTUK MEMBUKA KATALOG PRODUK',
+                    productInfoEnabled: Boolean(s.product_info_enabled),
                     autoReset: Boolean(s.auto_reset),
                     resetPeriod: s.reset_period || "12",
-                    productGridMobile: s.product_grid_mobile === "3" ? "3" : "2",
+                    productGridMobile: ["1", "3"].includes(s.product_grid_mobile) ? s.product_grid_mobile : "2",
                     cashierEnabled: Boolean(s.cashier_enabled),
                     financeEnabled: Boolean(s.finance_enabled),
                     hideStoreStatusBadge: Boolean(s.hide_store_status_badge),
@@ -2521,7 +2648,15 @@
         window.checkAdminCalls();
         window.updateCallButtonsVisibility();
 
-        if(!STATE.user) { window.renderPublicCatalog(); window.showPage('pagePublic'); }
+        if(!STATE.user) { 
+            if (STATE.data.settings.posterEnabled && !STATE.posterDismissed) {
+                window.renderPosterSplash();
+                window.showPage('pagePosterSplash');
+            } else {
+                window.renderPublicCatalog(); 
+                window.showPage('pagePublic'); 
+            }
+        }
         else if (STATE.user.role === 'admin' || STATE.user.role === 'cashier') { startOrdersListener(); window.renderAdminPOS(); window.showPage('pageAdminPOS'); }
         else if (STATE.user.role === 'kitchen') {
             if (!STATE.data.settings.kitchenEnabled) {
@@ -2612,16 +2747,40 @@
         let opacity = p.available ? 'opacity-100' : 'opacity-50';
         const isCustOn = Boolean(STATE.data.settings.customerEnabled);
         const isPosOn = Boolean(STATE.data.settings.posEnabled);
+        // Ikon info "i": hanya muncul kalau fitur Informasi Produk di Pengaturan ON DAN produk ini diisi keterangannya.
+        // Ditaruh sebaris dengan nama produk, dan pakai stopPropagation supaya tidak ikut memicu "Tambah ke Keranjang".
+        const hasInfo = Boolean(STATE.data.settings.productInfoEnabled) && p.info;
+        const infoIconHtml = hasInfo
+            ? `<button type="button" onclick="event.stopPropagation(); window.showProductInfo('${p.id}')" class="product-info-badge" style="pointer-events:auto;" title="Info Produk" aria-label="Info Produk">i</button>`
+            : '';
+        const nameRowHtml = `<div class="flex items-start justify-between gap-1 mb-2 flex-1"><h3 class="product-card-name font-bold text-xs md:text-sm leading-tight">${escapeHTML(p.name)}</h3>${infoIconHtml}</div>`;
+        // Keterangan produk ini hanya TERLIHAT (via CSS) saat tampilan katalog 1 kolom di HP (akses umum/pelanggan);
+        // di layout lain elemen ini tetap ada di HTML tapi disembunyikan, jadi tidak perlu render ulang kartu saat
+        // admin berganti pilihan jumlah kolom.
+        const descHtml = hasInfo ? `<p class="product-card-desc text-[11px] md:text-xs text-gray-600 italic mt-1 leading-snug">${escapeHTML(p.info)}</p>` : '';
 
         if(mode === 'pos' || (isPosOn && isCustOn)) {
             const actionClass = p.available ? 'cursor-pointer hover:bg-yellow-100 active:scale-95' : 'cursor-not-allowed'; 
             const clickAttr = p.available ? `onclick="${mode === 'pos' ? `window.addToCart('${p.id}')` : `window.addCustCart('${p.id}')`}"` : '';
             const btnHTML = p.available ? `<div class="product-card-btn w-full text-center border-2 border-black bg-main py-1 md:py-2 mt-2 text-xs md:text-sm uppercase font-bold">Tambah</div>` : `<div class="product-card-btn w-full text-center border-2 border-black bg-gray-300 py-1 md:py-2 mt-2 text-xs md:text-sm uppercase font-bold text-gray-500">Kosong</div>`;
-            return `<div ${clickAttr} class="brutal-box flex flex-col h-full transition-transform ${opacity} ${actionClass}">${imgBlock}<div class="product-card-body p-2 flex-1 flex flex-col pointer-events-none"><h3 class="product-card-name font-bold text-xs md:text-sm leading-tight mb-2 flex-1">${escapeHTML(p.name)}</h3>${btnHTML}</div></div>`;
+            return `<div ${clickAttr} class="product-card brutal-box flex flex-col h-full transition-transform ${opacity} ${actionClass}">${imgBlock}<div class="product-card-body p-2 flex-1 flex flex-col pointer-events-none">${nameRowHtml}${descHtml}${btnHTML}</div></div>`;
         }
         if(!p.available) return ''; 
-        return `<div class="brutal-box flex flex-col h-full ${opacity}">${imgBlock}<div class="product-card-body p-2 flex-1 flex flex-col"><h3 class="product-card-name font-bold text-xs md:text-sm leading-tight mb-2 flex-1">${escapeHTML(p.name)}</h3></div></div>`;
+        return `<div class="product-card brutal-box flex flex-col h-full ${opacity}">${imgBlock}<div class="product-card-body p-2 flex-1 flex flex-col">${nameRowHtml}${descHtml}</div></div>`;
     }
+
+    window.showProductInfo = (productId) => {
+        const p = STATE.data.products.find(x => x.id === productId);
+        if (!p) return;
+        const img = document.getElementById('productInfoImg');
+        const fallback = document.getElementById('productInfoImgFallback');
+        if (p.img) { img.src = p.img; img.classList.remove('d-none'); fallback.classList.add('d-none'); }
+        else { img.classList.add('d-none'); fallback.classList.remove('d-none'); }
+        document.getElementById('productInfoName').textContent = p.name || '';
+        document.getElementById('productInfoPrice').textContent = formatWon(p.price);
+        document.getElementById('productInfoDesc').textContent = p.info || '';
+        window.openModal('modalProductInfo');
+    };
 
     function buildCategoryFilter(containerId, activeStateKey, onSelectCallback) {
         const container = document.getElementById(containerId);
@@ -2629,6 +2788,98 @@
             const activeClass = STATE[activeStateKey] === c ? 'bg-black text-white shadow-none translate-x-[2px] translate-y-[2px]' : 'bg-white text-black';
             return `<button onclick="window.${onSelectCallback}('${c}')" class="brutal-btn ${activeClass} px-3 py-1 md:px-4 md:py-2 whitespace-nowrap text-xs md:text-sm">${escapeHTML(c)}</button>`;
         }).join('');
+    }
+
+    // ===== Poster Halaman Awal (splash sebelum katalog, khusus akses umum) =====
+    window.renderPosterSplash = () => {
+        const s = STATE.data.settings;
+        const logoImg = document.getElementById('posterLogoImg');
+        const logoFallback = document.getElementById('posterLogoFallback');
+        if (s.logoUrl) {
+            logoImg.src = s.logoUrl;
+            logoImg.classList.remove('d-none');
+            logoFallback.classList.add('d-none');
+        } else {
+            logoImg.classList.add('d-none');
+            logoFallback.classList.remove('d-none');
+        }
+        document.getElementById('posterStoreName').textContent = s.storeName || 'Warung Indonesia';
+        const lines = (s.posterDesc || '').split('\n').map(x => x.trim()).filter(Boolean);
+        document.getElementById('posterDescList').innerHTML = lines.length
+            ? lines.map(line => `<li>${escapeHTML(line)}</li>`).join('')
+            : '<li>Selamat datang!</li>';
+        document.getElementById('posterSlideLabel').textContent = s.posterSlideText || 'SLIDE UNTUK MEMBUKA KATALOG PRODUK';
+        initPosterSlider();
+    };
+
+    window.dismissPoster = () => {
+        STATE.posterDismissed = true;
+        window.renderPublicCatalog();
+        window.showPage('pagePublic');
+    };
+
+    let posterSliderInitialized = false;
+    function initPosterSlider() {
+        const track = document.getElementById('posterSlideTrack');
+        const thumb = document.getElementById('posterSlideThumb');
+        const label = document.getElementById('posterSlideLabel');
+        if (!track || !thumb) return;
+
+        // Reset posisi setiap kali poster dibuka ulang
+        thumb.style.left = '4px';
+        thumb.classList.remove('dragging');
+        if (label) label.style.opacity = '1';
+
+        if (posterSliderInitialized) return; // listener cukup dipasang sekali (elemen tidak dibuat ulang)
+        posterSliderInitialized = true;
+
+        let dragging = false, startX = 0, thumbStartLeft = 4, maxLeft = 0;
+
+        const getMaxLeft = () => track.clientWidth - thumb.offsetWidth - 8;
+
+        const onPointerDown = (clientX) => {
+            dragging = true;
+            startX = clientX;
+            thumbStartLeft = parseFloat(thumb.style.left) || 4;
+            maxLeft = getMaxLeft();
+            thumb.classList.add('dragging');
+        };
+        const onPointerMove = (clientX) => {
+            if (!dragging) return;
+            let newLeft = thumbStartLeft + (clientX - startX);
+            newLeft = Math.max(4, Math.min(maxLeft, newLeft));
+            thumb.style.left = newLeft + 'px';
+            if (label) label.style.opacity = String(Math.max(0.15, 1 - (newLeft / maxLeft)));
+        };
+        const onPointerUp = () => {
+            if (!dragging) return;
+            dragging = false;
+            thumb.classList.remove('dragging');
+            const newLeft = parseFloat(thumb.style.left) || 4;
+            maxLeft = getMaxLeft();
+            if (newLeft >= maxLeft * 0.82) {
+                thumb.style.left = maxLeft + 'px';
+                if (label) label.style.opacity = '0';
+                setTimeout(() => window.dismissPoster(), 150);
+            } else {
+                thumb.style.left = '4px';
+                if (label) label.style.opacity = '1';
+            }
+        };
+
+        thumb.addEventListener('mousedown', e => { e.preventDefault(); onPointerDown(e.clientX); });
+        window.addEventListener('mousemove', e => onPointerMove(e.clientX));
+        window.addEventListener('mouseup', onPointerUp);
+
+        thumb.addEventListener('touchstart', e => onPointerDown(e.touches[0].clientX), { passive: true });
+        thumb.addEventListener('touchmove', e => { onPointerMove(e.touches[0].clientX); if (dragging) e.preventDefault(); }, { passive: false });
+        thumb.addEventListener('touchend', onPointerUp);
+
+        // Tap langsung pada trek/tombol juga membuka katalog (memudahkan yang tidak menggeser)
+        track.addEventListener('click', (e) => {
+            if (dragging) return;
+            window.dismissPoster();
+        });
     }
 
     window.renderPublicCatalog = () => { 
@@ -3355,6 +3606,8 @@
         STATE.tempProdImgBase64 = p.img || ''; 
         document.getElementById('prodImgPreview').innerHTML = p.img ? `<img src="${p.img}" class="h-12 mt-2 border border-black">` : '';
         document.getElementById('prodCat').innerHTML = STATE.data.categories.map(c => `<option value="${escapeHTML(c)}" ${c===p.cat?'selected':''}>${escapeHTML(c)}</option>`).join('');
+        document.getElementById('prodInfoWrapper').classList.toggle('d-none', !Boolean(STATE.data.settings.productInfoEnabled));
+        document.getElementById('prodInfo').value = p.info || '';
         window.openModal('modalAddProduct');
     };
 
@@ -4123,13 +4376,21 @@
     };
 
     window.applyProductGridMobile = () => {
-        const cols = STATE.data.settings.productGridMobile === '3' ? '3' : '2';
-        ['adminPosProductGrid', 'publicProductGrid', 'custProductGrid'].forEach(id => {
+        const cols = ["1", "3"].includes(STATE.data.settings.productGridMobile) ? STATE.data.settings.productGridMobile : '2';
+        // Pengaturan 1/2/3 kolom ini KHUSUS untuk akses umum & pelanggan. Tampilan POS admin/kasir
+        // sengaja selalu dikunci 2 kolom, apapun pilihan admin, supaya layar kasir tetap ringkas.
+        ['publicProductGrid', 'custProductGrid'].forEach(id => {
             const grid = document.getElementById(id);
             if (!grid) return;
+            grid.classList.toggle('product-grid-mobile-1', cols === '1');
             grid.classList.toggle('product-grid-mobile-2', cols === '2');
             grid.classList.toggle('product-grid-mobile-3', cols === '3');
         });
+        const posGrid = document.getElementById('adminPosProductGrid');
+        if (posGrid) {
+            posGrid.classList.remove('product-grid-mobile-1', 'product-grid-mobile-3');
+            posGrid.classList.add('product-grid-mobile-2');
+        }
     };
 
     window.renderAdminSettings = () => {
@@ -4201,9 +4462,15 @@
             document.getElementById('setKitchenPass').placeholder = 'Kosongkan jika tidak ingin mengubah (default: 123456)';
         }
 
+        if (document.getElementById('setPosterEnabled')) document.getElementById('setPosterEnabled').checked = Boolean(STATE.data.settings.posterEnabled);
+        if (document.getElementById('setPosterDesc')) document.getElementById('setPosterDesc').value = STATE.data.settings.posterDesc || '';
+        if (document.getElementById('setPosterSlideText')) document.getElementById('setPosterSlideText').value = STATE.data.settings.posterSlideText || 'SLIDE UNTUK MEMBUKA KATALOG PRODUK';
+        if (document.getElementById('posterConfigWrapper')) document.getElementById('posterConfigWrapper').classList.toggle('d-none', !Boolean(STATE.data.settings.posterEnabled));
+        if (document.getElementById('setProductInfoEnabled')) document.getElementById('setProductInfoEnabled').checked = Boolean(STATE.data.settings.productInfoEnabled);
+
         document.getElementById('setAutoReset').checked = Boolean(STATE.data.settings.autoReset);
         document.getElementById('setResetPeriod').value = STATE.data.settings.resetPeriod || '12';
-        const gridMobile = STATE.data.settings.productGridMobile === '3' ? '3' : '2';
+        const gridMobile = ["1", "3"].includes(STATE.data.settings.productGridMobile) ? STATE.data.settings.productGridMobile : "2";
         const gridRadio = document.querySelector(`input[name="productGridMobile"][value="${gridMobile}"]`);
         if (gridRadio) gridRadio.checked = true;
         window.applyProductGridMobile();
@@ -4215,6 +4482,10 @@
 
     window.toggleAutoResetConfig = () => { 
         document.getElementById('autoResetConfigWrapper').classList.toggle('d-none', !document.getElementById('setAutoReset').checked); 
+    };
+
+    window.togglePosterConfig = () => {
+        document.getElementById('posterConfigWrapper').classList.toggle('d-none', !document.getElementById('setPosterEnabled').checked);
     };
 
     window.saveSettings = async e => {
@@ -4244,6 +4515,10 @@
             custom_call_audio: STATE.tempCallAudioBase64,
             order_alarm_audio: STATE.tempOrderAlarmBase64 || '',
             kitchen_enabled: document.getElementById('setKitchenEnabled') ? document.getElementById('setKitchenEnabled').checked : Boolean(STATE.data.settings.kitchenEnabled),
+            poster_enabled: document.getElementById('setPosterEnabled') ? document.getElementById('setPosterEnabled').checked : Boolean(STATE.data.settings.posterEnabled),
+            poster_desc: document.getElementById('setPosterDesc') ? document.getElementById('setPosterDesc').value : STATE.data.settings.posterDesc,
+            poster_slide_text: document.getElementById('setPosterSlideText') ? document.getElementById('setPosterSlideText').value.trim() || 'SLIDE UNTUK MEMBUKA KATALOG PRODUK' : STATE.data.settings.posterSlideText,
+            product_info_enabled: document.getElementById('setProductInfoEnabled') ? document.getElementById('setProductInfoEnabled').checked : Boolean(STATE.data.settings.productInfoEnabled),
             auto_reset: document.getElementById('setAutoReset').checked, 
             reset_period: document.getElementById('setResetPeriod').value,
             hide_store_status_badge: document.getElementById('setHideStoreStatusBadge') ? document.getElementById('setHideStoreStatusBadge').checked : false,
@@ -4257,7 +4532,7 @@
             instant_override: (document.getElementById('setHideStoreStatusBadge') && document.getElementById('setHideStoreStatusBadge').checked)
                 ? null 
                 : (STATE.tempInstantOverride !== undefined ? STATE.tempInstantOverride : (STATE.data.settings.instantOverride || null)),
-            product_grid_mobile: document.querySelector('input[name="productGridMobile"]:checked')?.value === '3' ? '3' : '2',
+            product_grid_mobile: ["1", "3"].includes(document.querySelector('input[name="productGridMobile"]:checked')?.value) ? document.querySelector('input[name="productGridMobile"]:checked').value : '2',
             cashier_enabled: document.getElementById('setCashierEnabled') ? document.getElementById('setCashierEnabled').checked : Boolean(STATE.data.settings.cashierEnabled),
             finance_enabled: document.getElementById('setFinanceEnabled') ? document.getElementById('setFinanceEnabled').checked : Boolean(STATE.data.settings.financeEnabled)
         };
@@ -4299,6 +4574,10 @@
                 orderAlarmAudio: payload.order_alarm_audio,
                 kitchenEnabled: payload.kitchen_enabled,
                 kitchenPassHash: payload.kitchen_pass_hash || STATE.data.settings.kitchenPassHash,
+                posterEnabled: payload.poster_enabled,
+                posterDesc: payload.poster_desc,
+                posterSlideText: payload.poster_slide_text,
+                productInfoEnabled: payload.product_info_enabled,
                 autoReset: payload.auto_reset, 
                 resetPeriod: payload.reset_period,
                 productGridMobile: payload.product_grid_mobile,
