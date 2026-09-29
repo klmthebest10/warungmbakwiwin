@@ -2433,6 +2433,8 @@
             if (isStaff) {
                 // Admin & kasir butuh daftar akun kasir (untuk nama di riwayat & kelola akun).
                 await window.loadCashierAccounts();
+                // Bersihkan salinan nota share WA yang sudah kedaluwarsa (sekali per sesi, hanya admin).
+                if (role === 'admin' && !STATE.receiptCleanupDone) { STATE.receiptCleanupDone = true; window.cleanupExpiredSharedReceipts(); }
 
                 const custSnap = await db.collection('customers').get();
                 STATE.data.customers = custSnap.empty ? [] : custSnap.docs.map(doc => {
@@ -3721,6 +3723,21 @@
         const waUrl = 'https://wa.me/?text=' + encodeURIComponent(text);
         const w = window.open(waUrl, '_blank');
         if (!w) window.location.href = waUrl;
+    };
+
+    // Pembersihan otomatis (pengganti TTL Firestore): hapus salinan nota di 'shared_receipts' yang expire_at-nya sudah lewat.
+    window.cleanupExpiredSharedReceipts = async () => {
+        if (IS_PREVIEW || !db) return;
+        try {
+            for (let round = 0; round < 5; round++) {
+                const snap = await db.collection('shared_receipts').where('expire_at', '<', firebase.firestore.Timestamp.now()).limit(200).get();
+                if (snap.empty) break;
+                const batch = db.batch();
+                snap.docs.forEach(d => batch.delete(d.ref));
+                await batch.commit();
+                if (snap.size < 200) break;
+            }
+        } catch (e) { console.warn('Pembersihan nota kedaluwarsa dilewati:', e); }
     };
 
     // Halaman nota publik (dibuka dari link ?receipt=<id>): hanya menampilkan nota, tanpa login & tanpa menu aplikasi.
