@@ -433,6 +433,16 @@
         /* Tombol close (x) yang saat hover jadi merah terang tetap kontras */
         [data-theme="dark"] .hover\:bg-red-500:hover { background-color: var(--dk-danger) !important; color: var(--dk-text) !important; }
 
+/* Dark mode: tombol "Kirim ke Keranjang" di Incoming Order jadi hijau gelap */
+[data-theme="dark"] .kirim-keranjang-btn { background-color: #0E5A32 !important; color: var(--dk-text) !important; }
+.set-card { border: 2px solid #000; background: #f9fafb; padding: 1rem; }
+.set-title { font-weight: 700; text-transform: uppercase; font-size: 0.875rem; border-bottom: 2px solid #000; padding-bottom: 0.25rem; margin-bottom: 0.75rem; }
+.set-hint { font-size: 11px; font-style: italic; color: #4b5563; line-height: 1.25; margin-top: 0.25rem; }
+[data-theme="dark"] .set-card { background-color: var(--dk-surface-2); border-color: var(--dk-border); }
+[data-theme="dark"] .set-title { border-color: var(--dk-border); }
+[data-theme="dark"] .set-hint { color: var(--dk-text-muted); }
+.instant-on { outline: 3px solid #000; outline-offset: 2px; }
+[data-theme="dark"] .instant-on { outline-color: var(--dk-border); }
     </style>
 </head>
 <body>
@@ -468,7 +478,7 @@
             
             <!-- PAGE: POSTER HALAMAN AWAL (khusus akses umum, sebelum katalog) -->
             <section id="pagePosterSplash" class="app-page d-none">
-                <div class="flex flex-col items-center text-center" style="min-height: calc(100vh - 220px); padding-bottom: 110px;">
+                <div class="flex flex-col items-center text-center" style="min-height: calc(100vh - 120px); padding-bottom: 110px;">
                     <div class="brutal-box bg-white p-3 mt-4" style="width: 200px; height: 200px; border-radius: 24px;">
                         <img id="posterLogoImg" src="" class="w-full h-full object-cover d-none" style="border-radius: 16px;" onerror="this.classList.add('d-none'); document.getElementById('posterLogoFallback').classList.remove('d-none');">
                         <div id="posterLogoFallback" class="w-full h-full flex items-center justify-center text-7xl">🍽️</div>
@@ -940,92 +950,55 @@
                     <div id="cashierSelfSettingsWrap" class="d-none w-full max-w-xl mx-auto"></div>
                     <div id="adminSettingsBox" class="brutal-box p-4 md:p-8 bg-white w-full">
                         <h3 class="text-xl md:text-2xl font-bold uppercase mb-6 border-b-4 border-black pb-3">Pengaturan Warung</h3>
-                        <form id="formSettings" onsubmit="window.saveSettings(event)">
-                            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
-                                <div class="bg-gray-50 p-4 border-2 border-black">
-                                    <h4 class="font-bold text-sm uppercase mb-3 border-b-2 border-black pb-1">Identitas Toko & Rekening</h4>
-                                    <div class="mb-4">
-                                        <label class="block font-bold mb-1">Nama Warung</label>
-                                        <input type="text" id="setStoreName" class="brutal-input bg-white" required>
+                        <form id="formSettings" onsubmit="window.saveSettings(event)" class="max-w-3xl mx-auto space-y-4">
+
+                            <!-- 1. Poster Halaman Awal -->
+                            <div class="set-card">
+                                <h4 class="set-title">Poster Halaman Awal</h4>
+                                <label class="flex items-center gap-2 font-bold cursor-pointer bg-purple-100 p-3 border-2 border-black w-full">
+                                    <input type="checkbox" id="setPosterEnabled" class="w-5 h-5 accent-black" onchange="window.togglePosterConfig()"> Aktifkan Poster
+                                </label>
+                                <p class="set-hint">Pengunjung umum (belum login) melihat poster ini dulu sebelum katalog.</p>
+                                <div id="posterConfigWrapper" class="d-none mt-3 pl-3 border-l-4 border-black space-y-3">
+                                    <div>
+                                        <label class="block font-bold mb-1 text-sm">Daftar Keterangan (satu poin per baris)</label>
+                                        <textarea id="setPosterDesc" rows="4" class="brutal-input bg-white text-sm" placeholder="Menyediakan berbagai macam makanan indonesia&#10;Higienis&#10;Bisa memesan melalui aplikasi"></textarea>
                                     </div>
-                                    <div class="mb-4">
-                                        <label class="block font-bold mb-1">Upload Logo Baru</label>
-                                        <input type="file" id="setLogoFile" class="brutal-input bg-white" accept="image/*" onchange="window.handleLogoSelect(event)">
-                                        <div id="logoPreview" class="mt-2 text-sm text-gray-500"></div>
-                                    </div>
-                                    <div class="grid grid-cols-2 gap-4 mb-2">
-                                        <div>
-                                            <label class="block font-bold mb-1">Nama Bank</label>
-                                            <input type="text" id="setBankName" class="brutal-input bg-white">
-                                        </div>
-                                        <div>
-                                            <label class="block font-bold mb-1">No Rekening</label>
-                                            <input type="text" id="setBankAcc" class="brutal-input bg-white">
-                                        </div>
+                                    <div>
+                                        <label class="block font-bold mb-1 text-sm">Teks Tombol Geser</label>
+                                        <input type="text" id="setPosterSlideText" class="brutal-input bg-white" placeholder="SLIDE UNTUK MEMBUKA KATALOG PRODUK">
                                     </div>
                                 </div>
-                                <div class="space-y-4">
-                            
-                            <!-- Pengaturan Fitur Pelanggan & Delivery -->
-                            <div class="mb-4 mt-6 border-t-2 border-black pt-4">
-                                <h4 class="font-bold mb-2">Fitur Pelanggan & Akun</h4>
-                                <label class="flex items-center gap-2 font-bold cursor-pointer bg-blue-50 p-3 border-2 border-black w-full mb-2">
-                                    <input type="checkbox" id="setCustEnabled" class="w-5 h-5 accent-black" onchange="window.handleCustFeatureToggle()"> Aktifkan Fitur Pelanggan (Akun, Hutang, & Riwayat)
-                                </label>
-                                <p class="text-[10px] md:text-xs text-gray-600 italic leading-tight mb-4">
-                                    *Status Default: <b>OFF</b>. Jika OFF, tombol login menjadi logo kunci 🔐 khusus pemilik/kasir, menu pelanggan di admin disembunyikan, dan pembayaran hutang dinonaktifkan.
-                                </p>
-
-                                <h4 class="font-bold mb-2">Tipe Pesanan Delivery</h4>
-                                <label class="flex items-center gap-2 font-bold cursor-pointer bg-green-50 p-3 border-2 border-black w-full" id="lblDeliveryOption">
-                                    <input type="checkbox" id="setDeliveryEnabled" class="w-5 h-5 accent-black"> Aktifkan Tipe Pesanan Delivery
-                                </label>
-                                <p class="text-[10px] md:text-xs text-gray-600 italic leading-tight mt-1" id="hintDeliveryAutoOn">
-                                    *Status Default: <b>OFF</b>. Hanya melayani pesanan Dine In / Takeaway langsung.
-                                </p>
                             </div>
 
-                            <!-- Fitur Akses Kasir -->
-                            <div class="mb-4 mt-4 border-t-2 border-black pt-4" id="settingCashierFeatureWrap">
-                                <h4 class="font-bold mb-2">Akses Tambahan Kasir</h4>
-                                <label class="flex items-center gap-2 font-bold cursor-pointer bg-yellow-100 p-3 border-2 border-black w-full">
-                                    <input type="checkbox" id="setCashierEnabled" class="w-5 h-5 accent-black"> Aktifkan Akses Kasir (Menu Kelola Kasir)
+                            <!-- 2. Informasi Produk -->
+                            <div class="set-card">
+                                <h4 class="set-title">Informasi Produk</h4>
+                                <label class="flex items-center gap-2 font-bold cursor-pointer bg-blue-50 p-3 border-2 border-black w-full">
+                                    <input type="checkbox" id="setProductInfoEnabled" class="w-5 h-5 accent-black"> Aktifkan Informasi Produk
                                 </label>
-                                <p class="text-[10px] md:text-xs text-gray-600 italic leading-tight mt-1">
-                                    *Status Default: <b>OFF</b>. Jika ON, muncul tab 'Kasir' di Kelola Admin untuk mengatur akun login & profil staf kasir.
-                                </p>
+                                <p class="set-hint">Muncul kolom "Informasi Produk" di form produk. Ikon ⓘ tampil di katalog umum &amp; pelanggan (tidak di POS kasir).</p>
                             </div>
-                            <!-- Fitur Catatan Keuangan -->
-                            <div class="mb-4 mt-4 border-t-2 border-black pt-4">
-                                <h4 class="font-bold mb-2">Catatan Keuangan</h4>
-                                <label class="flex items-center gap-2 font-bold cursor-pointer bg-violet-100 p-3 border-2 border-black w-full">
-                                    <input type="checkbox" id="setFinanceEnabled" class="w-5 h-5 accent-black"> Aktifkan Catatan Keuangan (Menu Kelola Admin)
-                                </label>
-                                <p class="text-[10px] md:text-xs text-gray-600 italic leading-tight mt-1">
-                                    *Status Default: <b>OFF</b>. Jika ON, muncul tab 'Catatan Keuangan' di Kelola Admin untuk mencatat pemasukan, pengeluaran, dan catatan, lengkap dengan laporan PDF A4. Data yang sudah tersimpan tidak hilang saat fitur di-OFF-kan.
-                                </p>
-                            </div>
-                            <!-- Pengaturan Jadwal Operasional Toko -->
-                            <div class="mb-4 mt-6 border-t-2 border-black pt-4">
-                                <h4 class="font-bold mb-2 uppercase">Jadwal & Waktu Buka Warung</h4>
-                                
-                                <label class="flex items-center gap-2 font-bold cursor-pointer bg-red-100 p-3 border-2 border-black w-full mb-3">
-                                    <input type="checkbox" id="setHideStoreStatusBadge" class="w-5 h-5 accent-black"> Sembunyikan (Hide) Keterangan Buka/Tutup di Header
-                                </label>
-                                
-                                <div class="flex gap-2 mb-3">
-                                    <button type="button" onclick="window.triggerInstantStoreStatus('open')" class="brutal-btn flex-1 bg-success text-black py-2 text-xs md:text-sm font-bold">Buka Sekarang</button>
-                                    <button type="button" onclick="window.triggerInstantStoreStatus('closed')" class="brutal-btn flex-1 bg-danger text-white py-2 text-xs md:text-sm font-bold">Tutup Sekarang</button>
+
+                            <!-- 3. Jadwal & Waktu Buka Warung -->
+                            <div class="set-card">
+                                <h4 class="set-title">Jadwal &amp; Waktu Buka Warung</h4>
+
+                                <p class="text-xs font-bold mb-2">Status Instan (berlaku hari ini)</p>
+                                <div class="grid grid-cols-2 gap-2">
+                                    <button type="button" id="btnInstantOpen" onclick="window.triggerInstantStoreStatus('open')" class="brutal-btn bg-success text-black py-2 text-xs md:text-sm font-bold">Buka Sekarang</button>
+                                    <button type="button" id="btnInstantClosed" onclick="window.triggerInstantStoreStatus('closed')" class="brutal-btn bg-danger text-white py-2 text-xs md:text-sm font-bold">Tutup Sekarang</button>
                                 </div>
-                                <div id="instantStatusAlert" class="text-xs italic font-bold mb-3 d-none"></div>
+                                <p id="instantStatusAlert" class="text-xs italic font-bold mt-2 d-none"></p>
+                                <p class="set-hint">Klik = ON, klik lagi = OFF (keterangan di header disembunyikan). Terapkan lewat "Simpan Pengaturan".</p>
 
-                                <label class="flex items-center gap-2 font-bold cursor-pointer bg-yellow-50 p-3 border-2 border-black w-full mb-2">
+                                <label class="flex items-center gap-2 font-bold cursor-pointer bg-yellow-50 p-3 border-2 border-black w-full mt-4">
                                     <input type="checkbox" id="setScheduleOpenEnabled" class="w-5 h-5 accent-black" onchange="window.handleStoreScheduleToggles()"> Aktifkan Jadwal Waktu Buka Warung
                                 </label>
 
-                                <div id="scheduleOpenContainer" class="d-none pl-3 border-l-4 border-black space-y-3 mt-2 mb-4 bg-gray-50 p-3 border-2 border-black">
+                                <div id="scheduleOpenContainer" class="d-none pl-3 border-l-4 border-black space-y-3 mt-3 bg-white p-3 border-2 border-black">
                                     <div>
-                                        <label class="block font-bold mb-1 text-xs md:text-sm">Pilih Tanggal & Waktu/Jam Buka:</label>
+                                        <label class="block font-bold mb-1 text-xs md:text-sm">Pilih Tanggal &amp; Waktu/Jam Buka:</label>
                                         <input type="datetime-local" id="setScheduleOpenDateTime" class="brutal-input bg-white text-xs md:text-sm">
                                     </div>
 
@@ -1034,9 +1007,8 @@
                                             <input type="checkbox" id="setScheduleCloseEnabled" class="w-4 h-4 accent-black" onchange="window.handleStoreScheduleToggles()"> Aktifkan Jadwal Waktu Tutup Warung
                                         </label>
                                     </div>
-
                                     <div id="scheduleCloseContainer" class="d-none pl-2 border-l-2 border-black">
-                                        <label class="block font-bold mb-1 text-xs">Pilih Tanggal & Waktu/Jam Tutup:</label>
+                                        <label class="block font-bold mb-1 text-xs">Pilih Tanggal &amp; Waktu/Jam Tutup:</label>
                                         <input type="datetime-local" id="setScheduleCloseDateTime" class="brutal-input bg-white text-xs md:text-sm">
                                     </div>
 
@@ -1045,9 +1017,8 @@
                                             <input type="checkbox" id="setRepeatScheduleEnabled" class="w-4 h-4 accent-black" onchange="window.handleStoreScheduleToggles()"> Ulangi Jadwal
                                         </label>
                                     </div>
-
                                     <div id="repeatScheduleContainer" class="d-none pl-2 border-l-2 border-black space-y-2">
-                                        <div class="flex gap-4 items-center text-xs md:text-sm font-bold">
+                                        <div class="flex gap-4 items-center text-xs md:text-sm font-bold flex-wrap">
                                             <label class="flex items-center gap-1 cursor-pointer">
                                                 <input type="radio" name="storeRepeatType" value="daily" checked onchange="window.handleStoreScheduleToggles()"> Setiap Hari
                                             </label>
@@ -1055,7 +1026,6 @@
                                                 <input type="radio" name="storeRepeatType" value="days" onchange="window.handleStoreScheduleToggles()"> Pilih Hari Libur/Tutup
                                             </label>
                                         </div>
-
                                         <div id="repeatDaysPickerContainer" class="d-none bg-white p-2 border-2 border-black">
                                             <span class="block font-bold text-xs mb-1">Pilih Hari-Hari Jadwal Tutup:</span>
                                             <div class="grid grid-cols-4 sm:grid-cols-7 gap-1 text-[11px] font-bold text-center">
@@ -1072,64 +1042,42 @@
                                 </div>
                             </div>
 
-                            <!-- Fitur POS Mandiri (Tamu/Pelanggan) -->
-                            <div class="mb-4 mt-4 border-t-2 border-black pt-4">
-                                <h4 class="font-bold mb-2">Pemesanan Mandiri Publik</h4>
+                            <!-- 4. Pemesanan Mandiri Publik -->
+                            <div class="set-card">
+                                <h4 class="set-title">Pemesanan Mandiri Publik</h4>
                                 <label class="flex items-center gap-2 font-bold cursor-pointer bg-yellow-50 p-3 border-2 border-black w-full">
-                                    <input type="checkbox" id="setPosEnabled" class="w-5 h-5 accent-black"> Aktifkan POS Mandiri (Pengunjung bisa buat pesanan)
+                                    <input type="checkbox" id="setPosEnabled" class="w-5 h-5 accent-black"> Aktifkan POS Mandiri (pengunjung bisa membuat pesanan)
                                 </label>
-                                <p class="text-[10px] md:text-xs text-gray-600 italic leading-tight mt-1">
-                                    *Status Default: <b>OFF</b>. Pengunjung hanya melihat katalog menu.
-                                </p>
                             </div>
 
-                            <!-- Tampilan Grid Produk -->
-                            <div class="mb-4 mt-6 border-t-2 border-black pt-4">
-                                <h4 class="font-bold mb-2">Tampilan Produk di HP</h4>
-                                <p class="text-[10px] md:text-xs text-gray-600 italic leading-tight mb-2">Jumlah kolom produk untuk tampilan Umum (Katalog Publik) & Pelanggan. Hanya berlaku di HP.</p>
-                                <div class="grid grid-cols-3 gap-2">
-                                    <label class="brutal-btn bg-white text-center py-3 cursor-pointer has-[:checked]:bg-success"><input type="radio" name="productGridMobile" value="1" id="setProductGrid1" class="hidden"><span class="font-bold">1 Kolom</span></label>
-                                    <label class="brutal-btn bg-white text-center py-3 cursor-pointer has-[:checked]:bg-main"><input type="radio" name="productGridMobile" value="2" id="setProductGrid2" class="hidden"><span class="font-bold">2 Kolom</span></label>
-                                    <label class="brutal-btn bg-white text-center py-3 cursor-pointer has-[:checked]:bg-blue-800 has-[:checked]:text-white"><input type="radio" name="productGridMobile" value="3" id="setProductGrid3" class="hidden"><span class="font-bold">3 Kolom</span></label>
+                            <!-- 5. Alarm Pesanan Masuk -->
+                            <div class="set-card">
+                                <h4 class="set-title">Alarm Pesanan Masuk</h4>
+                                <p class="set-hint" style="margin-top:0; margin-bottom:0.5rem;">Berbunyi di perangkat Admin/Kasir/Dapur yang sedang login saat ada pesanan baru masuk. Perangkat yang membuat pesanan itu sendiri tidak berbunyi.</p>
+                                <label class="block font-bold mb-1 text-sm">Nada Alarm</label>
+                                <input type="file" id="setOrderAlarmFile" class="brutal-input bg-white text-xs mb-2" accept="audio/*" onchange="window.handleOrderAlarmSelect(event)">
+                                <div class="flex items-center gap-2 flex-wrap">
+                                    <button type="button" onclick="window.testOrderAlarm()" class="brutal-btn bg-white px-2 py-1 text-xs">🔊 Tes Bunyi</button>
+                                    <button type="button" onclick="window.resetOrderAlarm()" class="brutal-btn bg-danger text-white px-2 py-1 text-xs">Reset ke Default</button>
+                                    <span id="orderAlarmStatus" class="text-[11px] font-bold text-gray-600 italic">Default: Bunyi Alarm Bawaan</span>
                                 </div>
-                                <p class="text-[10px] md:text-xs text-gray-600 italic leading-tight mt-4 mb-2">Jumlah kolom produk untuk tampilan POS Admin & Kasir. Hanya berlaku di HP.</p>
-                                <div class="grid grid-cols-2 gap-2">
-                                    <label class="brutal-btn bg-white text-center py-3 cursor-pointer has-[:checked]:bg-main"><input type="radio" name="posGridMobile" value="2" id="setPosGrid2" class="hidden"><span class="font-bold">2 Kolom</span></label>
-                                    <label class="brutal-btn bg-white text-center py-3 cursor-pointer has-[:checked]:bg-blue-800 has-[:checked]:text-white"><input type="radio" name="posGridMobile" value="3" id="setPosGrid3" class="hidden"><span class="font-bold">3 Kolom</span></label>
-                                </div>
+                                <p class="set-hint">Ukuran file maksimal 200KB.</p>
                             </div>
 
-                            <!-- Fitur Metode Pembayaran Kartu -->
-                            <div class="mb-4 mt-4 border-t-2 border-black pt-4">
-                                <h4 class="font-bold mb-2">Metode Pembayaran</h4>
-                                <label class="flex items-center gap-2 font-bold cursor-pointer bg-blue-50 p-3 border-2 border-black w-full">
-                                    <input type="checkbox" id="setCardEnabled" class="w-5 h-5 accent-black"> Aktifkan Pembayaran 'Kartu' (Debit / Kredit)
-                                </label>
-                                <p class="text-[10px] md:text-xs text-gray-600 italic leading-tight mt-1">
-                                    *Status Default: <b>OFF</b>. Hanya mengaktifkan Cash dan Transfer.
-                                </p>
-                            </div>
-
-                            <!-- Fitur Meja & Tombol Pemanggilan -->
-                            <div class="mb-4 mt-4 border-t-2 border-black pt-4">
-                                <h4 class="font-bold mb-2">Fitur Meja & Pemanggilan</h4>
-                                <label class="flex items-center gap-2 font-bold cursor-pointer bg-purple-50 p-3 border-2 border-black w-full mb-2">
+                            <!-- 6. Fitur Meja & Pemanggilan -->
+                            <div class="set-card">
+                                <h4 class="set-title">Fitur Meja &amp; Pemanggilan</h4>
+                                <label class="flex items-center gap-2 font-bold cursor-pointer bg-purple-50 p-3 border-2 border-black w-full">
                                     <input type="checkbox" id="setTableEnabled" class="w-5 h-5 accent-black" onchange="window.handleTableFeatureToggle()"> Aktifkan Fitur Meja
                                 </label>
-                                <p class="text-[10px] md:text-xs text-gray-600 italic leading-tight mb-2">
-                                    *Status Default: <b>OFF</b>.
-                                </p>
-                                
-                                <div id="tableConfigWrapper" class="d-none pl-2 border-l-4 border-black mb-2">
-                                    <label class="flex items-center gap-2 font-bold cursor-pointer bg-red-50 p-3 border-2 border-black w-full">
-                                        <input type="checkbox" id="setCallEnabled" class="w-5 h-5 accent-black"> Aktifkan Tombol Pemanggilan (Panggil Pelayan)
-                                    </label>
-                                    <p class="text-[10px] md:text-xs text-gray-600 italic leading-tight mt-1 mb-3">
-                                        *Memunculkan tombol bulat merah 🔔 "Panggil" untuk pelanggan.
-                                    </p>
-
-                                    <!-- Upload & Suara Panggilan -->
-                                    <div class="bg-gray-50 border-2 border-black p-3 mb-2">
+                                <div id="tableConfigWrapper" class="d-none mt-3 pl-3 border-l-4 border-black space-y-3">
+                                    <div>
+                                        <label class="flex items-center gap-2 font-bold cursor-pointer bg-red-50 p-3 border-2 border-black w-full">
+                                            <input type="checkbox" id="setCallEnabled" class="w-5 h-5 accent-black"> Aktifkan Tombol Pemanggilan (Panggil Pelayan)
+                                        </label>
+                                        <p class="set-hint">Memunculkan tombol bulat merah 🔔 "Panggil" untuk pelanggan.</p>
+                                    </div>
+                                    <div class="bg-white border-2 border-black p-3">
                                         <label class="block font-bold mb-1 text-sm">Nada Dering / Suara Panggilan</label>
                                         <input type="file" id="setCallAudioFile" class="brutal-input bg-white text-xs mb-2" accept="audio/*" onchange="window.handleCallAudioSelect(event)">
                                         <div class="flex items-center gap-2 flex-wrap">
@@ -1141,107 +1089,139 @@
                                 </div>
                             </div>
 
-                            <!-- Alarm Pesanan Masuk & Akun Dapur -->
-                            <div class="mb-4 mt-4 border-t-2 border-black pt-4">
-                                <h4 class="font-bold mb-2">Alarm Pesanan Masuk</h4>
-                                <p class="text-[10px] md:text-xs text-gray-600 italic leading-tight mb-2">
-                                    Bunyi ini otomatis diputar di setiap perangkat yang sedang login sebagai Admin/Kasir/Dapur ketika ada pesanan baru masuk ke halaman Incoming Order (dari pengunjung/pelanggan, maupun yang dibuat admin/kasir sendiri).
-                                </p>
-                                <div class="bg-gray-50 border-2 border-black p-3 mb-2">
-                                    <label class="block font-bold mb-1 text-sm">Nada Alarm Pesanan Masuk</label>
-                                    <input type="file" id="setOrderAlarmFile" class="brutal-input bg-white text-xs mb-2" accept="audio/*" onchange="window.handleOrderAlarmSelect(event)">
-                                    <div class="flex items-center gap-2 flex-wrap">
-                                        <button type="button" onclick="window.testOrderAlarm()" class="brutal-btn bg-white px-2 py-1 text-xs">🔊 Tes Bunyi</button>
-                                        <button type="button" onclick="window.resetOrderAlarm()" class="brutal-btn bg-danger text-white px-2 py-1 text-xs">Reset ke Default</button>
-                                        <span id="orderAlarmStatus" class="text-[11px] font-bold text-gray-600 italic">Default: Bunyi Alarm Bawaan</span>
+                            <!-- 7. Akun (Pelanggan, Kasir, Dapur) -->
+                            <div class="set-card">
+                                <h4 class="set-title">Akun (Pelanggan, Kasir, Dapur)</h4>
+                                <div class="space-y-4">
+                                    <div>
+                                        <label class="flex items-center gap-2 font-bold cursor-pointer bg-blue-50 p-3 border-2 border-black w-full">
+                                            <input type="checkbox" id="setCustEnabled" class="w-5 h-5 accent-black" onchange="window.handleCustFeatureToggle()"> Aktifkan Fitur Pelanggan (Akun, Hutang &amp; Riwayat)
+                                        </label>
+                                        <p class="set-hint">Jika OFF, tombol login menjadi 🔐 khusus pemilik/kasir, menu pelanggan di admin disembunyikan, dan pembayaran hutang dinonaktifkan.</p>
                                     </div>
-                                    <p class="text-[10px] text-gray-500 mt-1">*Ukuran file maksimal 200KB.</p>
-                                </div>
-                            </div>
-
-                            <!-- Akun Dapur -->
-                            <div class="mb-4 mt-4 border-t-2 border-black pt-4">
-                                <h4 class="font-bold mb-2">Akun Dapur</h4>
-                                <label class="flex items-center gap-2 font-bold cursor-pointer bg-orange-100 p-3 border-2 border-black w-full">
-                                    <input type="checkbox" id="setKitchenEnabled" class="w-5 h-5 accent-black"> Aktifkan Akun Dapur
-                                </label>
-                                <p class="text-[10px] md:text-xs text-gray-600 italic leading-tight mt-1 mb-2">
-                                    *Status Default: <b>OFF</b>. Jika ON, staf dapur bisa login dengan username <b>Dapur</b> dan hanya melihat halaman Incoming Order / Awaiting Payment saja (tidak bisa akses data lain).
-                                </p>
-                                <div class="bg-gray-50 border-2 border-black p-3">
-                                    <label class="block font-bold mb-1 text-sm">Password Akun Dapur</label>
-                                    <input type="text" id="setKitchenPass" class="brutal-input bg-white" placeholder="Kosongkan jika tidak ingin mengubah (default: 123456)">
-                                </div>
-                            </div>
-
-                            <!-- Poster Halaman Awal -->
-                            <div class="mb-4 mt-4 border-t-2 border-black pt-4">
-                                <h4 class="font-bold mb-2">Poster Halaman Awal</h4>
-                                <label class="flex items-center gap-2 font-bold cursor-pointer bg-purple-100 p-3 border-2 border-black w-full">
-                                    <input type="checkbox" id="setPosterEnabled" class="w-5 h-5 accent-black" onchange="window.togglePosterConfig()"> Aktifkan Poster
-                                </label>
-                                <p class="text-[10px] md:text-xs text-gray-600 italic leading-tight mt-1 mb-2">
-                                    *Status Default: <b>OFF</b>. Jika ON, pengunjung umum (belum login) akan melihat poster ini dulu sebelum katalog produk, berisi logo & nama toko, daftar keterangan di bawah ini, dan tombol geser untuk masuk ke katalog.
-                                </p>
-                                <div id="posterConfigWrapper" class="d-none pl-2 border-l-4 border-black">
-                                    <div class="bg-gray-50 border-2 border-black p-3 mb-2">
-                                        <label class="block font-bold mb-1 text-sm">Daftar Keterangan (satu poin per baris)</label>
-                                        <textarea id="setPosterDesc" rows="4" class="brutal-input bg-white text-sm" placeholder="Menyediakan berbagai macam makanan indonesia&#10;Higienis&#10;Bisa memesan melalui aplikasi"></textarea>
+                                    <div id="settingCashierFeatureWrap">
+                                        <label class="flex items-center gap-2 font-bold cursor-pointer bg-yellow-100 p-3 border-2 border-black w-full">
+                                            <input type="checkbox" id="setCashierEnabled" class="w-5 h-5 accent-black"> Aktifkan Akses Kasir (Menu Kelola Kasir)
+                                        </label>
+                                        <p class="set-hint">Jika ON, muncul tab "Kasir" di Kelola Admin untuk mengatur akun login &amp; profil staf kasir.</p>
                                     </div>
-                                    <div class="bg-gray-50 border-2 border-black p-3">
-                                        <label class="block font-bold mb-1 text-sm">Teks Tombol Geser</label>
-                                        <input type="text" id="setPosterSlideText" class="brutal-input bg-white" placeholder="SLIDE UNTUK MEMBUKA KATALOG PRODUK">
+                                    <div>
+                                        <label class="flex items-center gap-2 font-bold cursor-pointer bg-orange-100 p-3 border-2 border-black w-full">
+                                            <input type="checkbox" id="setKitchenEnabled" class="w-5 h-5 accent-black"> Aktifkan Akun Dapur
+                                        </label>
+                                        <p class="set-hint">Staf dapur login dengan username <b>Dapur</b> dan hanya melihat halaman Incoming Order / Awaiting Payment.</p>
+                                        <div class="bg-white border-2 border-black p-3 mt-2">
+                                            <label class="block font-bold mb-1 text-sm">Password Akun Dapur</label>
+                                            <input type="text" id="setKitchenPass" class="brutal-input bg-white" placeholder="Kosongkan jika tidak ingin mengubah (default: 123456)">
+                                        </div>
                                     </div>
                                 </div>
                             </div>
 
-                            <!-- Informasi Produk -->
-                            <div class="mb-4 mt-4 border-t-2 border-black pt-4">
-                                <h4 class="font-bold mb-2">Informasi Produk</h4>
-                                <label class="flex items-center gap-2 font-bold cursor-pointer bg-blue-50 p-3 border-2 border-black w-full">
-                                    <input type="checkbox" id="setProductInfoEnabled" class="w-5 h-5 accent-black"> Aktifkan Informasi Produk
-                                </label>
-                                <p class="text-[10px] md:text-xs text-gray-600 italic leading-tight mt-1 mb-2">
-                                    *Status Default: <b>OFF</b>. Jika ON, saat tambah/edit produk akan muncul kolom "Informasi Produk". Kalau diisi, ikon info "i" muncul di sebelah nama produk; jika ditekan, keterangan tersebut tampil dalam popup.
-                                </p>
+                            <!-- 8. Tipe Pesanan Delivery & Metode Pembayaran Kartu -->
+                            <div class="set-card">
+                                <h4 class="set-title">Tipe Pesanan &amp; Metode Pembayaran</h4>
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                                    <label id="lblDeliveryOption" class="flex items-center gap-2 font-bold cursor-pointer bg-green-50 p-3 border-2 border-black w-full">
+                                        <input type="checkbox" id="setDeliveryEnabled" class="w-5 h-5 accent-black"> Tipe Pesanan Delivery
+                                    </label>
+                                    <label class="flex items-center gap-2 font-bold cursor-pointer bg-blue-50 p-3 border-2 border-black w-full">
+                                        <input type="checkbox" id="setCardEnabled" class="w-5 h-5 accent-black"> Pembayaran Kartu (Debit/Kredit)
+                                    </label>
+                                </div>
+                                <p id="hintDeliveryAutoOn" class="set-hint d-none"></p>
                             </div>
 
+                            <!-- 9. Tampilan Grid Produk -->
+                            <div class="set-card">
+                                <h4 class="set-title">Tampilan Grid Produk (di HP)</h4>
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                    <div>
+                                        <label class="block font-bold mb-1 text-sm">Umum &amp; Pelanggan</label>
+                                        <select id="setProductGridMobile" class="brutal-input bg-white">
+                                            <option value="1">1 Kolom</option>
+                                            <option value="2">2 Kolom</option>
+                                            <option value="3">3 Kolom</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label class="block font-bold mb-1 text-sm">POS Admin &amp; Kasir</label>
+                                        <select id="setPosGridMobile" class="brutal-input bg-white">
+                                            <option value="2">2 Kolom</option>
+                                            <option value="3">3 Kolom</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
 
-                            <div class="mb-4 mt-6 border-t-2 border-black pt-4">
-                                <h4 class="font-bold mb-2">Manajemen Data Riwayat</h4>
-                                <label class="flex items-center gap-2 font-bold cursor-pointer bg-red-50 p-3 border-2 border-black w-full mb-2">
+                            <!-- 10. Catatan Keuangan -->
+                            <div class="set-card">
+                                <h4 class="set-title">Catatan Keuangan</h4>
+                                <label class="flex items-center gap-2 font-bold cursor-pointer bg-violet-100 p-3 border-2 border-black w-full">
+                                    <input type="checkbox" id="setFinanceEnabled" class="w-5 h-5 accent-black"> Aktifkan Catatan Keuangan (Menu Kelola Admin)
+                                </label>
+                                <p class="set-hint">Tab "Catatan Keuangan" muncul di Kelola Admin, lengkap dengan laporan PDF A4. Data yang sudah tersimpan tidak hilang saat di-OFF-kan.</p>
+                            </div>
+
+                            <!-- 11. Manajemen Data Riwayat -->
+                            <div class="set-card">
+                                <h4 class="set-title">Manajemen Data Riwayat</h4>
+                                <label class="flex items-center gap-2 font-bold cursor-pointer bg-red-50 p-3 border-2 border-black w-full">
                                     <input type="checkbox" id="setAutoReset" class="w-5 h-5 accent-black" onchange="window.toggleAutoResetConfig()"> Aktifkan Auto-Hapus Riwayat (Permanen)
                                 </label>
-                                <div id="autoResetConfigWrapper" class="d-none pl-2 border-l-4 border-black mb-2">
-                                    <label class="block font-bold mb-1 text-sm">Hapus Otomatis Jika Usia Data Melewati:</label>
+                                <div id="autoResetConfigWrapper" class="d-none mt-3 pl-3 border-l-4 border-black">
+                                    <label class="block font-bold mb-1 text-sm">Hapus otomatis jika usia data melewati:</label>
                                     <select id="setResetPeriod" class="brutal-input bg-white w-full">
                                         <option value="3">3 Bulan</option>
                                         <option value="6">6 Bulan</option>
                                         <option value="12">1 Tahun</option>
                                     </select>
                                 </div>
-                                <p class="text-[10px] md:text-xs text-gray-600 italic leading-tight">*Status Default: <b>OFF</b>.</p>
                             </div>
 
-                            <div class="p-4 border-2 border-black bg-blue-50">
-                                        <h4 class="font-bold mb-2">Akses Login Pemilik</h4>
-                                        <div class="mb-3">
-                                            <label class="block font-bold mb-1 text-sm">Username Owner</label>
-                                            <input type="text" id="setOwnerName" class="brutal-input bg-white" required>
-                                        </div>
-                                        <div>
-                                            <label class="block font-bold mb-1 text-sm">Password (Sandi Login Owner)</label>
-                                            <div class="relative">
-                                                <input type="password" id="setOwnerPass" class="brutal-input pr-10 bg-white">
-                                                <button type="button" class="absolute inset-y-0 right-0 flex items-center pr-3" onclick="window.togglePassword('setOwnerPass', 'iconSetOwnerPass')" id="iconSetOwnerPass">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12s3-7 10-7 10 7-3 7-10 7-10-7-10-7Z"></path><circle cx="12" cy="12" r="3"></circle></svg>
-                                                </button>
-                                            </div>
-                                        </div>
+                            <!-- 12. Akses Login Pemilik -->
+                            <div class="set-card">
+                                <h4 class="set-title">Akses Login Pemilik / Admin</h4>
+                                <div class="mb-3">
+                                    <label class="block font-bold mb-1 text-sm">Username Owner</label>
+                                    <input type="text" id="setOwnerName" class="brutal-input bg-white" required>
+                                </div>
+                                <div>
+                                    <label class="block font-bold mb-1 text-sm">Password (Sandi Login Owner)</label>
+                                    <div class="relative">
+                                        <input type="password" id="setOwnerPass" class="brutal-input pr-10 bg-white">
+                                        <button type="button" class="absolute inset-y-0 right-0 flex items-center pr-3" onclick="window.togglePassword('setOwnerPass', 'iconSetOwnerPass')" id="iconSetOwnerPass">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12s3-7 10-7 10 7-3 7-10 7-10-7-10-7Z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                                        </button>
                                     </div>
                                 </div>
                             </div>
-                            <button type="submit" class="brutal-btn w-full bg-main text-black py-3.5 text-base md:text-lg font-bold mt-6 shadow-brutal hover:bg-yellow-400">Simpan Pengaturan</button>
+
+                            <!-- 13. Identitas Toko & Rekening -->
+                            <div class="set-card">
+                                <h4 class="set-title">Identitas Toko &amp; Rekening</h4>
+                                <div class="mb-4">
+                                    <label class="block font-bold mb-1">Nama Warung</label>
+                                    <input type="text" id="setStoreName" class="brutal-input bg-white" required>
+                                </div>
+                                <div class="mb-4">
+                                    <label class="block font-bold mb-1">Upload Logo Baru</label>
+                                    <input type="file" id="setLogoFile" class="brutal-input bg-white" accept="image/*" onchange="window.handleLogoSelect(event)">
+                                    <div id="logoPreview" class="mt-2 text-sm text-gray-500"></div>
+                                </div>
+                                <div class="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <label class="block font-bold mb-1">Nama Bank</label>
+                                        <input type="text" id="setBankName" class="brutal-input bg-white">
+                                    </div>
+                                    <div>
+                                        <label class="block font-bold mb-1">No Rekening</label>
+                                        <input type="text" id="setBankAcc" class="brutal-input bg-white">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <button type="submit" class="brutal-btn w-full bg-main text-black py-3.5 text-base md:text-lg font-bold shadow-brutal hover:bg-yellow-400">Simpan Pengaturan</button>
                         </form>
                     </div>
                 </div>
@@ -2800,6 +2780,11 @@
         }
         hideAllPages(); 
         document.getElementById(pageId).classList.remove('d-none'); 
+        const isPoster = pageId === 'pagePosterSplash';
+        const hdrEl = document.querySelector('#mainAppWrapper > header');
+        if (hdrEl) hdrEl.classList.toggle('d-none', isPoster);
+        const cartFloatEl = document.getElementById('custCartFloatWrap');
+        if (cartFloatEl) cartFloatEl.classList.toggle('d-none', isPoster);
         const wrapEl = document.getElementById('mainAppWrapper');
         if (wrapEl) wrapEl.classList.toggle('pos-wide', pageId === 'pageAdminPOS');
         if (pageId === 'pageAdminPOS') { window.layoutPosCart(); window.refreshBestSellers(); }
@@ -2940,7 +2925,7 @@
         const isPosOn = Boolean(STATE.data.settings.posEnabled);
         // Ikon info "i": hanya muncul kalau fitur Informasi Produk di Pengaturan ON DAN produk ini diisi keterangannya.
         // Ditaruh sebaris dengan nama produk, dan pakai stopPropagation supaya tidak ikut memicu "Tambah ke Keranjang".
-        const hasInfo = Boolean(STATE.data.settings.productInfoEnabled) && p.info;
+        const hasInfo = mode !== 'pos' && Boolean(STATE.data.settings.productInfoEnabled) && p.info;
         const infoIconHtml = hasInfo
             ? `<button type="button" onclick="event.stopPropagation(); window.showProductInfo('${p.id}')" class="product-info-badge" style="pointer-events:auto;" title="Info Produk" aria-label="Info Produk">i</button>`
             : '';
@@ -3586,6 +3571,8 @@
             user_id: null,
             table_name: tableName
         };
+        STATE.ownWaitIds = STATE.ownWaitIds || new Set();
+        STATE.ownWaitIds.add(payload.id);
         
         showLoad();
         try {
@@ -4569,13 +4556,12 @@
         if (isCustChecked) {
             delivCheck.checked = true;
             delivCheck.disabled = true;
-            hintDelivery.textContent = "*Fitur Pelanggan AKTIF: Tipe Pesanan Delivery otomatis ON.";
-            hintDelivery.className = "text-[10px] md:text-xs text-blue-700 font-bold italic leading-tight mt-1";
+            hintDelivery.textContent = "Delivery otomatis ON selama Fitur Pelanggan aktif.";
+            hintDelivery.classList.remove('d-none');
             lblDelivery.classList.add('opacity-75', 'cursor-not-allowed');
         } else {
             delivCheck.disabled = false;
-            hintDelivery.textContent = "*Status Default: OFF. Hanya melayani pesanan Dine In / Takeaway langsung.";
-            hintDelivery.className = "text-[10px] md:text-xs text-gray-600 italic leading-tight mt-1";
+            hintDelivery.classList.add('d-none');
             lblDelivery.classList.remove('opacity-75', 'cursor-not-allowed');
         }
     };
@@ -4619,8 +4605,8 @@
         // Seluruh switch default OFF
         if(document.getElementById('setCashierEnabled')) document.getElementById('setCashierEnabled').checked = Boolean(STATE.data.settings.cashierEnabled);
         if(document.getElementById('setFinanceEnabled')) document.getElementById('setFinanceEnabled').checked = Boolean(STATE.data.settings.financeEnabled);
-        if(document.getElementById('setHideStoreStatusBadge')) document.getElementById('setHideStoreStatusBadge').checked = Boolean(STATE.data.settings.hideStoreStatusBadge);
 
+        STATE.tempInstantOverride = undefined;
         const sOpenCheck = document.getElementById('setScheduleOpenEnabled');
         if (sOpenCheck) {
             sOpenCheck.checked = Boolean(STATE.data.settings.scheduleOpenEnabled);
@@ -4685,12 +4671,10 @@
 
         document.getElementById('setAutoReset').checked = Boolean(STATE.data.settings.autoReset);
         document.getElementById('setResetPeriod').value = STATE.data.settings.resetPeriod || '12';
-        const gridMobile = ["1", "3"].includes(STATE.data.settings.productGridMobile) ? STATE.data.settings.productGridMobile : "2";
-        const gridRadio = document.querySelector(`input[name="productGridMobile"][value="${gridMobile}"]`);
-        if (gridRadio) gridRadio.checked = true;
-        const posGridMobile = STATE.data.settings.posGridMobile === "3" ? "3" : "2";
-        const posGridRadio = document.querySelector(`input[name="posGridMobile"][value="${posGridMobile}"]`);
-        if (posGridRadio) posGridRadio.checked = true;
+        const gridSel = document.getElementById('setProductGridMobile');
+        if (gridSel) gridSel.value = ["1", "3"].includes(STATE.data.settings.productGridMobile) ? STATE.data.settings.productGridMobile : "2";
+        const posGridSel = document.getElementById('setPosGridMobile');
+        if (posGridSel) posGridSel.value = STATE.data.settings.posGridMobile === "3" ? "3" : "2";
         window.applyProductGridMobile();
         window.toggleAutoResetConfig();
 
@@ -4739,7 +4723,6 @@
             product_info_enabled: document.getElementById('setProductInfoEnabled') ? document.getElementById('setProductInfoEnabled').checked : Boolean(STATE.data.settings.productInfoEnabled),
             auto_reset: document.getElementById('setAutoReset').checked, 
             reset_period: document.getElementById('setResetPeriod').value,
-            hide_store_status_badge: document.getElementById('setHideStoreStatusBadge') ? document.getElementById('setHideStoreStatusBadge').checked : false,
             schedule_open_enabled: document.getElementById('setScheduleOpenEnabled') ? document.getElementById('setScheduleOpenEnabled').checked : false,
             schedule_open_datetime: document.getElementById('setScheduleOpenDateTime') ? document.getElementById('setScheduleOpenDateTime').value : '',
             schedule_close_enabled: document.getElementById('setScheduleCloseEnabled') ? document.getElementById('setScheduleCloseEnabled').checked : false,
@@ -4747,11 +4730,9 @@
             repeat_schedule_enabled: document.getElementById('setRepeatScheduleEnabled') ? document.getElementById('setRepeatScheduleEnabled').checked : false,
             repeat_type: document.querySelector('input[name="storeRepeatType"]:checked')?.value || 'daily',
             repeat_closed_days: Array.from(document.querySelectorAll('.repeat-day-cb:checked')).map(cb => parseInt(cb.value)),
-            instant_override: (document.getElementById('setHideStoreStatusBadge') && document.getElementById('setHideStoreStatusBadge').checked)
-                ? null 
-                : (STATE.tempInstantOverride !== undefined ? STATE.tempInstantOverride : (STATE.data.settings.instantOverride || null)),
-            product_grid_mobile: ["1", "3"].includes(document.querySelector('input[name="productGridMobile"]:checked')?.value) ? document.querySelector('input[name="productGridMobile"]:checked').value : '2',
-            pos_grid_mobile: document.querySelector('input[name="posGridMobile"]:checked')?.value === '3' ? '3' : '2',
+            instant_override: (STATE.tempInstantOverride !== undefined ? STATE.tempInstantOverride : (STATE.data.settings.instantOverride || null)),
+            product_grid_mobile: ["1", "3"].includes(document.getElementById('setProductGridMobile')?.value) ? document.getElementById('setProductGridMobile').value : '2',
+            pos_grid_mobile: document.getElementById('setPosGridMobile')?.value === '3' ? '3' : '2',
             cashier_enabled: document.getElementById('setCashierEnabled') ? document.getElementById('setCashierEnabled').checked : Boolean(STATE.data.settings.cashierEnabled),
             finance_enabled: document.getElementById('setFinanceEnabled') ? document.getElementById('setFinanceEnabled').checked : Boolean(STATE.data.settings.financeEnabled)
         };
@@ -4803,7 +4784,6 @@
                 posGridMobile: payload.pos_grid_mobile,
                 cashierEnabled: payload.cashier_enabled,
                 financeEnabled: payload.finance_enabled,
-                hideStoreStatusBadge: payload.hide_store_status_badge,
                 scheduleOpenEnabled: payload.schedule_open_enabled,
                 scheduleOpenDateTime: payload.schedule_open_datetime,
                 scheduleCloseEnabled: payload.schedule_close_enabled,
@@ -5065,11 +5045,14 @@
         // jumlah pesanan di waiting_list bertambah (dari pengunjung/pelanggan, ATAU dari admin/kasir sendiri).
         // STATE.lastWaitCount === null artinya baru saja login/buka app -> jangan langsung bunyi untuk data lama.
         if (STATE.user && ['admin', 'cashier', 'kitchen'].includes(STATE.user.role)) {
-            const total = STATE.waitingList.length;
-            if (STATE.lastWaitCount !== null && total > STATE.lastWaitCount) {
-                playOrderAlarmChime();
+            if (STATE.lastWaitCount !== null && STATE.knownWaitIds) {
+                const hasForeignNew = STATE.waitingList.some(w =>
+                    !STATE.knownWaitIds.has(w.id) && !(STATE.ownWaitIds && STATE.ownWaitIds.has(w.id))
+                );
+                if (hasForeignNew) playOrderAlarmChime();
             }
-            STATE.lastWaitCount = total;
+            STATE.knownWaitIds = new Set(STATE.waitingList.map(w => w.id));
+            STATE.lastWaitCount = STATE.waitingList.length;
         }
 
         if(STATE.user && (STATE.user.role === 'admin' || STATE.user.role === 'cashier')) {
@@ -5944,41 +5927,38 @@
 
     window.syncInstantAlertUI = () => {
         const el = document.getElementById('instantStatusAlert');
+        const btnOpen = document.getElementById('btnInstantOpen');
+        const btnClosed = document.getElementById('btnInstantClosed');
+        const cur = STATE.tempInstantOverride !== undefined ? STATE.tempInstantOverride : STATE.data.settings.instantOverride;
+        const active = (cur && cur.dateString === new Date().toDateString()) ? cur.status : null;
+
+        if (btnOpen) {
+            btnOpen.classList.toggle('instant-on', active === 'open');
+            btnOpen.textContent = active === 'open' ? '✓ Buka Sekarang (ON)' : 'Buka Sekarang';
+        }
+        if (btnClosed) {
+            btnClosed.classList.toggle('instant-on', active === 'closed');
+            btnClosed.textContent = active === 'closed' ? '✓ Tutup Sekarang (ON)' : 'Tutup Sekarang';
+        }
         if (!el) return;
-        const inst = STATE.data.settings.instantOverride;
-        const todayStr = new Date().toDateString();
-        if (inst && inst.dateString === todayStr) {
-            el.classList.remove('d-none');
-            if (inst.status === 'open') {
-                el.className = 'text-xs italic font-bold mb-3 text-green-600';
-                el.textContent = '● Status instan berlaku hari ini: DIBUKA.';
-            } else {
-                el.className = 'text-xs italic font-bold mb-3 text-red-600';
-                el.textContent = '● Status instan berlaku hari ini: DITUTUP.';
-            }
+        if (active === 'open') {
+            el.className = 'text-xs italic font-bold mt-2 text-emerald-700';
+            el.textContent = '● Keterangan "sedang buka" akan tampil di header (klik Simpan Pengaturan).';
+        } else if (active === 'closed') {
+            el.className = 'text-xs italic font-bold mt-2 text-rose-700';
+            el.textContent = '● Keterangan "tutup" akan tampil di header (klik Simpan Pengaturan).';
         } else {
-            el.classList.add('d-none');
+            el.className = 'text-xs italic font-bold mt-2 d-none';
+            el.textContent = '';
         }
     };
 
     window.triggerInstantStoreStatus = (status) => {
+        const cur = STATE.tempInstantOverride !== undefined ? STATE.tempInstantOverride : STATE.data.settings.instantOverride;
         const todayStr = new Date().toDateString();
-        STATE.tempInstantOverride = {
-            status: status,
-            dateString: todayStr,
-            updatedAt: new Date().toISOString()
-        };
-        const el = document.getElementById('instantStatusAlert');
-        if (el) {
-            el.classList.remove('d-none');
-            if (status === 'open') {
-                el.className = 'text-xs italic font-bold mb-3 text-emerald-700';
-                el.textContent = '● Pilihan instan: SEDANG BUKA (Klik "Simpan Pengaturan" untuk menerapkan)';
-            } else {
-                el.className = 'text-xs italic font-bold mb-3 text-rose-700';
-                el.textContent = '● Pilihan instan: DITUTUP (Klik "Simpan Pengaturan" untuk menerapkan)';
-            }
-        }
+        const isActive = cur && cur.dateString === todayStr && cur.status === status;
+        STATE.tempInstantOverride = isActive ? null : { status: status, dateString: todayStr, updatedAt: new Date().toISOString() };
+        window.syncInstantAlertUI();
     };
 
     window.updateStoreStatusDisplay = () => {
@@ -5988,16 +5968,6 @@
 
         const s = STATE.data.settings || {};
 
-        // Prioritas Mutlak: Jika fitur Hide ON, bersihkan dan sembunyikan semua badge (instan maupun jadwal)
-        if (s.hideStoreStatusBadge) {
-            badge.classList.add('hidden');
-            badge.textContent = '';
-            if (closeBadge) {
-                closeBadge.classList.add('hidden');
-                closeBadge.textContent = '';
-            }
-            return;
-        }
 
         const now = new Date();
         const todayStr = now.toDateString();
