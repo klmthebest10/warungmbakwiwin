@@ -146,12 +146,112 @@
             }
             #pagePublic, #pageCustomerDashboard { padding-bottom: 5.5rem; }
         }
-        /* Layout responsif layar lebar (Tablet & PC) untuk Kelola Admin */
+        /* ===== Layout lebar Kelola Admin / Kelola Aplikasi =====
+           Mengikuti pola POS wide: area utama memakai seluruh lebar layar,
+           tetapi tetap menyisakan padding agar struktur tidak menempel ke tepi. */
         @media (min-width: 1024px) {
-            #mainAppWrapper.admin-wide > main { max-width: 100% !important; padding-left: 2rem; padding-right: 2rem; }
-            #pageAdminMgmt { width: 100%; }
-            #pageAdminMgmt .admin-grid-wide { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.5rem; align-items: start; }
+            #mainAppWrapper.admin-wide > main,
+            #mainAppWrapper.admin-wide > header > div {
+                max-width: none !important;
+            }
+
+            #mainAppWrapper.admin-wide > main {
+                padding-left: 2rem;
+                padding-right: 2rem;
+            }
+
+            #pageAdminMgmt {
+                width: 100%;
+                max-width: none !important;
+            }
+
+            /* Header Kelola Aplikasi memanfaatkan satu baris penuh. */
+            #pageAdminMgmt #cashierMgmtBar {
+                width: 100%;
+                align-items: center;
+            }
+
+            /* Tab admin memakai seluruh ruang yang tersedia dan tidak memaksa
+               konten berikutnya menjadi sempit. */
+            #pageAdminMgmt #adminTabBar {
+                width: 100%;
+                overflow-x: visible;
+                flex-wrap: wrap;
+            }
+
+            /* Konten admin selalu fleksibel terhadap lebar layar. */
+            #pageAdminMgmt .admin-content {
+                width: 100%;
+                max-width: none !important;
+            }
+
+            /* Kartu daftar yang memang berbentuk koleksi dibuat dua kolom. */
+            #pageAdminMgmt #adminCategoriesList,
+            #pageAdminMgmt #cashierDetailsCard {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            /* Form pengaturan tidak lagi terkunci max-width 3xl.
+               Kartu pengaturan mengisi area layar secara fleksibel. */
+            #pageAdminMgmt #adminSettingsBox {
+                width: 100%;
+                max-width: none !important;
+            }
+
+            #pageAdminMgmt #adminSettingsBox form {
+                max-width: none !important;
+                width: 100%;
+                display: grid;
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: 1rem;
+                align-items: start;
+            }
+
+            #pageAdminMgmt #adminSettingsBox form > .set-card {
+                margin: 0;
+                height: 100%;
+            }
+
+            /* Bagian yang membutuhkan ruang horizontal penuh. */
+            #pageAdminMgmt #adminSettingsBox form > .set-card:nth-child(3),
+            #pageAdminMgmt #adminSettingsBox form > button[type="submit"] {
+                grid-column: 1 / -1;
+            }
+
+            /* Ringkasan keuangan mengikuti lebar layar. */
+            #pageAdminMgmt #admin_finance .grid {
+                width: 100%;
+            }
+
+            /* Tabel memanfaatkan seluruh lebar area admin. */
+            #pageAdminMgmt .brutal-box:has(> table) {
+                width: 100%;
+            }
         }
+
+        /* Monitor sangat lebar: gunakan tiga kolom untuk kumpulan kartu,
+           supaya tidak menghasilkan dua kartu yang terlalu lebar. */
+        @media (min-width: 1440px) {
+            #pageAdminMgmt #adminCategoriesList,
+            #pageAdminMgmt #cashierDetailsCard {
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+            }
+
+            #pageAdminMgmt #adminSettingsBox form {
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+            }
+
+            #pageAdminMgmt #adminSettingsBox form > .set-card:nth-child(3),
+            #pageAdminMgmt #adminSettingsBox form > button[type="submit"] {
+                grid-column: 1 / -1;
+            }
+        }
+        @media (min-width: 1024px) {
+            #mainAppWrapper.admin-wide .admin-content > * {
+                max-width: none;
+            }
+        }
+
         /* Menu Tab Admin Melayang / Mengambang (Sticky saat scroll) */
         #adminTabBar {
             position: sticky;
@@ -2792,7 +2892,10 @@
         const cartFloatEl = document.getElementById('custCartFloatWrap');
         if (cartFloatEl) cartFloatEl.classList.toggle('d-none', isPoster);
         const wrapEl = document.getElementById('mainAppWrapper');
-        if (wrapEl) wrapEl.classList.toggle('pos-wide', pageId === 'pageAdminPOS');
+        if (wrapEl) {
+            wrapEl.classList.toggle('pos-wide', pageId === 'pageAdminPOS');
+            wrapEl.classList.toggle('admin-wide', pageId === 'pageAdminMgmt');
+        }
         if (pageId === 'pageAdminPOS') { window.layoutPosCart(); window.refreshBestSellers(); }
         if (pageId === 'pageAdminMgmt') window.syncAdminTabs();
 
