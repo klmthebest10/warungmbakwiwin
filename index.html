@@ -2489,6 +2489,10 @@
         if (root && root.parentElement !== document.body) document.body.appendChild(root);
         window.updateThemeToggleIcons();
         
+        // Link nota yang dibagikan (?receipt=...): tampilkan HANYA nota, tanpa memuat/menampilkan bagian aplikasi lain.
+        const sharedReceiptToken = new URLSearchParams(window.location.search).get('receipt');
+        if (sharedReceiptToken) { await window.showSharedReceiptOnly(sharedReceiptToken); return; }
+
         loadLocalDataCache();
         await autoSetupDatabase();
         const savedUser = localStorage.getItem('wi_user');
@@ -3669,10 +3673,97 @@
         link.click(); 
     };
     
-    window.shareReceiptWA = () => { 
-        if(!STATE.currentReceiptId) return; 
-        const link = window.location.href.split('?')[0] + '?receipt=' + STATE.currentReceiptId; 
-        window.shareToWA(link, 'Berikut nota pesanan Warung Indonesia Anda. Klik link untuk melihat:'); 
+    // Bagikan nota lewat WhatsApp: membuat salinan (snapshot) nota di koleksi 'shared_receipts' dengan ID acak,
+    // lalu mengirim link ?receipt=<id>. Penerima hanya melihat halaman nota (tanpa login & tanpa data toko lain).
+    window.shareReceiptWA = async () => {
+        const orderId = STATE.currentReceiptId;
+        if (!orderId) return await window.customAlert('Nota hutang rekap tidak bisa dibagikan lewat link. Buka nota transaksi tertentu dari Riwayat.', 'Info');
+        const o = STATE.data.orders.find(x => x.id === orderId);
+        if (!o) return await window.customAlert('Data transaksi tidak ditemukan.', 'Gagal');
+        if (IS_PREVIEW || !db) return await window.customAlert('Bagikan nota lewat link membutuhkan koneksi database (Firebase).', 'Gagal');
+
+        const custName = o.custId ? (STATE.data.customers.find(x => x.id === o.custId)?.name || 'Umum') : 'Umum';
+        const bytes = new Uint8Array(12);
+        crypto.getRandomValues(bytes);
+        const token = 'r' + Array.from(bytes).map(b => b.toString(16).padStart(2, '0')).join('');
+        const storeName = STATE.data.settings.storeName || 'Warung Indonesia';
+
+        showLoad();
+        try {
+            await db.collection('shared_receipts').doc(token).set({
+                order_id: o.id,
+                store_name: storeName,
+                date: o.date,
+                cust_name: custName,
+                order_type: o.orderType || '',
+                type: o.type || '',
+                payment_status: o.paymentStatus || '',
+                items: (o.items || []).map(i => ({ name: i.name, price: Number(i.price) || 0, qty: Number(i.qty) || 0 })),
+                subtotal: Number(o.subtotal) || 0,
+                ongkir: Number(o.ongkir) || 0,
+                total: Number(o.total) || 0,
+                paid_amount: Number(o.paidAmount) || 0,
+                change_amount: Number(o.changeAmount) || 0,
+                address: o.address || '',
+                table_name: o.table || '',
+                created_at: new Date().toISOString(),
+                // Field khusus TTL Firestore (harus bertipe Timestamp): salinan nota otomatis dihapus setelah 30 hari
+                expire_at: firebase.firestore.Timestamp.fromDate(new Date(Date.now() + 30 * 24 * 60 * 60 * 1000))
+            });
+        } catch (e) {
+            hideLoad();
+            return await window.customAlert('Gagal membuat link nota: ' + e.message, 'Gagal');
+        }
+        hideLoad();
+
+        const link = window.location.href.split('#')[0].split('?')[0] + '?receipt=' + token;
+        const text = 'Berikut nota pesanan ' + storeName + ' Anda. Klik link untuk melihat:\n' + link;
+        const waUrl = 'https://wa.me/?text=' + encodeURIComponent(text);
+        const w = window.open(waUrl, '_blank');
+        if (!w) window.location.href = waUrl;
+    };
+
+    // Halaman nota publik (dibuka dari link ?receipt=<id>): hanya menampilkan nota, tanpa login & tanpa menu aplikasi.
+    window.showSharedReceiptOnly = async (token) => {
+        window.__receiptOnly = true;
+        const root = document.getElementById('gasapp-root');
+        const app = document.getElementById('mainAppWrapper');
+        if (app) app.classList.add('d-none');
+
+        const view = document.createElement('div');
+        view.id = 'sharedReceiptView';
+        view.className = 'min-h-screen flex flex-col items-center justify-start p-4';
+        view.innerHTML = '<div class="brutal-box bg-gray-200 w-full max-w-sm flex flex-col overflow-hidden mt-2">' +
+            '<div class="p-3 bg-main border-b-4 border-black font-bold uppercase text-center text-lg">Nota Transaksi</div>' +
+            '<div class="p-4 flex justify-center items-start bg-gray-300" id="sharedReceiptBody"><div class="font-bold text-sm">Memuat nota...</div></div>' +
+            '<div id="sharedReceiptBtns" class="p-3 border-t-4 border-black bg-white grid grid-cols-2 gap-2 d-none">' +
+            '<button onclick="window.printReceiptPopup()" class="brutal-btn bg-white py-2 text-sm flex items-center justify-center gap-2">🖨️ Print</button>' +
+            '<button onclick="window.downloadReceiptImage()" class="brutal-btn bg-accent py-2 text-sm flex items-center justify-center gap-2">💾 Download</button>' +
+            '</div></div>';
+        root.appendChild(view);
+
+        const body = document.getElementById('sharedReceiptBody');
+        const fail = msg => { body.innerHTML = '<div class="font-bold text-sm text-center p-4">' + msg + '</div>'; };
+        if (!/^[A-Za-z0-9_-]{8,64}$/.test(token)) return fail('Link nota tidak valid.');
+        try {
+            if (IS_PREVIEW || !db) return fail('Nota tidak dapat dimuat (database tidak tersedia).');
+            const snap = await db.collection('shared_receipts').doc(token).get();
+            if (!snap.exists) return fail('Nota tidak ditemukan atau link sudah tidak berlaku.');
+            const r = snap.data();
+            STATE.data.settings.storeName = r.store_name || STATE.data.settings.storeName;
+            const order = {
+                id: r.order_id, date: r.date, orderType: r.order_type, type: r.type, paymentStatus: r.payment_status,
+                items: r.items || [], subtotal: Number(r.subtotal || 0), ongkir: Number(r.ongkir || 0), total: Number(r.total || 0),
+                paidAmount: Number(r.paid_amount || 0), changeAmount: Number(r.change_amount || 0),
+                address: r.address || '', table: r.table_name || ''
+            };
+            window.generateReceiptHtml(order, r.cust_name || 'Umum', 'sharedReceiptBody', 'INV');
+            document.getElementById('sharedReceiptBtns').classList.remove('d-none');
+            document.title = 'Nota ' + (r.store_name || '');
+        } catch (e) {
+            console.error(e);
+            fail('Gagal memuat nota. Periksa koneksi internet lalu muat ulang halaman.');
+        }
     };
     
     window.viewDebtReceipt = custId => { 
@@ -5137,7 +5228,7 @@
             if (btnCalls) btnCalls.classList.add('d-none');
         }
     };
-    setInterval(window.checkAdminCalls, 8000);
+    setInterval(() => { if (!window.__receiptOnly) window.checkAdminCalls(); }, 8000);
 
     window.togglePosSearch = () => {
         const wrap = document.getElementById('posSearchWrap');
@@ -5221,7 +5312,7 @@
             checkClose('posSearchWrap', 'adminPosProductGrid', 'posInlineSearch', 'togglePosSearch');
         }
     });
-    setInterval(window.checkAdminWaitList, 5000);
+    setInterval(() => { if (!window.__receiptOnly) window.checkAdminWaitList(); }, 5000);
 
     window.openAdminWaitingList = () => {
         window.showPage('pageAdminWaitList');
