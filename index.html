@@ -542,6 +542,29 @@
 [data-theme="dark"] .set-title { border-color: var(--dk-border); }
 [data-theme="dark"] .set-hint { color: var(--dk-text-muted); }
 .instant-on { outline: 3px solid #000; outline-offset: 2px; }
+        /* Status buka/tutup warung di header: warna gelap dan teks kontras saat dark mode */
+        [data-theme="dark"] #storeStatusBadge.bg-emerald-600 {
+            background-color: #0E5A32 !important;
+            color: #F2EFE6 !important;
+            border-color: #B9DAD8 !important;
+            box-shadow: 1px 1px 0 #06181A !important;
+        }
+        [data-theme="dark"] #storeStatusBadge.bg-rose-600,
+        [data-theme="dark"] #storeCloseStatusBadge.bg-rose-600 {
+            background-color: #7A1F2B !important;
+            color: #F2EFE6 !important;
+            border-color: #B9DAD8 !important;
+            box-shadow: 1px 1px 0 #06181A !important;
+        }
+        [data-theme="dark"] #storeStatusBadge.bg-amber-200 {
+            background-color: #7A5C00 !important;
+            color: #F2EFE6 !important;
+            border-color: #B9DAD8 !important;
+            box-shadow: 1px 1px 0 #06181A !important;
+        }
+        [data-theme="dark"] #storeStatusBadge,
+        [data-theme="dark"] #storeCloseStatusBadge { text-shadow: none !important; }
+
 [data-theme="dark"] .instant-on { outline-color: var(--dk-border); }
     </style>
 </head>
