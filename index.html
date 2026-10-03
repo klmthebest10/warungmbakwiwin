@@ -674,7 +674,24 @@
         [data-theme="dark"] .prod-cat-chip { background: var(--dk-surface-2); border-color: var(--dk-border); color: var(--dk-text); }
 
         /* ===== Pelanggan: tombol aksi 2x2 & info cicilan ===== */
-        .cust-actions .brutal-btn { font-size: 11px; padding: 0.55rem 0.4rem; letter-spacing: 0.01em; }
+        .cust-table { table-layout: auto; }
+        .cust-col-name { width: 32%; }
+        .cust-col-debt { width: 1%; }
+        .cust-sub { font-size: 10px; line-height: 1.25; margin-top: 3px; opacity: 0.85; word-break: break-word; }
+        .cust-addr { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        .cust-actions { min-width: 150px; }
+        .cust-actions .brutal-btn {
+            font-size: 11px; line-height: 1.15; padding: 0.5rem 0.35rem; min-height: 38px;
+            white-space: normal; overflow-wrap: normal; word-break: keep-all; text-align: center;
+            display: flex; align-items: center; justify-content: center;
+        }
+        @media (max-width: 1023px) {
+            .cust-col-name { width: 30%; max-width: 110px; }
+            .cust-actions { gap: 6px; }
+            .cust-actions .brutal-btn { font-size: 9.5px; letter-spacing: 0; padding: 0.4rem 0.2rem; min-height: 34px; border-width: 2px; box-shadow: 2px 2px 0 0 #000; }
+            .cust-actions .brutal-btn:active:not(:disabled) { transform: translate(1px, 1px); box-shadow: 1px 1px 0 0 #000; }
+            [data-theme="dark"] .cust-actions .brutal-btn { box-shadow: 2px 2px 0 0 var(--dk-border) !important; }
+        }
         .cust-actions .brutal-btn:disabled { opacity: 0.4; }
         .cicil-info { font-size: 10px; font-weight: 600; color: #4b5563; }
         [data-theme="dark"] .cicil-info { color: var(--dk-text-muted); }
@@ -1091,14 +1108,14 @@
                         <button onclick="window.openShareModal()" class="brutal-btn bg-accent px-4 py-2 text-sm">Bagikan Link 🔗</button>
                     </div>
                     <div class="brutal-box bg-white overflow-x-auto">
-                        <table class="w-full text-left border-collapse min-w-[860px]">
+                        <table class="cust-table w-full text-left border-collapse lg:min-w-[860px]">
                             <thead>
-                                <tr class="border-b-4 border-black bg-danger text-white">
-                                    <th class="p-2 border-r-2 border-black w-1/4">Nama & Akses</th>
-                                    <th class="p-2 border-r-2 border-black">Total Hutang</th>
-                                    <th class="p-2 border-r-2 border-black lg:hidden text-center w-[240px]">Aksi</th>
-                                    <th class="p-2 border-r-2 border-black w-1/5">Kontak</th>
-                                    <th class="p-2 border-r-0 lg:border-r-2 border-black w-1/3">Alamat</th>
+                                <tr class="border-b-4 border-black bg-danger text-white text-xs lg:text-base">
+                                    <th class="p-2 border-r-2 border-black cust-col-name">Nama</th>
+                                    <th class="p-2 border-r-2 border-black cust-col-debt">Hutang</th>
+                                    <th class="p-2 lg:hidden text-center">Aksi</th>
+                                    <th class="p-2 border-r-2 border-black w-1/5 hidden lg:table-cell">Kontak</th>
+                                    <th class="p-2 border-r-2 border-black w-1/3 hidden lg:table-cell">Alamat</th>
                                     <th class="p-2 text-center w-[260px] hidden lg:table-cell">Aksi</th>
                                 </tr>
                             </thead>
@@ -4939,27 +4956,27 @@
             return `<div class="cust-actions grid grid-cols-2 gap-2">
                 <button onclick="window.openDebtInstallment('${c.id}')" class="brutal-btn bg-accent" ${has ? '' : 'disabled'} title="Bayar sebagian hutang">Cicil</button>
                 <button onclick="window.payDebt('${c.id}')" class="brutal-btn bg-success" ${has ? '' : 'disabled'} title="Lunasi seluruh sisa hutang">Lunas</button>
-                <button onclick="window.viewDebtReceipt('${c.id}')" class="brutal-btn bg-main whitespace-nowrap">Nota Hutang</button>
-                <button onclick="window.openEditCustomer('${c.id}')" class="brutal-btn bg-white whitespace-nowrap">Edit/Hapus</button>
+                <button onclick="window.viewDebtReceipt('${c.id}')" class="brutal-btn bg-main">Nota Hutang</button>
+                <button onclick="window.openEditCustomer('${c.id}')" class="brutal-btn bg-white">Edit/<wbr>Hapus</button>
             </div>`;
         };
         tbody.innerHTML = sortedCust.map(c => {
             const cicil = window.getCustomerInstallmentTotal(c.id);
             return `
             <tr class="border-b-2 border-black hover:bg-gray-100">
-                <td class="p-2 border-r-2 border-black w-1/4 align-middle">
-                    <div class="font-bold text-sm">${escapeHTML(c.name)}</div>
-                    <div class="flex items-center gap-1 mt-1 text-[10px]">
-                        <button type="button" onclick="window.resetCustomerPassword('${c.id}')" class="underline text-blue-700 font-bold">🔑 Reset Password</button>
-                    </div>
+                <td class="p-2 border-r-2 border-black cust-col-name align-middle">
+                    <div class="font-bold text-xs lg:text-sm break-words leading-tight">${escapeHTML(c.name)}</div>
+                    ${c.wa ? `<div class="cust-sub lg:hidden">📞 ${escapeHTML(c.wa)}</div>` : ''}
+                    ${c.address ? `<div class="cust-sub cust-addr lg:hidden">📍 ${escapeHTML(c.address)}</div>` : ''}
+                    <button type="button" onclick="window.resetCustomerPassword('${c.id}')" class="underline text-blue-700 font-bold text-[9px] lg:text-[10px] mt-1 text-left leading-tight">🔑 Reset Password</button>
                 </td>
-                <td class="p-2 border-r-2 border-black align-middle">
-                    <div class="font-bold text-sm ${c.debt > 0 ? 'text-danger' : 'text-success'}">${formatWon(c.debt)}</div>
-                    ${cicil > 0 ? `<div class="cicil-info">sudah dicicil ${formatWon(cicil)}</div>` : ''}
+                <td class="p-2 border-r-2 border-black cust-col-debt align-middle">
+                    <div class="font-bold text-xs lg:text-sm whitespace-nowrap ${c.debt > 0 ? 'text-danger' : 'text-success'}">${formatWon(c.debt)}</div>
+                    ${cicil > 0 ? `<div class="cicil-info leading-tight">dicicil ${formatWon(cicil)}</div>` : ''}
                 </td>
-                <td class="p-2 border-r-2 border-black lg:hidden align-middle">${actions(c)}</td>
-                <td class="p-2 border-r-2 border-black text-xs md:text-sm w-1/5 align-middle">${escapeHTML(c.wa)}</td>
-                <td class="p-2 text-xs md:text-sm w-1/3 border-r-0 lg:border-r-2 border-black whitespace-pre-wrap break-words leading-relaxed align-middle">${escapeHTML(c.address)}</td>
+                <td class="p-1.5 lg:hidden align-middle">${actions(c)}</td>
+                <td class="p-2 border-r-2 border-black text-sm w-1/5 align-middle hidden lg:table-cell">${escapeHTML(c.wa)}</td>
+                <td class="p-2 text-sm w-1/3 border-r-2 border-black whitespace-pre-wrap break-words leading-relaxed align-middle hidden lg:table-cell">${escapeHTML(c.address)}</td>
                 <td class="p-2 hidden lg:table-cell align-middle">${actions(c)}</td>
             </tr>`;
         }).join('');
