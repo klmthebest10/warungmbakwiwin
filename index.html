@@ -566,6 +566,97 @@
         [data-theme="dark"] #storeCloseStatusBadge { text-shadow: none !important; }
 
 [data-theme="dark"] .instant-on { outline-color: var(--dk-border); }
+
+        /* ===== Baris produk di keranjang: warna kalem & elegan (ivory hangat + aksen taupe) ===== */
+        .cart-item-row { background-color: #F5F1E8 !important; border-left-width: 6px !important; border-left-color: #8C7A5B !important; }
+        .cart-item-row h4 { color: #2E2A24; }
+        .cart-item-row .cart-item-price { color: #6E604A; font-weight: 600; }
+        [data-theme="dark"] .cart-item-row { background-color: #1D4E4A !important; border-left-color: #CDB98F !important; }
+        [data-theme="dark"] .cart-item-row h4 { color: var(--dk-text); }
+        [data-theme="dark"] .cart-item-row .cart-item-price { color: #E3D3AE; }
+
+        /* ===== Tombol efek suara (per perangkat) ===== */
+        .sfx-toggle-btn { font-size: 15px; }
+        .sfx-toggle-btn.is-off { opacity: 0.55; }
+
+        /* ===== Dashboard admin ===== */
+        .dash-filter-btn { border-width: 2px !important; box-shadow: 2px 2px 0 0 #000 !important; }
+        [data-theme="dark"] .dash-filter-btn { box-shadow: 2px 2px 0 0 var(--dk-border) !important; }
+        .dash-chart svg { display: block; width: 100%; height: auto; overflow: visible; }
+        .dash-chart .dash-grid { stroke: #d6d3cb; stroke-dasharray: 3 4; stroke-width: 1; }
+        .dash-chart .dash-axis { stroke: #000; stroke-width: 2; }
+        .dash-chart .dash-bar { fill: #FFD500; stroke: #000; stroke-width: 1.5; }
+        .dash-chart .dash-slot.is-active .dash-bar { fill: #FFB300; }
+        .dash-chart .dash-hit { fill: transparent; cursor: pointer; }
+        .dash-chart .dash-slot.is-active .dash-hit { fill: rgba(0,0,0,0.05); }
+        .dash-chart .dash-line { fill: none; stroke: #2457D6; stroke-width: 2.5; stroke-linejoin: round; stroke-linecap: round; }
+        .dash-chart .dash-dot { fill: #fff; stroke: #2457D6; stroke-width: 2; }
+        .dash-chart .dash-txt { fill: #4b5563; font-size: 10px; font-family: 'Space Grotesk', sans-serif; }
+        .dash-chart .dash-txt-count { fill: #2457D6; }
+        .dash-legend-bar { display:inline-block; width: 12px; height: 12px; background: #FFD500; border: 1.5px solid #000; vertical-align: -2px; }
+        .dash-legend-line { display:inline-block; width: 16px; height: 0; border-top: 3px solid #2457D6; vertical-align: 3px; }
+        [data-theme="dark"] .dash-chart .dash-grid { stroke: #2C5F5C; }
+        [data-theme="dark"] .dash-chart .dash-axis { stroke: var(--dk-border); }
+        [data-theme="dark"] .dash-chart .dash-bar { fill: #B8952A; stroke: var(--dk-border); }
+        [data-theme="dark"] .dash-chart .dash-slot.is-active .dash-bar { fill: #D9B23A; }
+        [data-theme="dark"] .dash-chart .dash-slot.is-active .dash-hit { fill: rgba(255,255,255,0.06); }
+        [data-theme="dark"] .dash-chart .dash-line { stroke: #7FD3FF; }
+        [data-theme="dark"] .dash-chart .dash-dot { fill: var(--dk-surface); stroke: #7FD3FF; }
+        [data-theme="dark"] .dash-chart .dash-txt { fill: var(--dk-text-muted); }
+        [data-theme="dark"] .dash-chart .dash-txt-count { fill: #7FD3FF; }
+        [data-theme="dark"] .dash-legend-bar { background: #B8952A; border-color: var(--dk-border); }
+        [data-theme="dark"] .dash-legend-line { border-top-color: #7FD3FF; }
+        .dash-rank { width: 30px; height: 30px; min-width: 30px; display:flex; align-items:center; justify-content:center; font-weight: 700; font-size: 12px; border: 2px solid #000; background: #fff; }
+        .dash-rank.r1 { background: #FFD500; } .dash-rank.r2 { background: #E5E7EB; } .dash-rank.r3 { background: #F2C79A; }
+        [data-theme="dark"] .dash-rank { background: var(--dk-surface-2); border-color: var(--dk-border); }
+        [data-theme="dark"] .dash-rank.r1 { background: #7A5C00; } [data-theme="dark"] .dash-rank.r2 { background: #3B5C5A; } [data-theme="dark"] .dash-rank.r3 { background: #6B4A2B; }
+        .dash-meter { height: 6px; background: #ECE8DE; border: 1px solid #000; }
+        .dash-meter > span { display:block; height: 100%; background: #8C7A5B; }
+        [data-theme="dark"] .dash-meter { background: #0B3538; border-color: var(--dk-border); }
+        [data-theme="dark"] .dash-meter > span { background: #CDB98F; }
+        .dash-sold { white-space: nowrap; font-weight: 700; font-size: 12px; border: 2px solid #000; padding: 2px 8px; background: #EAF7EE; }
+        [data-theme="dark"] .dash-sold { background: #0E5A32; border-color: var(--dk-border); }
+        .dash-pager-btn { width: 30px; height: 30px; padding: 0 !important; font-size: 12px; border-width: 2px !important; box-shadow: 2px 2px 0 0 #000 !important; }
+        [data-theme="dark"] .dash-pager-btn { box-shadow: 2px 2px 0 0 var(--dk-border) !important; }
+
+        /* ===== Kamera foto produk ===== */
+        #cameraVideo { transform: none; }
+        #cameraVideo.is-front { transform: scaleX(-1); }
+
+        /* ===== Catatan Keuangan: bar filter & ringkasan ringkas di HP ===== */
+        .fin-bar .brutal-btn, .fin-bar .fin-sel { height: 40px; min-height: 40px; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; }
+        .fin-bar .fin-arrow { width: 36px; padding: 0; }
+        .fin-bar .fin-sel { width: auto; padding: 0 10px; text-align: center; text-align-last: center; -webkit-appearance: none; -moz-appearance: none; appearance: none; cursor: pointer; }
+        .fin-bar .fin-sel option { text-align: left; }
+        @media (max-width: 639px) {
+            .fin-bar { gap: 6px; }
+            .fin-bar .brutal-btn, .fin-bar .fin-sel { height: 34px; min-height: 34px; border-width: 2px; box-shadow: 2px 2px 0 0 #000; }
+            .fin-bar .brutal-btn:active:not(:disabled) { transform: translate(1px, 1px); box-shadow: 1px 1px 0 0 #000; }
+            .fin-bar .fin-arrow { width: 28px; }
+            .fin-bar .fin-sel { padding: 0 6px; }
+            .fin-sum { border-width: 2px; box-shadow: 3px 3px 0 0 #000; }
+        }
+        /* HP sempit (<400px): dirapatkan lagi supaya tetap 1 baris */
+        @media (max-width: 399px) {
+            .fin-bar { gap: 4px; padding: 6px !important; }
+            .fin-bar .brutal-btn, .fin-bar .fin-sel { font-size: 10px !important; height: 32px; min-height: 32px; }
+            .fin-bar .fin-mode, .fin-bar #btnFinancePdf { padding: 0 6px !important; }
+            .fin-bar .fin-arrow { width: 24px; }
+            .fin-bar .fin-sel { padding: 0 5px; }
+        }
+        [data-theme="dark"] .fin-bar .brutal-btn,
+        [data-theme="dark"] .fin-bar .fin-sel { box-shadow: 4px 4px 0 0 var(--dk-border) !important; }
+        [data-theme="dark"] .fin-bar .fin-sel { background-color: var(--dk-surface-2) !important; color: var(--dk-text) !important; }
+        [data-theme="dark"] .fin-bar .fin-sel option { background-color: var(--dk-surface); color: var(--dk-text); }
+        [data-theme="dark"] .fin-bar #btnFinancePdf { background-color: #0B3A66 !important; color: var(--dk-text) !important; }
+        [data-theme="dark"] .fin-sum { box-shadow: 4px 4px 0 0 var(--dk-border) !important; }
+        [data-theme="dark"] .fin-sum.bg-danger, [data-theme="dark"] .fin-sum.bg-danger div { color: var(--dk-text) !important; }
+        @media (max-width: 639px) {
+            [data-theme="dark"] .fin-bar .brutal-btn,
+            [data-theme="dark"] .fin-bar .fin-sel { box-shadow: 2px 2px 0 0 var(--dk-border) !important; }
+            [data-theme="dark"] .fin-bar .brutal-btn:active:not(:disabled) { box-shadow: 1px 1px 0 0 var(--dk-border) !important; }
+            [data-theme="dark"] .fin-sum { box-shadow: 3px 3px 0 0 var(--dk-border) !important; }
+        }
     </style>
 </head>
 <body>
@@ -621,7 +712,7 @@
             <section id="pagePublic" class="app-page d-none">
                 <div class="flex justify-between items-center gap-2 mb-1">
                     <div id="publicBankInfo" class="text-xs italic opacity-80"></div>
-                    <button onclick="window.toggleTheme()" class="theme-toggle-btn brutal-btn bg-white w-8 h-8 md:w-9 md:h-9 flex-shrink-0 flex items-center justify-center p-0" title="Ganti Mode Terang/Gelap" aria-label="Ganti Mode Terang/Gelap">🌙</button>
+                    <div class="flex items-center gap-2 flex-shrink-0"><button onclick="window.toggleSfx()" class="sfx-toggle-btn brutal-btn bg-white w-8 h-8 md:w-9 md:h-9 flex-shrink-0 flex items-center justify-center p-0" title="Efek Suara" aria-label="Efek Suara">🔊</button><button onclick="window.toggleTheme()" class="theme-toggle-btn brutal-btn bg-white w-8 h-8 md:w-9 md:h-9 flex-shrink-0 flex items-center justify-center p-0" title="Ganti Mode Terang/Gelap" aria-label="Ganti Mode Terang/Gelap">🌙</button></div>
                 </div>
                 <div class="flex justify-between items-center mb-4">
                     <h2 class="text-2xl md:text-3xl font-bold uppercase border-l-8 border-main pl-3">Menu Tersedia</h2>
@@ -721,7 +812,7 @@
             <section id="pageCustomerDashboard" class="app-page d-none">
                 <div class="flex justify-between items-center gap-2 mb-1">
                     <div id="custBankInfo" class="text-xs italic opacity-80"></div>
-                    <button onclick="window.toggleTheme()" class="theme-toggle-btn brutal-btn bg-white w-8 h-8 md:w-9 md:h-9 flex-shrink-0 flex items-center justify-center p-0" title="Ganti Mode Terang/Gelap" aria-label="Ganti Mode Terang/Gelap">🌙</button>
+                    <div class="flex items-center gap-2 flex-shrink-0"><button onclick="window.toggleSfx()" class="sfx-toggle-btn brutal-btn bg-white w-8 h-8 md:w-9 md:h-9 flex-shrink-0 flex items-center justify-center p-0" title="Efek Suara" aria-label="Efek Suara">🔊</button><button onclick="window.toggleTheme()" class="theme-toggle-btn brutal-btn bg-white w-8 h-8 md:w-9 md:h-9 flex-shrink-0 flex items-center justify-center p-0" title="Ganti Mode Terang/Gelap" aria-label="Ganti Mode Terang/Gelap">🌙</button></div>
                 </div>
                 <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
                     <h2 class="text-2xl md:text-3xl font-bold uppercase border-l-8 border-accent pl-3">Halo, <span id="custNameDisplay" class="bg-main px-2 border-2 border-black"></span></h2>
@@ -806,7 +897,7 @@
               <div id="posLayout">
                 <div id="posProductsCol">
                 <div class="flex justify-end mb-1">
-                    <button onclick="window.toggleTheme()" class="theme-toggle-btn brutal-btn bg-white w-8 h-8 md:w-9 md:h-9 flex-shrink-0 flex items-center justify-center p-0" title="Ganti Mode Terang/Gelap" aria-label="Ganti Mode Terang/Gelap">🌙</button>
+                    <div class="flex items-center gap-2 flex-shrink-0"><button onclick="window.toggleSfx()" class="sfx-toggle-btn brutal-btn bg-white w-8 h-8 md:w-9 md:h-9 flex-shrink-0 flex items-center justify-center p-0" title="Efek Suara" aria-label="Efek Suara">🔊</button><button onclick="window.toggleTheme()" class="theme-toggle-btn brutal-btn bg-white w-8 h-8 md:w-9 md:h-9 flex-shrink-0 flex items-center justify-center p-0" title="Ganti Mode Terang/Gelap" aria-label="Ganti Mode Terang/Gelap">🌙</button></div>
                 </div>
                 <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 gap-4">
                     <div class="flex items-center gap-2 flex-wrap">
@@ -863,7 +954,8 @@
                     <button onclick="window.showPage('pageAdminPOS')" class="brutal-btn bg-white px-3 sm:px-4 py-2 text-sm text-black border-2 border-black whitespace-nowrap">← POS<span class="hidden sm:inline"> Kasir</span></button>
                 </div>
                 <div id="adminTabBar" class="flex overflow-x-auto lg:overflow-visible gap-2 md:gap-3 mb-6 border-b-4 border-black pb-3 no-scrollbar flex-nowrap lg:flex-wrap">
-                    <button onclick="window.switchAdminTab('products')" id="tab_products" class="admin-tab brutal-btn bg-white px-4 py-2 whitespace-nowrap">Produk</button>
+                    <button onclick="window.switchAdminTab('dashboard')" id="tab_dashboard" class="admin-tab brutal-btn bg-white px-4 py-2 whitespace-nowrap d-none">📊 Dashboard</button>
+                    <button onclick="window.switchAdminTab('products')" id="tab_products"class="admin-tab brutal-btn bg-white px-4 py-2 whitespace-nowrap">Produk</button>
                     <button onclick="window.switchAdminTab('categories')" id="tab_categories" class="admin-tab brutal-btn bg-white px-4 py-2 whitespace-nowrap">Kategori</button>
                     <button onclick="window.switchAdminTab('tables')" id="tab_tables" class="admin-tab brutal-btn bg-white px-4 py-2 whitespace-nowrap d-none">Meja</button>
                     <button onclick="window.switchAdminTab('customers')" id="tab_customers" class="admin-tab brutal-btn bg-white px-4 py-2 whitespace-nowrap d-none">Pelanggan</button>
@@ -871,6 +963,51 @@
                     <button onclick="window.switchAdminTab('history')" id="tab_history" class="admin-tab brutal-btn bg-white px-4 py-2 whitespace-nowrap">Riwayat</button>
                     <button onclick="window.switchAdminTab('finance')" id="tab_finance" class="admin-tab brutal-btn bg-white px-4 py-2 whitespace-nowrap d-none">Catatan Keuangan</button>
                     <button onclick="window.switchAdminTab('settings')" id="tab_settings" class="admin-tab brutal-btn bg-white px-4 py-2 whitespace-nowrap">Pengaturan</button>
+                </div>
+
+                <!-- Admin: Dashboard -->
+                <div id="admin_dashboard" class="admin-content d-none w-full">
+                    <div class="flex flex-col lg:flex-row justify-between lg:items-center mb-4 gap-3">
+                        <div>
+                            <h3 class="text-xl font-bold uppercase">Dashboard</h3>
+                            <p id="dashRangeHint" class="text-[11px] md:text-xs text-gray-600 italic leading-tight mt-1"></p>
+                        </div>
+                        <div id="dashFilterBar" class="flex gap-2 flex-wrap"></div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-3 mb-4">
+                        <div class="brutal-box bg-success p-3 md:p-4 min-w-0">
+                            <div class="text-[11px] md:text-xs font-bold uppercase">💰 Pendapatan</div>
+                            <div id="dashRevenue" class="text-lg md:text-3xl font-bold break-all leading-tight mt-1">₩0</div>
+                            <div class="text-[10px] italic leading-tight mt-1">hutang belum lunas tidak dihitung</div>
+                        </div>
+                        <div class="brutal-box bg-accent p-3 md:p-4 min-w-0">
+                            <div class="text-[11px] md:text-xs font-bold uppercase">🧾 Jumlah Transaksi</div>
+                            <div id="dashTxCount" class="text-lg md:text-3xl font-bold break-all leading-tight mt-1">0</div>
+                            <div class="text-[10px] italic leading-tight mt-1">semua metode pembayaran</div>
+                        </div>
+                    </div>
+
+                    <div class="brutal-box bg-white p-3 md:p-4 mb-4">
+                        <div class="flex flex-wrap justify-between items-center gap-2 mb-3">
+                            <h4 class="font-bold uppercase text-sm md:text-base">Grafik Penjualan</h4>
+                            <div class="flex items-center gap-3 text-[11px] font-bold">
+                                <span><span class="dash-legend-bar"></span> Pendapatan</span>
+                                <span><span class="dash-legend-line"></span> Transaksi</span>
+                            </div>
+                        </div>
+                        <div id="dashChart" class="dash-chart w-full"></div>
+                        <div id="dashChartInfo" class="text-xs font-bold mt-2 min-h-[18px] text-gray-600">Ketuk grafik untuk melihat detail.</div>
+                    </div>
+
+                    <div class="brutal-box bg-white p-3 md:p-4">
+                        <div class="flex flex-wrap justify-between items-center gap-2 mb-1">
+                            <h4 class="font-bold uppercase text-sm md:text-base">🏆 Produk Terlaris</h4>
+                            <div id="dashBestPager" class="flex items-center gap-2"></div>
+                        </div>
+                        <p class="text-[11px] text-gray-600 italic leading-tight mb-3">Total terjual sepanjang waktu. Transaksi yang dihapus manual tidak dihitung; data yang terhapus otomatis oleh Manajemen Data Riwayat tetap dihitung.</p>
+                        <div id="dashBestList" class="space-y-2"></div>
+                    </div>
                 </div>
 
                 <!-- Admin: Products -->
@@ -1017,29 +1154,23 @@
 
                 <!-- Admin: Catatan Keuangan -->
                 <div id="admin_finance" class="admin-content d-none w-full">
-                    <div class="flex flex-col sm:flex-row justify-between sm:items-center mb-4 gap-3">
-                        <div>
-                            <h3 class="text-xl font-bold uppercase">Catatan Keuangan</h3>
+                    <div class="flex flex-row justify-between items-start gap-3 mb-4">
+                        <div class="min-w-0">
+                            <h3 class="text-lg sm:text-xl font-bold uppercase leading-tight">Catatan Keuangan</h3>
                             <p class="text-[11px] md:text-xs text-gray-600 italic leading-tight mt-1">Pemasukan &amp; pengeluaran dicatat manual. Jenis <b>Catatan</b> hanya untuk diingat dan tidak ikut dihitung.</p>
                         </div>
-                        <button onclick="window.openFinanceModal()" class="brutal-btn bg-main px-4 py-3 text-sm whitespace-nowrap">+ Tambah Catatan</button>
+                        <button onclick="window.openFinanceModal()" class="brutal-btn bg-main px-3 py-2.5 sm:px-4 sm:py-3 text-[11px] sm:text-sm whitespace-nowrap shrink-0">+ Tambah Catatan</button>
                     </div>
 
-                    <!-- Filter periode -->
-                    <div class="brutal-box p-3 md:p-4 mb-4 flex flex-col lg:flex-row lg:items-center justify-between gap-3">
-                        <div class="flex flex-col sm:flex-row sm:items-center gap-3">
-                            <div class="grid grid-cols-2 gap-2 sm:flex">
-                                <button onclick="window.setFinanceMode('month')" id="finMode_month" class="fin-mode brutal-btn bg-black text-white px-4 py-2 text-sm">Bulanan</button>
-                                <button onclick="window.setFinanceMode('3month')" id="finMode_3month" class="fin-mode brutal-btn bg-white px-4 py-2 text-sm">3 Bulan</button>
-                            </div>
-                            <div class="flex items-stretch gap-2">
-                                <button onclick="window.shiftFinanceMonth(-1)" class="brutal-btn bg-white px-3 text-base" aria-label="Bulan sebelumnya">◀</button>
-                                <select id="finMonthSel" onchange="window.onFinanceSelectChange()" class="brutal-input !w-auto flex-1 sm:flex-none bg-white text-sm font-bold py-1.5"></select>
-                                <select id="finYearSel" onchange="window.onFinanceSelectChange()" class="brutal-input !w-auto bg-white text-sm font-bold py-1.5"></select>
-                                <button onclick="window.shiftFinanceMonth(1)" class="brutal-btn bg-white px-3 text-base" aria-label="Bulan berikutnya">▶</button>
-                            </div>
-                        </div>
-                        <button onclick="window.downloadFinancePDF()" id="btnFinancePdf" class="brutal-btn bg-accent px-4 py-3 text-sm whitespace-nowrap">📄 Download Laporan PDF</button>
+                    <!-- Filter periode (1 baris, ringkas di HP) -->
+                    <div class="fin-bar brutal-box p-2 md:p-3 mb-4 flex items-center gap-1.5 sm:gap-2 flex-nowrap overflow-x-auto no-scrollbar">
+                        <button onclick="window.setFinanceMode('month')" id="finMode_month" class="fin-mode brutal-btn bg-black text-white px-2 sm:px-4 text-[11px] sm:text-sm">Bulanan</button>
+                        <button onclick="window.setFinanceMode('3month')" id="finMode_3month" class="fin-mode brutal-btn bg-white px-2 sm:px-4 text-[11px] sm:text-sm">3 Bulan</button>
+                        <button onclick="window.shiftFinanceMonth(-1)" class="fin-arrow brutal-btn bg-white text-xs sm:text-base" aria-label="Bulan sebelumnya">◀</button>
+                        <select id="finMonthSel" onchange="window.onFinanceSelectChange()" class="fin-sel brutal-input bg-white text-[11px] sm:text-sm font-bold" aria-label="Bulan"></select>
+                        <select id="finYearSel" onchange="window.onFinanceSelectChange()" class="fin-sel brutal-input bg-white text-[11px] sm:text-sm font-bold" aria-label="Tahun"></select>
+                        <button onclick="window.shiftFinanceMonth(1)" class="fin-arrow brutal-btn bg-white text-xs sm:text-base" aria-label="Bulan berikutnya">▶</button>
+                        <button onclick="window.downloadFinancePDF()" id="btnFinancePdf" class="brutal-btn bg-accent ml-auto px-2 sm:px-4 text-[11px] sm:text-sm whitespace-nowrap" title="Download Laporan PDF">📄<span class="sm:hidden">PDF</span><span class="hidden sm:inline"> Download Laporan PDF</span></button>
                     </div>
 
                     <div class="mb-3">
@@ -1047,19 +1178,19 @@
                         <div id="finPeriodHint" class="text-[11px] text-gray-600 italic"></div>
                     </div>
 
-                    <!-- Ringkasan -->
-                    <div class="grid grid-cols-2 md:grid-cols-3 gap-3 mb-2">
-                        <div class="brutal-box bg-success p-3">
-                            <div class="text-[11px] md:text-xs font-bold uppercase">Total Pemasukan</div>
-                            <div id="finTotalIn" class="text-lg md:text-2xl font-bold break-all">₩0</div>
+                    <!-- Ringkasan (3 kolom sejajar, juga di HP) -->
+                    <div class="grid grid-cols-3 gap-2 sm:gap-3 mb-2">
+                        <div class="fin-sum brutal-box bg-success p-2 sm:p-3 min-w-0">
+                            <div class="text-[9px] sm:text-xs font-bold uppercase leading-tight">Total Pemasukan</div>
+                            <div id="finTotalIn" class="text-sm sm:text-2xl font-bold break-all leading-tight mt-1">₩0</div>
                         </div>
-                        <div class="brutal-box bg-danger text-white p-3">
-                            <div class="text-[11px] md:text-xs font-bold uppercase">Total Pengeluaran</div>
-                            <div id="finTotalOut" class="text-lg md:text-2xl font-bold break-all">₩0</div>
+                        <div class="fin-sum brutal-box bg-danger text-white p-2 sm:p-3 min-w-0">
+                            <div class="text-[9px] sm:text-xs font-bold uppercase leading-tight">Total Pengeluaran</div>
+                            <div id="finTotalOut" class="text-sm sm:text-2xl font-bold break-all leading-tight mt-1">₩0</div>
                         </div>
-                        <div class="brutal-box bg-main p-3 col-span-2 md:col-span-1">
-                            <div class="text-[11px] md:text-xs font-bold uppercase">Selisih (Masuk − Keluar)</div>
-                            <div id="finTotalDiff" class="text-lg md:text-2xl font-bold break-all">₩0</div>
+                        <div class="fin-sum brutal-box bg-main p-2 sm:p-3 min-w-0">
+                            <div class="text-[9px] sm:text-xs font-bold uppercase leading-tight">Selisih<span class="hidden sm:inline"> (Masuk − Keluar)</span></div>
+                            <div id="finTotalDiff" class="text-sm sm:text-2xl font-bold break-all leading-tight mt-1">₩0</div>
                         </div>
                     </div>
                     <p id="finSummaryNote" class="text-[11px] text-gray-600 italic mb-4"></p>
@@ -1549,7 +1680,12 @@
                 </div>
                 <div class="mb-3">
                     <label class="block font-bold mb-1">Gambar Produk</label>
-                    <input type="file" id="prodImgFile" class="brutal-input bg-white text-xs" accept="image/*" onchange="window.handleProdImgSelect(event)">
+                    <div class="grid grid-cols-2 gap-2">
+                        <button type="button" onclick="document.getElementById('prodImgFile').click()" class="brutal-btn bg-white py-2 text-xs md:text-sm normal-case">🖼️ Dari Galeri</button>
+                        <button type="button" onclick="window.openProductCamera()" class="brutal-btn bg-accent py-2 text-xs md:text-sm normal-case">📷 Kamera</button>
+                    </div>
+                    <input type="file" id="prodImgFile" class="hidden" accept="image/*" onchange="window.handleProdImgSelect(event)">
+                    <input type="file" id="prodImgCamera" class="hidden" accept="image/*" capture="environment" onchange="window.handleProdImgSelect(event)">
                     <div id="prodImgPreview" class="text-xs text-gray-500 mt-2 break-all">Gambar belum dipilih. (Otomatis Kompres)</div>
                 </div>
                 <div class="mb-4 border-t-2 border-black pt-3">
@@ -1774,6 +1910,25 @@
                 <button onclick="window.closeModal('modalAdminCalls')" class="bg-white text-black font-bold px-2 py-1 border-2 border-black text-sm inline-flex items-center justify-center"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" class="pointer-events-none"><line x1="5" y1="5" x2="19" y2="19"></line><line x1="19" y1="5" x2="5" y2="19"></line></svg></button>
             </div>
             <div class="p-4 overflow-y-auto flex-1 bg-gray-100" id="adminCallsList"></div>
+        </div>
+    </div>
+
+<!-- Modal Kamera Foto Produk -->
+    <div id="modalCamera" class="fixed inset-0 modal-backdrop d-none z-[60] flex items-center justify-center p-3">
+        <div class="brutal-box bg-white w-full max-w-md flex flex-col overflow-hidden max-h-[95vh]">
+            <div class="p-3 bg-main border-b-4 border-black font-bold uppercase flex justify-between items-center">
+                <span>📷 Foto Produk</span>
+                <button type="button" onclick="window.closeProductCamera()" class="bg-white border-2 border-black w-8 h-8 inline-flex items-center justify-center" aria-label="Tutup"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" class="pointer-events-none"><line x1="5" y1="5" x2="19" y2="19"></line><line x1="19" y1="5" x2="5" y2="19"></line></svg></button>
+            </div>
+            <div class="relative bg-black w-full" style="aspect-ratio:1/1;">
+                <video id="cameraVideo" autoplay playsinline muted class="w-full h-full object-cover"></video>
+                <div id="cameraMsg" class="absolute inset-0 flex flex-col items-center justify-center gap-3 text-white text-sm font-bold p-4 text-center d-none"></div>
+            </div>
+            <div class="p-3 grid grid-cols-4 gap-2 border-t-4 border-black">
+                <button type="button" onclick="window.switchProductCamera()" class="brutal-btn bg-white py-3 text-lg" title="Ganti kamera depan/belakang">🔄</button>
+                <button type="button" id="btnCameraShot" onclick="window.captureProductPhoto()" class="brutal-btn bg-success col-span-3 py-3 text-sm md:text-base">📸 Ambil Foto</button>
+            </div>
+            <p class="px-3 pb-3 text-[11px] italic text-gray-600 leading-tight">Foto otomatis dipotong persegi &amp; dikompres sebelum disimpan.</p>
         </div>
     </div>
 
@@ -2017,6 +2172,92 @@
     // supaya dua data yang dibuat pada milidetik yang sama tidak saling menimpa.
     const genId = prefix => prefix + Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
     const formatWon = num => '₩' + parseInt(num || 0).toLocaleString('ko-KR');
+
+    // ======================================================= //
+    // EFEK SUARA POS (Web Audio, tanpa file eksternal). Bisa dimatikan per perangkat (localStorage 'wi_sfx').
+    // ======================================================= //
+    const SFX = (() => {
+        let ctx = null, master = null, noiseBuf = null;
+        const isOn = () => { try { return localStorage.getItem('wi_sfx') !== 'off'; } catch (e) { return true; } };
+        const getCtx = () => {
+            const AC = window.AudioContext || window.webkitAudioContext;
+            if (!AC) return null;
+            if (!ctx || ctx.state === 'closed') {
+                ctx = new AC();
+                const comp = ctx.createDynamicsCompressor();
+                master = ctx.createGain();
+                master.gain.value = 0.9;
+                master.connect(comp); comp.connect(ctx.destination);
+                noiseBuf = ctx.createBuffer(1, Math.floor(ctx.sampleRate * 0.3), ctx.sampleRate);
+                const d = noiseBuf.getChannelData(0);
+                for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
+            }
+            if (ctx.state === 'suspended') ctx.resume();
+            return ctx;
+        };
+        const tone = (c, o) => {
+            const t0 = c.currentTime + (o.at || 0), dur = o.dur || 0.08, vol = o.vol || 0.16;
+            const osc = c.createOscillator(), g = c.createGain();
+            osc.type = o.type || 'sine';
+            osc.frequency.setValueAtTime(o.f, t0);
+            if (o.to) osc.frequency.exponentialRampToValueAtTime(o.to, t0 + dur);
+            g.gain.setValueAtTime(0.0001, t0);
+            g.gain.exponentialRampToValueAtTime(vol, t0 + (o.attack || 0.005));
+            g.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
+            osc.connect(g); g.connect(master);
+            osc.start(t0); osc.stop(t0 + dur + 0.03);
+        };
+        const noise = (c, o) => {
+            const t0 = c.currentTime + (o.at || 0), dur = o.dur || 0.03;
+            const src = c.createBufferSource(), f = c.createBiquadFilter(), g = c.createGain();
+            src.buffer = noiseBuf;
+            f.type = o.filter || 'highpass'; f.frequency.value = o.freq || 3000;
+            g.gain.setValueAtTime(o.vol || 0.08, t0);
+            g.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
+            src.connect(f); f.connect(g); g.connect(master);
+            src.start(t0); src.stop(t0 + dur + 0.02);
+        };
+        const SOUNDS = {
+            // pilih produk: "bip" naik dua nada yang cerah + klik halus
+            add: c => { noise(c, { dur: 0.015, vol: 0.05, freq: 4000 }); tone(c, { f: 988, dur: 0.06, vol: 0.15 }); tone(c, { f: 1480, at: 0.05, dur: 0.1, vol: 0.14 }); },
+            plus: c => { tone(c, { f: 1175, dur: 0.045, vol: 0.12 }); tone(c, { f: 1568, at: 0.035, dur: 0.06, vol: 0.11 }); },
+            minus: c => { tone(c, { f: 1568, dur: 0.045, vol: 0.11 }); tone(c, { f: 1175, at: 0.035, dur: 0.06, vol: 0.11 }); },
+            remove: c => { tone(c, { f: 620, to: 240, type: 'triangle', dur: 0.18, vol: 0.14 }); noise(c, { dur: 0.12, vol: 0.04, filter: 'bandpass', freq: 1200 }); },
+            select: c => { tone(c, { f: 1760, type: 'triangle', dur: 0.035, vol: 0.09 }); },
+            open: c => { tone(c, { f: 660, dur: 0.06, vol: 0.09 }); tone(c, { f: 990, at: 0.045, dur: 0.09, vol: 0.09 }); },
+            // transaksi berhasil: arpeggio lonceng modern + kilau
+            success: c => {
+                [1046.5, 1318.5, 1568, 2093].forEach((f, i) => {
+                    tone(c, { f, at: i * 0.075, dur: 0.42, vol: 0.13, attack: 0.008 });
+                    tone(c, { f: f * 2, at: i * 0.075, dur: 0.2, vol: 0.03 });
+                });
+                noise(c, { at: 0.24, dur: 0.25, vol: 0.035, freq: 7000 });
+            },
+            error: c => { tone(c, { f: 233, type: 'square', dur: 0.09, vol: 0.06 }); tone(c, { f: 196, type: 'square', at: 0.12, dur: 0.15, vol: 0.06 }); }
+        };
+        return {
+            isOn,
+            play(kind) {
+                if (!isOn() || !SOUNDS[kind]) return;
+                try { const c = getCtx(); if (c) SOUNDS[kind](c); } catch (e) { console.warn('SFX:', e); }
+            }
+        };
+    })();
+    window.sfx = kind => SFX.play(kind);
+    window.updateSfxToggleIcons = () => {
+        const on = SFX.isOn();
+        document.querySelectorAll('.sfx-toggle-btn').forEach(btn => {
+            btn.textContent = on ? '🔊' : '🔇';
+            btn.title = on ? 'Matikan Efek Suara' : 'Nyalakan Efek Suara';
+            btn.classList.toggle('is-off', !on);
+        });
+    };
+    window.toggleSfx = () => {
+        const next = SFX.isOn() ? 'off' : 'on';
+        try { localStorage.setItem('wi_sfx', next); } catch (e) {}
+        window.updateSfxToggleIcons();
+        if (next === 'on') window.sfx('select');
+    };
 
     // Suara Bel Panggilan Pelayan (Chime Controller)
     let activeCallAudioSource = null;
@@ -2300,6 +2541,13 @@
         return `${d.getDate().toString().padStart(2,'0')}/${(d.getMonth()+1).toString().padStart(2,'0')}/${d.getFullYear()} ${d.getHours().toString().padStart(2,'0')}:${d.getMinutes().toString().padStart(2,'0')}`; 
     };
     
+    // Kompres otomatis: turunkan kualitas JPEG bertahap sampai ukurannya <= ~130KB (aman disimpan di dokumen Firestore).
+    function canvasToCompressedJpeg(canvas, maxChars = 175000) {
+        let q = 0.8, out = canvas.toDataURL('image/jpeg', q);
+        while (out.length > maxChars && q > 0.45) { q -= 0.07; out = canvas.toDataURL('image/jpeg', q); }
+        return out;
+    }
+
     function compressImage(file, callback) {
         const reader = new FileReader();
         reader.onload = e => {
@@ -2310,9 +2558,11 @@
                 const MAX_SIZE = 800; 
                 if (width > height && width > MAX_SIZE) { height *= MAX_SIZE / width; width = MAX_SIZE; } 
                 else if (height > MAX_SIZE) { width *= MAX_SIZE / height; height = MAX_SIZE; }
-                canvas.width = width; canvas.height = height; 
-                const ctx = canvas.getContext('2d'); ctx.drawImage(img, 0, 0, width, height);
-                callback(canvas.toDataURL('image/jpeg', 0.75));
+                canvas.width = Math.round(width); canvas.height = Math.round(height);
+                const ctx = canvas.getContext('2d');
+                ctx.fillStyle = '#ffffff'; ctx.fillRect(0, 0, canvas.width, canvas.height);
+                ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                callback(canvasToCompressedJpeg(canvas));
             }; 
             img.src = e.target.result;
         }; 
@@ -2506,9 +2756,59 @@
         const d = new Date(); d.setMonth(d.getMonth() - CASHIER_HISTORY_MONTHS); return d;
     }
 
-    // Listener realtime: transaksi baru/ubah/hapus dari perangkat kasir mana pun langsung memperbarui urutan terlaris
+    STATE.data.salesArchive = { counts: {}, names: {} };
+    STATE.pendingArchive = {};
+    const normalizeArchive = d => ({ counts: (d && d.counts) || {}, names: (d && d.names) || {} });
+
+    window.loadSalesArchive = async () => {
+        if (IS_PREVIEW || !db) return;
+        try {
+            const d = await db.collection('sales_archive').doc('products').get();
+            STATE.data.salesArchive = normalizeArchive(d.exists ? d.data() : null);
+        } catch (e) { console.warn('Gagal memuat arsip penjualan:', e); }
+    };
+
+    // Dipakai HANYA untuk penghapusan otomatis (Manajemen Data Riwayat & batas 6 bulan riwayat kasir).
+    window.archiveExpiredOrders = async (orderIds) => {
+        if (IS_PREVIEW || !db) return;
+        const aRef = db.collection('sales_archive').doc('products');
+        for (const id of orderIds) {
+            try {
+                await db.runTransaction(async t => {
+                    const oRef = db.collection('orders').doc(id);
+                    const snap = await t.get(oRef);
+                    if (!snap.exists) return; // sudah diarsipkan/dihapus perangkat lain
+                    const items = snap.data().items || [];
+                    const inc = {}, names = {};
+                    const sum = {};
+                    items.forEach(i => { const k = salesKey(i), q = Number(i.qty) || 0; if (!k || q <= 0) return; sum[k] = (sum[k] || 0) + q; names[k] = String(i.name || '').slice(0, 120); });
+                    Object.keys(sum).forEach(k => { inc[k] = firebase.firestore.FieldValue.increment(sum[k]); });
+                    if (Object.keys(inc).length) t.set(aRef, { counts: inc, names, updated_at: new Date().toISOString() }, { merge: true });
+                    t.delete(oRef);
+                });
+            } catch (e) {
+                console.warn('Gagal mengarsipkan pesanan kedaluwarsa:', id, e);
+            } finally {
+                delete STATE.pendingArchive[id];
+            }
+        }
+        await window.loadSalesArchive();
+        window.refreshBestSellers();
+    };
+
+    let archiveUnsub = null;
+
+    // Listener realtime: transaksi baru/ubah/hapusdari perangkat kasir mana pun langsung memperbarui urutan terlaris
     let ordersUnsub = null;
     function startOrdersListener() {
+        if (!archiveUnsub && !IS_PREVIEW && db) {
+            try {
+                archiveUnsub = db.collection('sales_archive').doc('products').onSnapshot(d => {
+                    STATE.data.salesArchive = normalizeArchive(d.exists ? d.data() : null);
+                    window.refreshBestSellers();
+                }, err => { console.warn('Listener arsip dihentikan:', err); archiveUnsub = null; });
+            } catch (e) { archiveUnsub = null; }
+        }
         if (ordersUnsub || IS_PREVIEW || !db) return;
         try {
             ordersUnsub = db.collection('orders').onSnapshot(snap => {
@@ -2531,6 +2831,7 @@
     }
     function stopOrdersListener() {
         if (ordersUnsub) { try { ordersUnsub(); } catch(e) {} ordersUnsub = null; }
+        if (archiveUnsub) { try { archiveUnsub(); } catch(e) {} archiveUnsub = null; }
     }
 
     async function fetchAllData() {
@@ -2589,16 +2890,20 @@
                     const cutoffDate = getOrderCutoffDate();
                     const cashierCutoff = getCashierHistoryCutoffDate();
                     const validOrders = [];
+                    const toArchive = [];
+                    await window.loadSalesArchive();
                     for (const o of mappedOrders) {
                         const expired = new Date(o.date) < cutoffDate;
                         const cashierExpired = o.cashierId && new Date(o.date) < cashierCutoff;
                         if (expired || cashierExpired) {
-                            db.collection('orders').doc(o.id).delete().catch(err => console.warn('Gagal hapus pesanan kedaluwarsa:', o.id, err));
+                            // Dihapus otomatis -> qty produknya diarsipkan dulu supaya tetap terhitung di Produk Terlaris.
+                            if (!STATE.pendingArchive[o.id]) { STATE.pendingArchive[o.id] = o.items || []; toArchive.push(o.id); }
                         } else {
                             validOrders.push(o);
                         }
                     }
                     STATE.data.orders = validOrders;
+                    if (toArchive.length) window.archiveExpiredOrders(toArchive);
                 } else {
                     STATE.data.orders = mappedOrders;
                 }
@@ -2613,6 +2918,7 @@
         const root = document.getElementById('gasapp-root');
         if (root && root.parentElement !== document.body) document.body.appendChild(root);
         window.updateThemeToggleIcons();
+        window.updateSfxToggleIcons();
         
         // Link nota yang dibagikan (?receipt=...): tampilkan HANYA nota, tanpa memuat/menampilkan bagian aplikasi lain.
         const sharedReceiptToken = new URLSearchParams(window.location.search).get('receipt');
@@ -3031,7 +3337,7 @@
 
             nav.innerHTML = `${posMenu}${loginBtnHtml}`; 
         } else if (STATE.user.role === 'admin') { 
-            nav.innerHTML = `<button onclick="window.showPage('pageAdminPOS')" class="${iconClasses} !bg-main hidden sm:block">POS Kasir</button><button onclick="window.showPage('pageAdminMgmt'); window.renderAdminProducts();" class="${iconClasses}">Kelola Admin</button><button onclick="window.logout()" class="${iconClasses} !bg-danger !text-white">Keluar</button>`; 
+            nav.innerHTML = `<button onclick="window.showPage('pageAdminPOS')" class="${iconClasses} !bg-main hidden sm:block">POS Kasir</button><button onclick="window.showPage('pageAdminMgmt'); window.switchAdminTab('dashboard');" class="${iconClasses}">Kelola Admin</button><button onclick="window.logout()" class="${iconClasses} !bg-danger !text-white">Keluar</button>`; 
         } else if (STATE.user.role === 'cashier') { 
             nav.innerHTML = `<span class="font-bold text-xs md:text-sm mr-2 hidden sm:inline-block">Hi, ${escapeHTML(STATE.user.name)}</span><button onclick="window.showPage('pageAdminPOS')" class="${iconClasses} !bg-main hidden sm:block">POS Kasir</button><button onclick="window.openCashierManage()" id="navBtnManage" class="${iconClasses}">Kelola Aplikasi</button><button onclick="window.logout()" id="navBtnLogout" class="${iconClasses} !bg-danger !text-white">Keluar</button>`; 
         } else if (STATE.user.role === 'kitchen') {
@@ -3278,14 +3584,26 @@
     };
 
     // ===== Produk terlaris: hitung total qty terjual dari seluruh riwayat transaksi =====
+    // Kunci produk untuk statistik: pakai ID produk; item lama tanpa ID memakai nama yang dinormalisasi.
+    const salesNameKey = name => name ? 'n_' + String(name).toLowerCase().trim().replace(/[^a-z0-9]+/g, '_') : '';
+    const salesKey = item => item && item.id ? String(item.id) : salesNameKey(item && item.name);
+    window.salesKey = salesKey;
+
+    // Total terjual = transaksi yang masih ada di riwayat + arsip (sales_archive/products) dari transaksi
+    // yang dihapus OTOMATIS oleh Manajemen Data Riwayat. Transaksi yang dihapus manual oleh admin tidak diarsipkan,
+    // sehingga otomatis tidak dihitung lagi.
+    window.getSalesCounts = () => {
+        const counts = {};
+        const add = (k, q) => { if (k && q) counts[k] = (counts[k] || 0) + q; };
+        (STATE.data.orders || []).forEach(o => (o.items || []).forEach(i => add(salesKey(i), Number(i.qty) || 0)));
+        Object.values(STATE.pendingArchive || {}).forEach(items => (items || []).forEach(i => add(salesKey(i), Number(i.qty) || 0)));
+        const ac = (STATE.data.salesArchive && STATE.data.salesArchive.counts) || {};
+        Object.keys(ac).forEach(k => add(k, Number(ac[k]) || 0));
+        return counts;
+    };
     window.getProductSalesGetter = () => {
-        const byId = {}, byName = {};
-        (STATE.data.orders || []).forEach(o => (o.items || []).forEach(i => {
-            const q = Number(i.qty) || 0;
-            if (i.id) byId[i.id] = (byId[i.id] || 0) + q;
-            if (i.name) byName[i.name] = (byName[i.name] || 0) + q;
-        }));
-        return p => (byId[p.id] !== undefined ? byId[p.id] : (byName[p.name] || 0));
+        const c = window.getSalesCounts();
+        return p => (c[p.id] || 0) + (c[salesNameKey(p.name)] || 0);
     };
 
     // Terlaris di atas; produk kosong (tidak tersedia) di bawah; sisanya urutan asli
@@ -3314,6 +3632,7 @@
 
     // Dipanggil setiap data transaksi berubah (checkout, edit/hapus, sinkron dari server)
     window.refreshBestSellers = () => {
+        if (window.isDashboardVisible && window.isDashboardVisible()) window.renderDashboard();
         if (!STATE.user || STATE.user.role !== 'admin') return;
         const page = document.getElementById('pageAdminPOS');
         if (!page || page.classList.contains('d-none')) return; // otomatis di-render saat halaman POS dibuka lagi
@@ -3398,7 +3717,7 @@
             list.innerHTML = '<p class="font-bold text-center p-4">Keranjang kosong</p>'; 
             noteWrap.classList.add('d-none'); 
         } else { 
-            list.innerHTML = STATE.cart.map((item, index) => `<div class="flex justify-between items-center mb-2 bg-gray-50 p-2 border-2 border-black"><div class="flex-1"><h4 class="font-bold text-xs md:text-sm leading-tight">${escapeHTML(item.name)}</h4><div class="text-xs md:text-sm">${formatWon(item.price)}</div></div><div class="flex items-center gap-1 md:gap-2"><button onclick="window.changeQty(${index}, -1)" class="w-6 h-6 md:w-8 md:h-8 font-bold bg-white border-2 border-black">-</button><input type="number" min="1" inputmode="numeric" value="${item.qty}" onchange="window.setCartQty(${index}, this.value)" onclick="this.select()" class="w-11 md:w-12 text-center font-bold text-sm md:text-base border-2 border-black bg-white py-0.5"><button onclick="window.changeQty(${index}, 1)" class="w-6 h-6 md:w-8 md:h-8 font-bold bg-main border-2 border-black">+</button><button onclick="window.changeQty(${index}, -999)" class="w-6 h-6 md:w-8 md:h-8 font-bold bg-danger text-white border-2 border-black ml-1 md:ml-2 inline-flex items-center justify-center"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" class="pointer-events-none"><line x1="5" y1="5" x2="19" y2="19"></line><line x1="19" y1="5" x2="5" y2="19"></line></svg></button></div></div>`).join(''); 
+            list.innerHTML = STATE.cart.map((item, index) => `<div class="cart-item-row flex justify-between items-center mb-2 p-2 border-2 border-black"><div class="flex-1"><h4 class="font-bold text-xs md:text-sm leading-tight">${escapeHTML(item.name)}</h4><div class="cart-item-price text-xs md:text-sm">${formatWon(item.price)}</div></div><div class="flex items-center gap-1 md:gap-2"><button onclick="window.changeQty(${index}, -1)" class="w-6 h-6 md:w-8 md:h-8 font-bold bg-white border-2 border-black">-</button><input type="number" min="1" inputmode="numeric" value="${item.qty}" onchange="window.setCartQty(${index}, this.value)" onclick="this.select()" class="w-11 md:w-12 text-center font-bold text-sm md:text-base border-2 border-black bg-white py-0.5"><button onclick="window.changeQty(${index}, 1)" class="w-6 h-6 md:w-8 md:h-8 font-bold bg-main border-2 border-black">+</button><button onclick="window.changeQty(${index}, -999)" class="w-6 h-6 md:w-8 md:h-8 font-bold bg-danger text-white border-2 border-black ml-1 md:ml-2 inline-flex items-center justify-center"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" class="pointer-events-none"><line x1="5" y1="5" x2="19" y2="19"></line><line x1="19" y1="5" x2="5" y2="19"></line></svg></button></div></div>`).join(''); 
             noteWrap.classList.remove('d-none'); 
         }
 
@@ -3663,6 +3982,7 @@
             window.refreshBestSellers();
             window.closeModal('modalCart'); 
             hideLoad();
+            window.sfx('success');
             await window.customAlert('Transaksi Berhasil!', 'Sukses');
             
             if(isPrint) window.showReceiptPopup(payload.id);
@@ -3727,6 +4047,7 @@
             window.updateCartUI(); 
             window.closeModal('modalCart'); 
             hideLoad();
+            window.sfx('success');
             await window.customAlert('Tersimpan di Pesanan Masuk (Waiting List)!', 'Sukses'); 
             window.checkAdminWaitList();
             window.renderAdminTables();
@@ -3924,6 +4245,7 @@
         if (!isTableOn && tabName === 'tables') tabName = 'products';
         if (!isFinanceOn && tabName === 'finance') tabName = 'products';
         if (STATE.user && STATE.user.role === 'cashier' && ['categories', 'customers', 'cashier', 'finance'].includes(tabName)) tabName = 'products';
+        if (tabName === 'dashboard' && !(STATE.user && STATE.user.role === 'admin')) tabName = 'products';
 
         document.querySelectorAll('.admin-content').forEach(el => el.classList.add('d-none'));
         document.querySelectorAll('.admin-tab').forEach(el => el.classList.remove('bg-main', 'translate-x-[2px]', 'translate-y-[2px]', 'shadow-none') || el.classList.add('bg-white'));
@@ -3944,14 +4266,83 @@
         if(tabName === 'history') window.renderAdminHistory();
         if(tabName === 'settings') window.renderAdminSettings();
         if(tabName === 'finance' && isFinanceOn) window.openFinanceTab();
+        if(tabName === 'dashboard') window.renderDashboard();
     };
 
-    window.handleProdImgSelect = e => { 
-        const file = e.target.files[0]; 
-        if(file) compressImage(file, d => { 
-            STATE.tempProdImgBase64 = d; 
-            document.getElementById('prodImgPreview').innerHTML = `<img src="${d}" class="h-12 mt-2 border border-black">`; 
-        }); 
+    window.setProductImage = d => {
+        STATE.tempProdImgBase64 = d;
+        const kb = Math.round(d.length * 0.75 / 1024);
+        document.getElementById('prodImgPreview').innerHTML = `<div class="flex items-center gap-2 mt-1"><img src="${d}" class="h-14 w-14 object-cover border-2 border-black"><span class="font-bold">✔ Gambar siap (±${kb} KB, sudah dikompres)</span></div>`;
+    };
+    window.handleProdImgSelect = e => {
+        const file = e.target.files[0];
+        if (!file) return;
+        if (!/^image\//.test(file.type)) { window.customAlert('File yang dipilih bukan gambar.', 'Peringatan'); e.target.value = ''; return; }
+        document.getElementById('prodImgPreview').textContent = 'Mengompres gambar...';
+        compressImage(file, d => window.setProductImage(d));
+        e.target.value = '';
+    };
+
+    // ===== Kamera langsung (getUserMedia). Jika tidak didukung / ditolak -> pakai kamera bawaan HP (input capture). =====
+    let camStream = null, camFacing = 'environment';
+    const camMsg = (html) => {
+        const el = document.getElementById('cameraMsg');
+        if (!el) return;
+        el.innerHTML = html || '';
+        el.classList.toggle('d-none', !html);
+        const shot = document.getElementById('btnCameraShot');
+        if (shot) shot.disabled = Boolean(html);
+    };
+    const stopCam = () => {
+        if (camStream) { camStream.getTracks().forEach(t => { try { t.stop(); } catch (e) {} }); camStream = null; }
+        const v = document.getElementById('cameraVideo');
+        if (v) v.srcObject = null;
+    };
+    const startCam = async () => {
+        stopCam();
+        camMsg('Membuka kamera...');
+        try {
+            camStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: { ideal: camFacing }, width: { ideal: 1280 }, height: { ideal: 1280 } }, audio: false });
+            const v = document.getElementById('cameraVideo');
+            v.srcObject = camStream;
+            v.classList.toggle('is-front', camFacing === 'user');
+            await v.play().catch(() => {});
+            camMsg('');
+        } catch (err) {
+            stopCam();
+            camMsg(`<span>Kamera tidak bisa dibuka (${escapeHTML(err && err.name ? err.name : 'error')}). Pastikan izin kamera diberikan &amp; situs dibuka lewat https.</span><button type="button" onclick="window.useNativeCamera()" class="brutal-btn bg-main text-black px-3 py-2 text-xs">Pakai Kamera Bawaan HP</button>`);
+        }
+    };
+    window.useNativeCamera = () => {
+        window.closeProductCamera();
+        document.getElementById('prodImgCamera').click();
+    };
+    window.openProductCamera = async () => {
+        if (!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia) || !window.isSecureContext) {
+            document.getElementById('prodImgCamera').click();
+            return;
+        }
+        window.openModal('modalCamera');
+        await startCam();
+    };
+    window.switchProductCamera = async () => {
+        camFacing = camFacing === 'environment' ? 'user' : 'environment';
+        await startCam();
+    };
+    window.closeProductCamera = () => { stopCam(); window.closeModal('modalCamera'); };
+    window.captureProductPhoto = () => {
+        const v = document.getElementById('cameraVideo');
+        if (!camStream || !v || !v.videoWidth) return;
+        const side = Math.min(v.videoWidth, v.videoHeight);
+        const out = Math.min(800, side);
+        const canvas = document.createElement('canvas');
+        canvas.width = out; canvas.height = out;
+        const ctx = canvas.getContext('2d');
+        if (camFacing === 'user') { ctx.translate(out, 0); ctx.scale(-1, 1); }
+        ctx.drawImage(v, (v.videoWidth - side) / 2, (v.videoHeight - side) / 2, side, side, 0, 0, out, out);
+        window.setProductImage(canvasToCompressedJpeg(canvas));
+        window.sfx('select');
+        window.closeProductCamera();
     };
 
     window.handleLogoSelect = e => { 
@@ -5074,7 +5465,8 @@
     };
     
     window.closeModal = id => { 
-        document.getElementById(id).classList.add('d-none'); 
+        document.getElementById(id).classList.add('d-none');
+        if(id === 'modalAddProduct' && typeof window.closeProductCamera === 'function' && !document.getElementById('modalCamera').classList.contains('d-none')) window.closeProductCamera();
         if(id === 'modalAddProduct') { 
             document.getElementById('prodId').value = ''; 
             document.getElementById('formProduct').reset(); 
@@ -5148,7 +5540,7 @@
         if(STATE.custCart.length === 0) {
             list.innerHTML = '<p class="font-bold text-center p-4">Keranjang kosong</p>';
         } else {
-            list.innerHTML = STATE.custCart.map((item, index) => `<div class="flex justify-between items-center mb-2 bg-gray-50 p-2 border-2 border-black"><div class="flex-1"><h4 class="font-bold text-xs md:text-sm leading-tight">${escapeHTML(item.name)}</h4><div class="text-xs md:text-sm">${formatWon(item.price)}</div></div><div class="flex items-center gap-1 md:gap-2"><button onclick="window.changeCustQty(${index}, -1)" class="w-6 h-6 md:w-8 md:h-8 font-bold bg-white border-2 border-black">-</button><input type="number" min="1" inputmode="numeric" value="${item.qty}" onchange="window.setCustQty(${index}, this.value)" onclick="this.select()" class="w-11 md:w-12 text-center font-bold text-sm md:text-base border-2 border-black bg-white py-0.5"><button onclick="window.changeCustQty(${index}, 1)" class="w-6 h-6 md:w-8 md:h-8 font-bold bg-main border-2 border-black">+</button></div></div>`).join('');
+            list.innerHTML = STATE.custCart.map((item, index) => `<div class="cart-item-row flex justify-between items-center mb-2 p-2 border-2 border-black"><div class="flex-1"><h4 class="font-bold text-xs md:text-sm leading-tight">${escapeHTML(item.name)}</h4><div class="cart-item-price text-xs md:text-sm">${formatWon(item.price)}</div></div><div class="flex items-center gap-1 md:gap-2"><button onclick="window.changeCustQty(${index}, -1)" class="w-6 h-6 md:w-8 md:h-8 font-bold bg-white border-2 border-black">-</button><input type="number" min="1" inputmode="numeric" value="${item.qty}" onchange="window.setCustQty(${index}, this.value)" onclick="this.select()" class="w-11 md:w-12 text-center font-bold text-sm md:text-base border-2 border-black bg-white py-0.5"><button onclick="window.changeCustQty(${index}, 1)" class="w-6 h-6 md:w-8 md:h-8 font-bold bg-main border-2 border-black">+</button></div></div>`).join('');
         }
         document.getElementById('custCartTotal').textContent = formatWon(STATE.custCart.reduce((s, i) => s + (i.price * i.qty), 0));
     };
@@ -5224,6 +5616,7 @@
             window.updateCustCartUI(); 
             window.closeModal('modalCustCart'); 
             hideLoad();
+            window.sfx('success');
             await window.customAlert('Pesanan telah dibuat, mohon tunggu!', 'Sukses'); 
             window.checkAdminWaitList(); 
             window.openCustWaitList();
@@ -6363,6 +6756,7 @@
     window.syncAdminTabs = () => {
         const st = STATE.data.settings, isCashier = Boolean(STATE.user) && STATE.user.role === 'cashier';
         const set = (id, show) => { const el = document.getElementById(id); if (el) el.classList.toggle('d-none', !show); };
+        set('tab_dashboard', Boolean(STATE.user) && STATE.user.role === 'admin');
         set('tab_categories', !isCashier);
         set('tab_tables', Boolean(st.tableEnabled));
         set('tab_customers', Boolean(st.customerEnabled) && !isCashier);
@@ -6487,7 +6881,8 @@
 
         // Dropdown bulan & tahun
         const monthSel = document.getElementById('finMonthSel'), yearSel = document.getElementById('finYearSel');
-        monthSel.innerHTML = FIN_MONTHS.map((m, i) => `<option value="${i + 1}">${m}</option>`).join('');
+        const finShortMonth = window.innerWidth < 640;
+        monthSel.innerHTML = FIN_MONTHS.map((m, i) => `<option value="${i + 1}">${finShortMonth ? m.slice(0, 3) : m}</option>`).join('');
         monthSel.value = String(selM);
         const curY = new Date().getFullYear();
         const years = STATE.data.financeNotes.map(n => parseInt(String(n.date).slice(0, 4))).filter(Boolean);
@@ -6722,6 +7117,266 @@
             stage.remove();
         }
     };
+
+    // ======================================================= //
+    // DASHBOARD ADMIN
+    // ======================================================= //
+    const DASH_PERIODS = [
+        { key: 'week', label: 'Minggu', months: 0.25 },
+        { key: 'month', label: 'Sebulan', months: 1 },
+        { key: '3month', label: '3 Bulan', months: 3 },
+        { key: '6month', label: '6 Bulan', months: 6 },
+        { key: '1year', label: '1 Tahun', months: 12 }
+    ];
+    const DASH_MONTHS_SHORT = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
+    const DASH_DAYS_SHORT = ['Min','Sen','Sel','Rab','Kam','Jum','Sab'];
+    STATE.dashFilter = 'week';
+    STATE.dashBestPage = 0;
+    STATE.dashActiveSlot = null;
+    const DASH_PAGE_SIZE = 10;
+
+    // Mengikuti Manajemen Data Riwayat: filter yang lebih panjang dari masa simpan data disembunyikan.
+    const dashLimitMonths = () => STATE.data.settings.autoReset ? parseInt(STATE.data.settings.resetPeriod || 12) : 24;
+    const dashAllowedPeriods = () => DASH_PERIODS.filter(p => p.months <= dashLimitMonths());
+
+    window.isDashboardVisible = () => {
+        const page = document.getElementById('pageAdminMgmt'), tab = document.getElementById('admin_dashboard');
+        return Boolean(page && tab && !page.classList.contains('d-none') && !tab.classList.contains('d-none'));
+    };
+    window.setDashFilter = key => { STATE.dashFilter = key; STATE.dashActiveSlot = null; window.sfx('select'); window.renderDashboard(); };
+    window.dashBestPageShift = n => { STATE.dashBestPage += n; window.sfx('select'); window.renderDashBestSellers(); };
+
+    const dashCompact = v => {
+        const a = Math.abs(v);
+        if (a >= 1e9) return '₩' + (v / 1e9).toFixed(a >= 1e10 ? 0 : 1).replace(/\.0$/, '') + 'B';
+        if (a >= 1e6) return '₩' + (v / 1e6).toFixed(a >= 1e7 ? 0 : 1).replace(/\.0$/, '') + 'M';
+        if (a >= 1e3) return '₩' + (v / 1e3).toFixed(a >= 1e5 ? 0 : 1).replace(/\.0$/, '') + 'k';
+        return '₩' + Math.round(v);
+    };
+    const dashNiceMax = v => {
+        if (v <= 0) return 1;
+        const p = Math.pow(10, Math.floor(Math.log10(v)));
+        const n = v / p;
+        return (n <= 1 ? 1 : n <= 2 ? 2 : n <= 2.5 ? 2.5 : n <= 5 ? 5 : 10) * p;
+    };
+
+    // Membagi periode menjadi kolom grafik: harian (minggu/sebulan), mingguan (3 bulan), bulanan (6 bulan/1 tahun).
+    const dashBuckets = key => {
+        const today = new Date(); today.setHours(0, 0, 0, 0);
+        const b = [];
+        const dayMs = 86400000;
+        if (key === 'week' || key === 'month') {
+            const n = key === 'week' ? 7 : 30;
+            for (let i = n - 1; i >= 0; i--) {
+                const s = new Date(today.getTime() - i * dayMs), e = new Date(s.getTime() + dayMs);
+                b.push({ start: s, end: e,
+                    label: key === 'week' ? `${DASH_DAYS_SHORT[s.getDay()]} ${s.getDate()}` : String(s.getDate()),
+                    full: `${DASH_DAYS_SHORT[s.getDay()]}, ${s.getDate()} ${DASH_MONTHS_SHORT[s.getMonth()]} ${s.getFullYear()}` });
+            }
+        } else if (key === '3month') {
+            const end = new Date(today.getTime() + dayMs);
+            for (let i = 12; i >= 0; i--) {
+                const e = new Date(end.getTime() - i * 7 * dayMs), s = new Date(e.getTime() - 7 * dayMs);
+                const last = new Date(e.getTime() - dayMs);
+                b.push({ start: s, end: e, label: `${s.getDate()}/${s.getMonth() + 1}`,
+                    full: `${s.getDate()} ${DASH_MONTHS_SHORT[s.getMonth()]} – ${last.getDate()} ${DASH_MONTHS_SHORT[last.getMonth()]} ${last.getFullYear()}` });
+            }
+        } else {
+            const n = key === '6month' ? 6 : 12;
+            for (let i = n - 1; i >= 0; i--) {
+                const s = new Date(today.getFullYear(), today.getMonth() - i, 1), e = new Date(today.getFullYear(), today.getMonth() - i + 1, 1);
+                b.push({ start: s, end: e, label: DASH_MONTHS_SHORT[s.getMonth()], full: `${DASH_MONTHS_SHORT[s.getMonth()]} ${s.getFullYear()}` });
+            }
+        }
+        return b.map(x => ({ ...x, revenue: 0, count: 0 }));
+    };
+
+    window.renderDashboard = () => {
+        if (!document.getElementById('admin_dashboard')) return;
+        const allowed = dashAllowedPeriods();
+        if (!allowed.some(p => p.key === STATE.dashFilter)) STATE.dashFilter = allowed.length ? allowed[0].key : 'week';
+
+        document.getElementById('dashFilterBar').innerHTML = allowed.map(p => {
+            const on = p.key === STATE.dashFilter;
+            return `<button onclick="window.setDashFilter('${p.key}')" class="dash-filter-btn brutal-btn ${on ? 'bg-black text-white' : 'bg-white text-black'} px-3 py-1.5 text-xs md:text-sm">${p.label}</button>`;
+        }).join('');
+
+        const buckets = dashBuckets(STATE.dashFilter);
+        const from = buckets[0].start, to = buckets[buckets.length - 1].end;
+        let revenue = 0, count = 0;
+        (STATE.data.orders || []).forEach(o => {
+            const d = new Date(o.date);
+            if (isNaN(d) || d < from || d >= to) return;
+            const paid = (o.type === 'Hutang' && o.paymentStatus === 'Unpaid') ? 0 : Number(o.total || 0);
+            const bk = buckets.find(x => d >= x.start && d < x.end);
+            if (bk) { bk.revenue += paid; bk.count += 1; }
+            revenue += paid; count += 1;
+        });
+        document.getElementById('dashRevenue').textContent = formatWon(revenue);
+        document.getElementById('dashTxCount').textContent = count.toLocaleString('ko-KR');
+        const lastDay = new Date(Math.min(to.getTime() - 1, Date.now()));
+        const auto = STATE.data.settings.autoReset ? ` · data riwayat disimpan ${dashLimitMonths() >= 12 ? '1 tahun' : dashLimitMonths() + ' bulan'}` : '';
+        document.getElementById('dashRangeHint').textContent = `${from.getDate()} ${DASH_MONTHS_SHORT[from.getMonth()]} ${from.getFullYear()} – ${lastDay.getDate()} ${DASH_MONTHS_SHORT[lastDay.getMonth()]} ${lastDay.getFullYear()}${auto}`;
+
+        STATE.dashBuckets = buckets;
+        window.renderDashChart();
+        window.renderDashBestSellers();
+    };
+
+    window.renderDashChart = () => {
+        const wrap = document.getElementById('dashChart');
+        const buckets = STATE.dashBuckets || [];
+        if (!wrap || !buckets.length) return;
+        const W = Math.max(300, Math.round(wrap.clientWidth || 600));
+        const H = W < 520 ? 220 : 270;
+        const padL = 46, padR = 30, padT = 14, padB = 26;
+        const pw = W - padL - padR, ph = H - padT - padB;
+        const maxRev = dashNiceMax(Math.max(...buckets.map(b => b.revenue)));
+        const maxCnt = Math.max(1, Math.ceil(dashNiceMax(Math.max(...buckets.map(b => b.count)))));
+        const slot = pw / buckets.length;
+        const bw = Math.max(3, Math.min(42, slot * 0.62));
+        const y = v => padT + ph - (v / maxRev) * ph;
+        const yc = v => padT + ph - (v / maxCnt) * ph;
+        const step = Math.max(1, Math.ceil(buckets.length / Math.max(2, Math.floor(pw / 46))));
+
+        let g = '';
+        for (let i = 0; i <= 4; i++) {
+            const gy = padT + ph - (i / 4) * ph;
+            g += `<line class="dash-grid" x1="${padL}" x2="${W - padR}" y1="${gy}" y2="${gy}"/>`;
+            g += `<text class="dash-txt" x="${padL - 6}" y="${gy + 3}" text-anchor="end">${dashCompact(maxRev * i / 4)}</text>`;
+            const cv = maxCnt * i / 4;
+            if (Number.isInteger(cv) || maxCnt <= 4) g += `<text class="dash-txt dash-txt-count" x="${W - padR + 6}" y="${gy + 3}">${Number.isInteger(cv) ? cv : cv.toFixed(1)}</text>`;
+        }
+        let bars = '', pts = [];
+        buckets.forEach((b, i) => {
+            const cx = padL + slot * i + slot / 2;
+            const by = y(b.revenue), bh = padT + ph - by;
+            const active = STATE.dashActiveSlot === i ? ' is-active' : '';
+            bars += `<g class="dash-slot${active}" onclick="window.dashShowSlot(${i})">`
+                + `<rect class="dash-hit" x="${padL + slot * i}" y="${padT}" width="${slot}" height="${ph}"/>`
+                + (b.revenue > 0 ? `<rect class="dash-bar" x="${cx - bw / 2}" y="${by}" width="${bw}" height="${Math.max(1, bh)}"/>` : '')
+                + `</g>`;
+            if (i % step === 0 || i === buckets.length - 1 && (buckets.length - 1) % step > step / 2)
+                bars += `<text class="dash-txt" x="${cx}" y="${H - 8}" text-anchor="middle">${escapeHTML(b.label)}</text>`;
+            pts.push([cx, yc(b.count)]);
+        });
+        const line = `<polyline class="dash-line" points="${pts.map(p => p.join(',')).join(' ')}" pointer-events="none"/>`
+            + (buckets.length <= 31 ? pts.map(p => `<circle class="dash-dot" cx="${p[0]}" cy="${p[1]}" r="${buckets.length > 14 ? 2.2 : 3.2}" pointer-events="none"/>`).join('') : '');
+        const axis = `<line class="dash-axis" x1="${padL}" x2="${W - padR}" y1="${padT + ph}" y2="${padT + ph}"/>`;
+        wrap.innerHTML = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Grafik pendapatan dan jumlah transaksi">${g}${bars}${axis}${line}</svg>`;
+    };
+
+    window.dashShowSlot = i => {
+        const b = (STATE.dashBuckets || [])[i];
+        if (!b) return;
+        STATE.dashActiveSlot = i;
+        document.getElementById('dashChartInfo').innerHTML = `<span class="text-black">${escapeHTML(b.full)}</span> — Pendapatan <b>${formatWon(b.revenue)}</b> · <b>${b.count}</b> transaksi`;
+        window.renderDashChart();
+    };
+
+    window.renderDashBestSellers = () => {
+        const listEl = document.getElementById('dashBestList'), pagerEl = document.getElementById('dashBestPager');
+        if (!listEl) return;
+        const counts = window.getSalesCounts();
+        const names = (STATE.data.salesArchive && STATE.data.salesArchive.names) || {};
+        const prodById = {}, prodByName = {};
+        STATE.data.products.forEach(p => { prodById[p.id] = p; prodByName[salesNameKey(p.name)] = p; });
+        const merged = {};
+        Object.keys(counts).forEach(k => {
+            const p = prodById[k] || (k.startsWith('n_') ? prodByName[k] : null);
+            const mk = p ? p.id : k;
+            if (!merged[mk]) merged[mk] = { qty: 0, p, name: p ? p.name : (names[k] || k.replace(/^n_/, '').replace(/_/g, ' ')) };
+            merged[mk].qty += counts[k];
+        });
+        const rows = Object.values(merged).filter(r => r.qty > 0).sort((a, b) => b.qty - a.qty || a.name.localeCompare(b.name));
+        const pages = Math.max(1, Math.ceil(rows.length / DASH_PAGE_SIZE));
+        STATE.dashBestPage = Math.min(Math.max(0, STATE.dashBestPage), pages - 1);
+        const startIdx = STATE.dashBestPage * DASH_PAGE_SIZE;
+        const view = rows.slice(startIdx, startIdx + DASH_PAGE_SIZE);
+        const topQty = rows.length ? rows[0].qty : 1;
+
+        pagerEl.innerHTML = rows.length > DASH_PAGE_SIZE
+            ? `<button onclick="window.dashBestPageShift(-1)" class="dash-pager-btn brutal-btn bg-white" ${STATE.dashBestPage === 0 ? 'disabled' : ''} aria-label="Sebelumnya">◀</button>
+               <span class="text-[11px] font-bold whitespace-nowrap">${startIdx + 1}–${startIdx + view.length} dari ${rows.length}</span>
+               <button onclick="window.dashBestPageShift(1)" class="dash-pager-btn brutal-btn bg-white" ${STATE.dashBestPage >= pages - 1 ? 'disabled' : ''} aria-label="Berikutnya">▶</button>`
+            : (rows.length ? `<span class="text-[11px] font-bold">${rows.length} produk</span>` : '');
+
+        if (!rows.length) {
+            listEl.innerHTML = `<div class="p-6 text-center font-bold text-gray-600 border-2 border-dashed border-black">Belum ada produk terjual.</div>`;
+            return;
+        }
+        listEl.innerHTML = view.map((r, i) => {
+            const rank = startIdx + i + 1;
+            const img = r.p && r.p.img
+                ? `<img src="${r.p.img}" class="w-10 h-10 object-cover border-2 border-black shrink-0">`
+                : `<div class="w-10 h-10 border-2 border-black shrink-0 flex items-center justify-center text-[8px] font-bold text-gray-500 bg-gray-100">NO IMG</div>`;
+            const sub = r.p ? escapeHTML(r.p.cat || '-') : '<span class="italic">produk sudah dihapus</span>';
+            return `<div class="flex items-center gap-2 md:gap-3 p-2 border-2 border-black">
+                <div class="dash-rank ${rank <= 3 ? 'r' + rank : ''}">${rank}</div>
+                ${img}
+                <div class="flex-1 min-w-0">
+                    <div class="font-bold text-xs md:text-sm truncate">${escapeHTML(r.name)}</div>
+                    <div class="text-[10px] text-gray-600 truncate mb-1">${sub}</div>
+                    <div class="dash-meter"><span style="width:${Math.max(3, Math.round(r.qty / topQty * 100))}%"></span></div>
+                </div>
+                <div class="dash-sold">Terjual ${Number(r.qty).toLocaleString('ko-KR')}</div>
+            </div>`;
+        }).join('');
+    };
+
+    let dashResizeTimer = null;
+    window.addEventListener('resize', () => {
+        clearTimeout(dashResizeTimer);
+        dashResizeTimer = setTimeout(() => { if (window.isDashboardVisible()) window.renderDashChart(); }, 150);
+    });
+
+    // ======================================================= //
+    // EFEK SUARA: pemilihan produk, keranjang, sampai transaksi berhasil
+    // ======================================================= //
+    (function attachCartSounds() {
+        const wrap = (name, pick) => {
+            const orig = window[name];
+            if (typeof orig !== 'function') return;
+            window[name] = function (...args) {
+                let kind = null;
+                try { kind = pick(...args); } catch (e) {}
+                if (kind) window.sfx(kind);
+                return orig.apply(this, args);
+            };
+        };
+        const availKind = id => { const p = STATE.data.products.find(x => x.id === id); return p && p.available ? 'add' : 'error'; };
+        const deltaKind = (d) => d <= -999 ? 'remove' : (d > 0 ? 'plus' : 'minus');
+        const setKind = (arr, i, val) => { const n = Math.floor(Number(val)); return (!isFinite(n) || n <= 0) ? 'remove' : 'select'; };
+        wrap('addToCart', availKind);
+        wrap('addCustCart', availKind);
+        wrap('changeQty', (i, d) => deltaKind(d));
+        wrap('changeCustQty', (i, d) => deltaKind(d));
+        wrap('setCartQty', (i, v) => setKind(STATE.cart, i, v));
+        wrap('setCustQty', (i, v) => setKind(STATE.custCart, i, v));
+        wrap('openCart', () => window.isPosDocked() ? null : 'open');
+        wrap('openCustCartModal', () => 'open');
+        wrap('setCashNominal', () => 'select');
+
+        // Pilihan tipe pesanan, metode bayar, meja & pelanggan di keranjang
+        document.addEventListener('change', e => {
+            const t = e.target;
+            if (!t) return;
+            if ((t.name === 'payMethod' || t.name === 'orderType') && t.checked) window.sfx('select');
+            else if (['posCartTable', 'selectHutangCustomer', 'selectDeliveryCustomer', 'custOrderTable'].includes(t.id)) window.sfx('select');
+        });
+
+        // Bunyi peringatan saat validasi keranjang/pembayaran gagal
+        const cartActive = () => {
+            const vis = id => { const el = document.getElementById(id); return el && !el.classList.contains('d-none'); };
+            return vis('modalCart') || vis('modalCustCart') || (vis('pageAdminPOS') && window.isPosDocked());
+        };
+        const origAlert = window.customAlert;
+        window.customAlert = (msg, title = 'Info') => {
+            if (['Peringatan', 'Gagal', 'Meja Terisi', 'Pilih Meja Wajib'].includes(title) && cartActive()) window.sfx('error');
+            return origAlert(msg, title);
+        };
+        window.alert = window.customAlert;
+    })();
 
     setInterval(window.updateStoreStatusDisplay, 30000);
 </script>
