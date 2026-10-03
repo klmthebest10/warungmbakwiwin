@@ -657,6 +657,30 @@
             [data-theme="dark"] .fin-bar .brutal-btn:active:not(:disabled) { box-shadow: 1px 1px 0 0 var(--dk-border) !important; }
             [data-theme="dark"] .fin-sum { box-shadow: 3px 3px 0 0 var(--dk-border) !important; }
         }
+
+        /* ===== Riwayat transaksi (HP): kartu dengan detail dropdown ===== */
+        .hist-card .hist-detail { display: none; }
+        .hist-card.is-open .hist-detail { display: block; }
+        .hist-chev { display: inline-block; font-size: 11px; transition: transform 0.15s ease; }
+        .hist-card.is-open .hist-chev { transform: rotate(90deg); }
+        .hist-card.is-open { border-left-width: 8px; }
+        .hist-kv { display: flex; justify-content: space-between; gap: 12px; }
+        .hist-kv > span:first-child { color: #6b7280; flex-shrink: 0; }
+        .hist-kv > span:last-child { text-align: right; font-weight: 700; word-break: break-word; }
+        [data-theme="dark"] .hist-kv > span:first-child { color: var(--dk-text-muted); }
+
+        /* ===== Produk (HP): chip kategori ===== */
+        .prod-cat-chip { border: 1.5px solid #000; background: #f3f4f6; padding: 1px 8px; font-size: 11px; white-space: nowrap; }
+        [data-theme="dark"] .prod-cat-chip { background: var(--dk-surface-2); border-color: var(--dk-border); color: var(--dk-text); }
+
+        /* ===== Pelanggan: tombol aksi 2x2 & info cicilan ===== */
+        .cust-actions .brutal-btn { font-size: 11px; padding: 0.55rem 0.4rem; letter-spacing: 0.01em; }
+        .cust-actions .brutal-btn:disabled { opacity: 0.4; }
+        .cicil-info { font-size: 10px; font-weight: 600; color: #4b5563; }
+        [data-theme="dark"] .cicil-info { color: var(--dk-text-muted); }
+        .cicil-box-debt { background: #FEF2F2; }
+        [data-theme="dark"] .cicil-box-debt { background: #3A1E24 !important; }
+        [data-theme="dark"] .cicil-box-debt #cicilDebt { color: #FFB4BE !important; }
     </style>
 </head>
 <body>
@@ -979,7 +1003,7 @@
                         <div class="brutal-box bg-success p-3 md:p-4 min-w-0">
                             <div class="text-[11px] md:text-xs font-bold uppercase">💰 Pendapatan</div>
                             <div id="dashRevenue" class="text-lg md:text-3xl font-bold break-all leading-tight mt-1">₩0</div>
-                            <div class="text-[10px] italic leading-tight mt-1">hutang belum lunas tidak dihitung</div>
+                            <div class="text-[10px] italic leading-tight mt-1">sisa hutang belum dibayar tidak dihitung</div>
                         </div>
                         <div class="brutal-box bg-accent p-3 md:p-4 min-w-0">
                             <div class="text-[11px] md:text-xs font-bold uppercase">🧾 Jumlah Transaksi</div>
@@ -1028,8 +1052,8 @@
                                 <tr class="border-b-4 border-black bg-main">
                                     <th class="p-2 border-r-2 border-black w-16">Foto</th>
                                     <th class="p-2 border-r-2 border-black">Nama</th>
-                                    <th class="p-2 border-r-2 border-black">Kategori</th>
-                                    <th class="p-2 border-r-2 border-black">Harga</th>
+                                    <th class="p-2 border-r-2 border-black hidden md:table-cell">Kategori</th>
+                                    <th class="p-2 border-r-2 border-black hidden md:table-cell">Harga</th>
                                     <th class="p-2 border-r-2 border-black text-center hidden md:table-cell">Status</th>
                                     <th class="p-2 text-center hidden md:table-cell">Aksi</th>
                                 </tr>
@@ -1067,15 +1091,15 @@
                         <button onclick="window.openShareModal()" class="brutal-btn bg-accent px-4 py-2 text-sm">Bagikan Link 🔗</button>
                     </div>
                     <div class="brutal-box bg-white overflow-x-auto">
-                        <table class="w-full text-left border-collapse min-w-[700px]">
+                        <table class="w-full text-left border-collapse min-w-[860px]">
                             <thead>
                                 <tr class="border-b-4 border-black bg-danger text-white">
                                     <th class="p-2 border-r-2 border-black w-1/4">Nama & Akses</th>
                                     <th class="p-2 border-r-2 border-black">Total Hutang</th>
-                                    <th class="p-2 border-r-2 border-black lg:hidden text-center w-24">Aksi</th>
+                                    <th class="p-2 border-r-2 border-black lg:hidden text-center w-[240px]">Aksi</th>
                                     <th class="p-2 border-r-2 border-black w-1/5">Kontak</th>
                                     <th class="p-2 border-r-0 lg:border-r-2 border-black w-1/3">Alamat</th>
-                                    <th class="p-2 text-center w-28 hidden lg:table-cell">Aksi</th>
+                                    <th class="p-2 text-center w-[260px] hidden lg:table-cell">Aksi</th>
                                 </tr>
                             </thead>
                             <tbody id="adminCustomersTable"></tbody>
@@ -1123,19 +1147,20 @@
                         <div class="brutal-box bg-success p-3">
                             <div class="text-[11px] md:text-xs font-bold uppercase">Total Nominal</div>
                             <div id="cashierStatTotal" class="text-xl md:text-2xl font-bold break-all">₩0</div>
-                            <div class="text-[10px] italic leading-tight">hutang belum lunas tidak dihitung</div>
+                            <div class="text-[10px] italic leading-tight">sisa hutang belum dibayar tidak dihitung</div>
                         </div>
                     </div>
 
                     <div id="adminIncomeBox" class="brutal-box bg-success p-4 mb-4 flex items-center justify-between">
                         <div>
                             <span class="font-bold uppercase text-sm md:text-base">Total Pendapatan:</span>
-                            <div class="text-xs max-w-[200px] md:max-w-none">(Transaksi hutang belum lunas tidak dihitung)</div>
+                            <div class="text-xs max-w-[200px] md:max-w-none">(Sisa hutang yang belum dibayar tidak dihitung)</div>
                         </div>
                         <span class="text-xl md:text-2xl font-bold" id="adminIncomeTotal">₩0</span>
                     </div>
 
-                    <div class="brutal-box bg-white overflow-x-auto">
+                    <div id="adminHistoryCards" class="md:hidden space-y-2"></div>
+                    <div class="brutal-box bg-white overflow-x-auto hidden md:block">
                         <table class="w-full text-left border-collapse min-w-[800px]">
                             <thead>
                                 <tr class="border-b-4 border-black bg-gray-200">
@@ -1624,13 +1649,7 @@
                         <label class="font-bold text-sm md:text-base">Nominal Bayar:</label>
                         <input type="number" id="inputBayar" class="brutal-input w-1/2 text-right text-lg bg-white" placeholder="₩0" onkeyup="window.calculateTotal()">
                     </div>
-                    <div class="flex gap-2 justify-end mt-2 flex-wrap">
-                        <button type="button" class="brutal-btn bg-white px-3 py-2 text-xs flex-1 md:flex-none" onclick="window.setCashNominal('pas')">Pas</button>
-                        <button type="button" class="brutal-btn bg-white px-3 py-2 text-xs flex-1 md:flex-none" onclick="window.setCashNominal(10000)">10k</button>
-                        <button type="button" class="brutal-btn bg-white px-3 py-2 text-xs flex-1 md:flex-none" onclick="window.setCashNominal(20000)">20k</button>
-                        <button type="button" class="brutal-btn bg-white px-3 py-2 text-xs flex-1 md:flex-none" onclick="window.setCashNominal(50000)">50k</button>
-                        <button type="button" class="brutal-btn bg-white px-3 py-2 text-xs flex-1 md:flex-none" onclick="window.setCashNominal(100000)">100k</button>
-                    </div>
+                    <div id="cashSuggestWrap" class="flex gap-2 justify-end mt-2 flex-wrap"></div>
                     <div class="flex justify-between items-center mt-3 text-danger font-bold text-lg">
                         <span>Kembalian:</span><span id="labelKembalian">₩0</span>
                     </div>
@@ -1751,13 +1770,7 @@
                         </select>
                     </div>
                 </div>
-                <div class="mb-4">
-                    <label class="block font-bold mb-1 text-xs">Status Lunas</label>
-                    <select id="editTrxStatus" class="brutal-input bg-white py-1 text-xs font-bold">
-                        <option value="Paid">Lunas (Paid)</option>
-                        <option value="Unpaid">Belum Lunas (Unpaid)</option>
-                    </select>
-                </div>
+                <p class="text-[11px] italic text-gray-600 leading-tight mb-4">Status pembayaran otomatis: metode <b>Hutang</b> tercatat belum lunas sampai dicicil / dilunasi di menu Pelanggan.</p>
                 
                 <button type="submit" class="brutal-btn w-full bg-main py-3">Simpan Perubahan</button>
             </form>
@@ -1913,7 +1926,70 @@
         </div>
     </div>
 
-<!-- Modal Kamera Foto Produk -->
+<!-- Modal Cicil Hutang -->
+    <div id="modalDebtInstallment" class="fixed inset-0 modal-backdrop d-none z-50 flex items-center justify-center p-4">
+        <div class="brutal-box bg-white w-full max-w-sm relative p-5 max-h-[95vh] overflow-y-auto">
+            <button type="button" onclick="window.closeModal('modalDebtInstallment')" class="absolute top-2 right-2 font-bold px-2 py-1 hover:bg-red-500 hover:text-white border-2 border-black inline-flex items-center justify-center" aria-label="Tutup"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" class="pointer-events-none"><line x1="5" y1="5" x2="19" y2="19"></line><line x1="19" y1="5" x2="5" y2="19"></line></svg></button>
+            <h2 class="text-xl font-bold mb-4 uppercase border-b-2 border-black pb-2 pr-10">Bayar Cicilan Hutang</h2>
+            <form id="formDebtInstallment" onsubmit="window.saveDebtInstallment(event)">
+                <input type="hidden" id="cicilCustId">
+                <div class="grid grid-cols-2 gap-2 mb-4">
+                    <div class="border-2 border-black p-2 bg-gray-50 min-w-0">
+                        <div class="text-[10px] font-bold uppercase">Pelanggan</div>
+                        <div id="cicilCustName" class="font-bold text-sm break-words"></div>
+                    </div>
+                    <div class="cicil-box-debt border-2 border-black p-2 min-w-0">
+                        <div class="text-[10px] font-bold uppercase">Sisa Hutang</div>
+                        <div id="cicilDebt" class="font-bold text-sm text-danger break-all"></div>
+                    </div>
+                </div>
+                <label class="block font-bold mb-1 text-sm">Nominal Cicilan</label>
+                <input type="number" id="cicilAmount" min="1" step="1" inputmode="numeric" class="brutal-input bg-white text-right text-lg font-bold" placeholder="₩0" oninput="window.updateCicilPreview()" required>
+                <div id="cicilQuick" class="flex gap-2 flex-wrap mt-2"></div>
+                <div class="flex justify-between items-center font-bold mt-3 p-2 border-2 border-black bg-yellow-100 text-sm">
+                    <span>Sisa setelah bayar</span><span id="cicilAfter">₩0</span>
+                </div>
+                <label class="block font-bold mb-1 mt-4 text-sm">Metode Pembayaran</label>
+                <div id="cicilMethodWrap" class="grid grid-cols-2 gap-2"></div>
+                <label class="block font-bold mb-1 mt-4 text-sm">Catatan <span class="text-gray-500 font-normal">(opsional)</span></label>
+                <input type="text" id="cicilNote" maxlength="120" autocomplete="off" class="brutal-input bg-white text-sm" placeholder="Contoh: cicilan minggu ke-2">
+                <div class="grid grid-cols-2 gap-2 mt-5">
+                    <button type="button" onclick="window.closeModal('modalDebtInstallment')" class="brutal-btn bg-white py-3">Batal</button>
+                    <button type="submit" class="brutal-btn bg-accent py-3">Simpan Cicilan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Edit / Hapus Pelanggan -->
+    <div id="modalEditCustomer" class="fixed inset-0 modal-backdrop d-none z-50 flex items-center justify-center p-4">
+        <div class="brutal-box bg-white w-full max-w-sm relative p-5 max-h-[95vh] overflow-y-auto">
+            <button type="button" onclick="window.closeModal('modalEditCustomer')" class="absolute top-2 right-2 font-bold px-2 py-1 hover:bg-red-500 hover:text-white border-2 border-black inline-flex items-center justify-center" aria-label="Tutup"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" class="pointer-events-none"><line x1="5" y1="5" x2="19" y2="19"></line><line x1="19" y1="5" x2="5" y2="19"></line></svg></button>
+            <h2 class="text-xl font-bold mb-1 uppercase pr-10">Edit Pelanggan</h2>
+            <p id="editCustDebtInfo" class="text-xs font-bold text-gray-600 border-b-2 border-black pb-2 mb-4"></p>
+            <form onsubmit="window.saveEditCustomer(event)">
+                <input type="hidden" id="editCustId">
+                <div class="mb-3">
+                    <label class="block font-bold mb-1 text-sm">Nama Pelanggan</label>
+                    <input type="text" id="editCustName" maxlength="60" autocomplete="off" class="brutal-input bg-white" required>
+                </div>
+                <div class="mb-3">
+                    <label class="block font-bold mb-1 text-sm">No Telp / WhatsApp</label>
+                    <input type="text" id="editCustWA" inputmode="tel" class="brutal-input bg-white">
+                </div>
+                <div class="mb-5">
+                    <label class="block font-bold mb-1 text-sm">Alamat</label>
+                    <textarea id="editCustAddress" rows="2" class="brutal-input bg-white text-sm"></textarea>
+                </div>
+                <div class="grid grid-cols-2 gap-2">
+                    <button type="button" onclick="window.deleteCustomerFromModal()" class="brutal-btn bg-danger text-white py-3">Hapus</button>
+                    <button type="submit" class="brutal-btn bg-main py-3">Simpan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Kamera Foto Produk -->
     <div id="modalCamera" class="fixed inset-0 modal-backdrop d-none z-[60] flex items-center justify-center p-3">
         <div class="brutal-box bg-white w-full max-w-md flex flex-col overflow-hidden max-h-[95vh]">
             <div class="p-3 bg-main border-b-4 border-black font-bold uppercase flex justify-between items-center">
@@ -2734,6 +2810,7 @@
         total: Number(o.total || 0),
         paidAmount: Number(o.paid_amount || 0),      // << TAMBAHKAN
         changeAmount: Number(o.change_amount || 0),  // << TAMBAHKAN
+        debtPaid: Number(o.debt_paid || 0),          // total cicilan yang sudah dibayar untuk order Hutang
         address: o.address || '',
         table: o.table_name || o.table || '',
         isEdited: Boolean(o.isEdited),
@@ -2865,6 +2942,10 @@
                     const c = doc.data();
                     return { id: doc.id, name: c.name, wa: c.wa, address: c.address, pass: c.pass, passHash: c.pass_hash, debt: Number(c.debt || 0) };
                 });
+                try {
+                    const dpSnap = await db.collection('debt_payments').get();
+                    STATE.data.debtPayments = dpSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+                } catch (e) { STATE.data.debtPayments = []; console.warn('Gagal memuat riwayat cicilan:', e); }
             } else if (role === 'customer' && STATE.user) {
                 // KEAMANAN: pelanggan HANYA boleh mengambil datanya sendiri (bukan seluruh koleksi customers),
                 // supaya satu pelanggan tidak bisa membaca nama/WA/alamat/password pelanggan lain lewat console.
@@ -3855,6 +3936,35 @@
         const labelK = document.getElementById('labelKembalian'); 
         labelK.textContent = formatWon(kembalian > 0 ? kembalian : 0); 
         labelK.classList.toggle('text-red-600', kembalian < 0 && bayar > 0); 
+        window.renderCashSuggestions(total, bayar);
+    };
+
+    // Saran nominal uang tunai mengikuti total pesanan (pecahan Won: 1.000 / 5.000 / 10.000 / 50.000).
+    // Contoh total ₩23.500 -> Pas, 24k, 25k, 30k, 50k.
+    window.getCashSuggestions = total => {
+        if (!(total > 0)) return [];
+        const out = new Set();
+        [1000, 5000, 10000, 50000, 100000].forEach(step => {
+            const v = Math.ceil(total / step) * step;
+            if (v > total) out.add(v);
+        });
+        let list = [...out].sort((a, b) => a - b);
+        // Total sudah bulat besar (mis. ₩100.000) -> tambahkan pecahan 50k berikutnya agar tetap ada pilihan
+        let next = Math.ceil(total / 50000) * 50000;
+        while (list.length < 3) { next += 50000; if (!list.includes(next)) list.push(next); }
+        return list.slice(0, 4);
+    };
+    const cashLabel = v => v >= 1000 ? (v / 1000).toLocaleString('ko-KR', { maximumFractionDigits: 1 }) + 'k' : String(v);
+    window.renderCashSuggestions = (total, bayar) => {
+        const wrap = document.getElementById('cashSuggestWrap');
+        if (!wrap) return;
+        const key = total + '|' + bayar;
+        if (wrap.dataset.key === key) return;
+        wrap.dataset.key = key;
+        if (!(total > 0)) { wrap.innerHTML = ''; return; }
+        const btn = (val, label, active) => `<button type="button" onclick="window.setCashNominal(${val === 'pas' ? "'pas'" : val})" class="brutal-btn ${active ? 'bg-main' : 'bg-white'} px-3 py-2 text-xs flex-1 md:flex-none whitespace-nowrap">${label}</button>`;
+        wrap.innerHTML = btn('pas', 'Pas', bayar === total)
+            + window.getCashSuggestions(total).map(v => btn(v, cashLabel(v), bayar === v)).join('');
     };
     
     window.setCashNominal = val => { 
@@ -4069,15 +4179,7 @@
     let itemsHtml = (order.items || []).map(i => `<div style="display:flex; justify-content:space-between; margin-bottom:4px;"><span>${i.qty}x ${escapeHTML(i.name)}</span><span>${formatWon(i.price * i.qty)}</span></div>`).join('');
 
     if(receiptType === 'DEBT_RECAP') {
-        const cust = STATE.data.customers.find(c => c.id === order.custId); 
-        const hutangOrders = STATE.data.orders.filter(o => o.custId === order.custId && o.type === 'Hutang' && o.paymentStatus === 'Unpaid');
-        let html = `<div class="receipt-88mm" id="printReceiptCore"><div style="text-align:center; border-bottom:2px dashed black; padding-bottom:12px; margin-bottom:12px;"><h2 style="margin:0; font-size:18px; font-weight:bold; text-transform:uppercase;">${escapeHTML(STATE.data.settings.storeName||'WARUNG INDONESIA')}</h2><p style="margin:4px 0 0; font-size:12px; font-weight:bold;">NOTA HUTANG - ${escapeHTML(cust?.name || '-')}</p></div>`;
-        if(hutangOrders.length === 0) html += `<div style="text-align:center; font-size:12px; font-weight:bold;">Tidak ada hutang belum lunas.</div>`;
-        else { 
-            html += hutangOrders.map(o => `<div style="border-bottom:1px dashed #aaa; padding-bottom:8px; margin-bottom:8px; font-size:12px;"><div style="font-weight:bold;">Tgl: ${safeDate(o.date)} (Inv: ${o.id})</div>${o.items.map(i => `<div style="display:flex;justify-content:space-between;"><span>- ${i.qty}x ${escapeHTML(i.name)}</span><span>${formatWon(i.price*i.qty)}</span></div>`).join('')}<div style="text-align:right; font-weight:bold; margin-top:4px;">Sub: ${formatWon(o.total)}</div></div>`).join(''); 
-        }
-        html += `<div style="font-size:16px; font-weight:bold; text-align:right; margin-top:12px; padding-top:12px; border-top:2px solid black;">TOTAL HUTANG: ${formatWon(cust?.debt || 0)}</div></div>`; 
-        document.getElementById(targetId).innerHTML = html; 
+        document.getElementById(targetId).innerHTML = window.buildDebtRecapHtml(order.custId);
         return;
     }
 
@@ -4096,11 +4198,15 @@
         ? `<div style="display:flex; justify-content:space-between; margin-top:8px;"><span>Bayar:</span> <span>${formatWon(paid)}</span></div><div style="display:flex; justify-content:space-between;"><span>Kembalian:</span> <span>${formatWon(change)}</span></div>`
         : '';
 
+    const debtRows = (order.type === 'Hutang' && Number(order.debtPaid || 0) > 0)
+        ? `<div style="display:flex; justify-content:space-between; margin-top:8px;"><span>Sudah dicicil:</span> <span>${formatWon(order.debtPaid)}</span></div><div style="display:flex; justify-content:space-between;"><span>Sisa hutang:</span> <span>${formatWon(Math.max(0, Number(order.total || 0) - Number(order.debtPaid || 0)))}</span></div>`
+        : '';
+
     const html = `<div class="receipt-88mm" id="printReceiptCore">
             <div style="text-align:center; border-bottom:2px dashed black; padding-bottom:12px; margin-bottom:12px;"><h2 style="margin:0; font-size:18px; font-weight:bold; text-transform:uppercase;">${escapeHTML(STATE.data.settings.storeName||'WARUNG INDONESIA')}</h2><p style="margin:4px 0 0; font-size:12px; color:#555;">${safeDate(order.date)}</p></div>
             <div style="font-size:12px; margin-bottom:12px; display:flex; flex-direction:column; gap:4px;"><div style="display:flex; justify-content:space-between;"><span>No:</span> <span style="font-weight:bold">${order.id}</span></div><div style="display:flex; justify-content:space-between;"><span>Plg:</span> <span style="font-weight:bold">${escapeHTML(custName)}</span></div>${tableRow}<div style="display:flex; justify-content:space-between;"><span>Tipe:</span> <span>${order.orderType === 'Delivery'?'Delivery':'Dine In/TA'}</span></div>${addressRow}<div style="display:flex; justify-content:space-between;"><span>Metode:</span> <span style="font-weight:bold">${order.type}</span></div>${statusRow}</div>
             <div style="font-size:12px; border-bottom:2px dashed black; padding-bottom:12px; margin-bottom:12px;">${itemsHtml}</div>
-            <div style="font-size:13px; font-weight:bold;"><div style="display:flex; justify-content:space-between; margin-bottom:4px;"><span>Subtotal:</span> <span>${formatWon(order.subtotal)}</span></div>${order.ongkir > 0 ? `<div style="display:flex; justify-content:space-between; margin-bottom:4px;"><span>Ongkir:</span> <span>${formatWon(order.ongkir)}</span></div>` : ''}<div style="display:flex; justify-content:space-between; font-size:16px; margin-top:8px; border-top:2px solid black; padding-top:8px;"><span>TOTAL:</span> <span>${formatWon(order.total)}</span></div>${cashRows}</div>
+            <div style="font-size:13px; font-weight:bold;"><div style="display:flex; justify-content:space-between; margin-bottom:4px;"><span>Subtotal:</span> <span>${formatWon(order.subtotal)}</span></div>${order.ongkir > 0 ? `<div style="display:flex; justify-content:space-between; margin-bottom:4px;"><span>Ongkir:</span> <span>${formatWon(order.ongkir)}</span></div>` : ''}<div style="display:flex; justify-content:space-between; font-size:16px; margin-top:8px; border-top:2px solid black; padding-top:8px;"><span>TOTAL:</span> <span>${formatWon(order.total)}</span></div>${cashRows}${debtRows}</div>
             <div style="text-align:center; margin-top:24px; font-size:11px; font-weight:bold;"><p>~ Terima Kasih ~</p></div></div>`;
     document.getElementById(targetId).innerHTML = html;
 };
@@ -4360,32 +4466,42 @@
 
         const query = (document.getElementById('adminProductSearch')?.value || '').toLowerCase();
         const sortedProducts = [...STATE.data.products].filter(p => p.name.toLowerCase().includes(query)).sort((a, b) => {
-            const catAIndex = STATE.data.categories.indexOf(a.cat); 
+            const catAIndex = STATE.data.categories.indexOf(a.cat);
             const catBIndex = STATE.data.categories.indexOf(b.cat);
             if (catAIndex !== catBIndex) return catAIndex - catBIndex;
             return a.name.localeCompare(b.name);
         });
         const tableBody = document.getElementById('adminProductsTable');
         if (!tableBody) return;
+        const X = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" class="pointer-events-none"><line x1="5" y1="5" x2="19" y2="19"></line><line x1="19" y1="5" x2="5" y2="19"></line></svg>`;
+        const onBtn = (p, cls) => `<button onclick="window.toggleProductAvail('${p.id}')" class="font-bold border-2 border-black ${cls} ${p.available ? 'bg-success text-black' : 'bg-gray-300 text-gray-600'}">${p.available ? 'ON' : 'OFF'}</button>`;
+        if (!sortedProducts.length) {
+            tableBody.innerHTML = `<tr><td colspan="6" class="p-4 text-center font-bold">Produk tidak ditemukan.</td></tr>`;
+            return;
+        }
         tableBody.innerHTML = sortedProducts.map(p => `
             <tr class="border-b-2 border-black hover:bg-gray-100">
-                <td class="p-2 border-r-2 border-black"><img src="${p.img || 'https://placehold.co/40x40/e2e8f0/000000?text=No+Img'}" class="w-10 h-10 object-cover border border-black"></td>
-                <td class="p-2 border-r-2 border-black font-bold text-xs md:text-sm whitespace-nowrap">
-                    <div class="flex items-center justify-between gap-2">
-                        <span class="whitespace-nowrap">${escapeHTML(p.name)}</span>
-                        <div class="flex items-center shrink-0 md:hidden">
-                            <button onclick="window.toggleProductAvail('${p.id}')" class="font-bold text-[10px] px-2 py-1 border-2 border-black mr-1 ${p.available ? 'bg-success text-black' : 'bg-gray-300 text-gray-600'}">${p.available ? 'ON' : 'OFF'}</button>
-                            ${!isCashier ? `<button onclick="window.editProduct('${p.id}')" class="bg-main border-2 border-black px-2 py-1 text-[10px] font-bold mr-1">Edit</button><button onclick="window.deleteProduct('${p.id}')" class="bg-danger text-white border-2 border-black px-2 py-1 text-[10px] font-bold inline-flex items-center justify-center"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" class="pointer-events-none"><line x1="5" y1="5" x2="19" y2="19"></line><line x1="19" y1="5" x2="5" y2="19"></line></svg></button>` : ''}
+                <td class="p-2 border-r-2 border-black w-16 align-middle"><img src="${p.img || 'https://placehold.co/60x60/e2e8f0/000000?text=No+Img'}" class="w-12 h-12 md:w-10 md:h-10 object-cover border border-black"></td>
+                <td class="p-2 md:border-r-2 border-black align-middle">
+                    <div class="flex items-center justify-between gap-3">
+                        <div class="min-w-0">
+                            <div class="font-bold text-sm whitespace-nowrap">${escapeHTML(p.name)}</div>
+                            <div class="md:hidden flex items-center gap-2 mt-1.5 flex-wrap">
+                                <span class="font-bold text-xs">${formatWon(p.price)}</span>
+                                <span class="prod-cat-chip">${escapeHTML(p.cat)}</span>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-1.5 shrink-0 md:hidden">
+                            ${onBtn(p, 'text-[11px] px-2.5 h-9')}
+                            ${!isCashier ? `<button onclick="window.editProduct('${p.id}')" class="bg-main border-2 border-black px-2.5 h-9 text-[11px] font-bold">Edit</button><button onclick="window.deleteProduct('${p.id}')" class="bg-danger text-white border-2 border-black w-9 h-9 inline-flex items-center justify-center" aria-label="Hapus">${X}</button>` : ''}
                         </div>
                     </div>
                 </td>
-                <td class="p-2 border-r-2 border-black text-xs">${escapeHTML(p.cat)}</td>
-                <td class="p-2 border-r-2 border-black text-sm">${formatWon(p.price)}</td>
-                <td class="p-2 border-r-2 border-black text-center hidden md:table-cell">
-                    <button onclick="window.toggleProductAvail('${p.id}')" class="font-bold text-[10px] md:text-xs px-2 py-1 border-2 border-black ${p.available ? 'bg-success text-black' : 'bg-gray-300 text-gray-600'}">${p.available ? 'ON' : 'OFF'}</button>
-                </td>
-                <td class="p-2 text-center hidden md:table-cell">
-                    ${!isCashier ? `<button onclick="window.editProduct('${p.id}')" class="bg-main border-2 border-black px-2 py-1 text-[10px] font-bold mr-1">Edit</button><button onclick="window.deleteProduct('${p.id}')" class="bg-danger text-white border-2 border-black px-2 py-1 text-[10px] font-bold mt-1 md:mt-0 inline-flex items-center justify-center"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" class="pointer-events-none"><line x1="5" y1="5" x2="19" y2="19"></line><line x1="19" y1="5" x2="5" y2="19"></line></svg></button>` : '<span class="text-xs text-gray-400 font-bold">-</span>'}
+                <td class="p-2 border-r-2 border-black text-xs hidden md:table-cell">${escapeHTML(p.cat)}</td>
+                <td class="p-2 border-r-2 border-black text-sm hidden md:table-cell whitespace-nowrap">${formatWon(p.price)}</td>
+                <td class="p-2 border-r-2 border-black text-center hidden md:table-cell">${onBtn(p, 'text-[10px] md:text-xs px-2 py-1')}</td>
+                <td class="p-2 text-center hidden md:table-cell whitespace-nowrap">
+                    ${!isCashier ? `<button onclick="window.editProduct('${p.id}')" class="bg-main border-2 border-black px-2 py-1 text-[10px] font-bold mr-1">Edit</button><button onclick="window.deleteProduct('${p.id}')" class="bg-danger text-white border-2 border-black px-2 py-1 text-[10px] font-bold inline-flex items-center justify-center align-middle" aria-label="Hapus">${X}</button>` : '<span class="text-xs text-gray-400 font-bold">-</span>'}
                 </td>
             </tr>`).join('');
     };
@@ -4514,7 +4630,7 @@
                     if (changed) {
                         const newSubtotal = newItems.reduce((s, it) => s + (Number(it.price) || 0) * (Number(it.qty) || 0), 0);
                         const newTotal = newSubtotal + Number(o.ongkir || 0);
-                        batch.update(doc.ref, { items: newItems, subtotal: newSubtotal, total: newTotal });
+                        batch.update(doc.ref, { items: newItems, subtotal: newSubtotal, total: newTotal, payment_status: newTotal <= Number(o.debt_paid || 0) ? 'Paid' : 'Unpaid' });
                         if (o.cust_id) affectedCustIds.add(o.cust_id);
                         touched = true;
                     }
@@ -4549,7 +4665,7 @@
                         if (c) {
                             c.debt = STATE.data.orders
                                 .filter(o => o.custId === cid && o.type === 'Hutang' && o.paymentStatus === 'Unpaid')
-                                .reduce((s, o) => s + Number(o.total || 0), 0);
+                                .reduce((s, o) => s + window.debtRemain(o), 0);
                         }
                     });
                 }
@@ -4814,30 +4930,39 @@
         const sortedCust = [...STATE.data.customers].sort((a,b) => (a.name||'').localeCompare(b.name||''));
         const tbody = document.getElementById('adminCustomersTable');
         if (!tbody) return;
-        tbody.innerHTML = sortedCust.map(c => `
+        if (!sortedCust.length) {
+            tbody.innerHTML = `<tr><td colspan="6" class="p-4 text-center font-bold">Belum ada pelanggan.</td></tr>`;
+            return;
+        }
+        const actions = c => {
+            const has = Number(c.debt || 0) > 0;
+            return `<div class="cust-actions grid grid-cols-2 gap-2">
+                <button onclick="window.openDebtInstallment('${c.id}')" class="brutal-btn bg-accent" ${has ? '' : 'disabled'} title="Bayar sebagian hutang">Cicil</button>
+                <button onclick="window.payDebt('${c.id}')" class="brutal-btn bg-success" ${has ? '' : 'disabled'} title="Lunasi seluruh sisa hutang">Lunas</button>
+                <button onclick="window.viewDebtReceipt('${c.id}')" class="brutal-btn bg-main whitespace-nowrap">Nota Hutang</button>
+                <button onclick="window.openEditCustomer('${c.id}')" class="brutal-btn bg-white whitespace-nowrap">Edit/Hapus</button>
+            </div>`;
+        };
+        tbody.innerHTML = sortedCust.map(c => {
+            const cicil = window.getCustomerInstallmentTotal(c.id);
+            return `
             <tr class="border-b-2 border-black hover:bg-gray-100">
-                <td class="p-2 border-r-2 border-black w-1/4">
+                <td class="p-2 border-r-2 border-black w-1/4 align-middle">
                     <div class="font-bold text-sm">${escapeHTML(c.name)}</div>
                     <div class="flex items-center gap-1 mt-1 text-[10px]">
                         <button type="button" onclick="window.resetCustomerPassword('${c.id}')" class="underline text-blue-700 font-bold">🔑 Reset Password</button>
                     </div>
                 </td>
-                <td class="p-2 border-r-2 border-black font-bold text-sm ${c.debt > 0 ? 'text-danger' : 'text-success'}">${formatWon(c.debt)}</td>
-                <td class="p-2 border-r-2 border-black text-center flex flex-col gap-1 items-center lg:hidden">
-                    <button onclick="window.viewDebtReceipt('${c.id}')" class="brutal-btn bg-main px-2 py-1 text-[10px] w-full">Nota Hutang</button>
-                    <button onclick="window.payDebt('${c.id}')" class="brutal-btn bg-success px-2 py-1 text-[10px] w-full">Lunas</button>
-                    ${!(STATE.user && STATE.user.role === 'cashier') ? `<button onclick="window.deleteCustomer('${c.id}')" class="brutal-btn bg-danger text-white px-2 py-1 text-[10px] w-full mt-1">Hapus</button>` : ''}
+                <td class="p-2 border-r-2 border-black align-middle">
+                    <div class="font-bold text-sm ${c.debt > 0 ? 'text-danger' : 'text-success'}">${formatWon(c.debt)}</div>
+                    ${cicil > 0 ? `<div class="cicil-info">sudah dicicil ${formatWon(cicil)}</div>` : ''}
                 </td>
-                <td class="p-2 border-r-2 border-black text-xs md:text-sm w-1/5">${escapeHTML(c.wa)}</td>
-                <td class="p-2 text-xs md:text-sm w-1/3 border-r-0 lg:border-r-2 border-black whitespace-pre-wrap break-words leading-relaxed">${escapeHTML(c.address)}</td>
-                <td class="p-2 text-center hidden lg:table-cell">
-                    <div class="flex flex-col gap-1 items-center">
-                        <button onclick="window.viewDebtReceipt('${c.id}')" class="brutal-btn bg-main px-2 py-1 text-[10px] w-full">Nota Hutang</button>
-                        <button onclick="window.payDebt('${c.id}')" class="brutal-btn bg-success px-2 py-1 text-[10px] w-full">Lunas</button>
-                        ${!(STATE.user && STATE.user.role === 'cashier') ? `<button onclick="window.deleteCustomer('${c.id}')" class="brutal-btn bg-danger text-white px-2 py-1 text-[10px] w-full mt-1">Hapus</button>` : ''}
-                    </div>
-                </td>
-            </tr>`).join('');
+                <td class="p-2 border-r-2 border-black lg:hidden align-middle">${actions(c)}</td>
+                <td class="p-2 border-r-2 border-black text-xs md:text-sm w-1/5 align-middle">${escapeHTML(c.wa)}</td>
+                <td class="p-2 text-xs md:text-sm w-1/3 border-r-0 lg:border-r-2 border-black whitespace-pre-wrap break-words leading-relaxed align-middle">${escapeHTML(c.address)}</td>
+                <td class="p-2 hidden lg:table-cell align-middle">${actions(c)}</td>
+            </tr>`;
+        }).join('');
     };
 
     // Admin/kasir bisa mengganti password pelanggan yang lupa sandi (tanpa perlu melihat password lamanya).
@@ -4901,57 +5026,279 @@
 
     window.shareToWA = (link, text) => window.open(`https://wa.me/?text=${encodeURIComponent(text + '\n' + link)}`, '_blank');
     
-    window.payDebt = async id => {
-        const cust = STATE.data.customers.find(c => c.id === id); 
-        if(!cust || cust.debt <= 0) return await window.customAlert('Tidak ada hutang.', 'Info');
-        if(await window.customConfirm(`Lunasi seluruh hutang ${cust.name}?`)) {
-            showLoad();
-            try { 
-                if(!IS_PREVIEW && db) { 
-                    await db.collection('customers').doc(id).update({ debt: 0 }); 
-                    const ordSnap = await db.collection('orders').where('cust_id', '==', id).where('type', '==', 'Hutang').get();
-                    const batch = db.batch();
-                    ordSnap.forEach(oDoc => {
-                        batch.update(db.collection('orders').doc(oDoc.id), { payment_status: 'Paid' });
-                    });
-                    await batch.commit();
-                    await fetchAllData(); 
-                } else { 
-                    cust.debt = 0; 
-                    STATE.data.orders.forEach(o => { 
-                        if(o.custId === id && o.type === 'Hutang') o.paymentStatus = 'Paid'; 
-                    }); 
-                }
-                hideLoad();
-                await window.customAlert('Lunas!', 'Sukses'); 
-                window.renderAdminCustomers(); 
-                window.renderAdminHistory(); 
-            } catch(e) { 
-                hideLoad();
-                await window.customAlert(e.message, 'Gagal'); 
-            }
+    // ======================================================= //
+    // HUTANG PELANGGAN: CICIL, LUNAS, EDIT & HAPUS
+    // Cicilan dialokasikan ke transaksi hutang TERLAMA lebih dulu (FIFO) lewat field debt_paid.
+    // Transaksi yang cicilannya sudah menutup totalnya otomatis berstatus Lunas.
+    // Setiap pembayaran dicatat di koleksi 'debt_payments' (dipakai di Nota Hutang).
+    // ======================================================= //
+    STATE.data.debtPayments = STATE.data.debtPayments || [];
+    window.debtRemain = o => Math.max(0, Number(o.total || 0) - Number(o.debtPaid ?? o.debt_paid ?? 0));
+    const unpaidDebtOrders = custId => STATE.data.orders
+        .filter(o => o.custId === custId && o.type === 'Hutang' && o.paymentStatus === 'Unpaid')
+        .sort((a, b) => new Date(a.date) - new Date(b.date));
+    window.getCustomerInstallmentTotal = custId => unpaidDebtOrders(custId).reduce((s, o) => s + Number(o.debtPaid || 0), 0);
+    window.recalcLocalDebt = custId => {
+        const c = STATE.data.customers.find(x => x.id === custId);
+        if (c) c.debt = unpaidDebtOrders(custId).reduce((s, o) => s + window.debtRemain(o), 0);
+    };
+
+    function allocateDebtPayment(orders, amount) {
+        const sorted = [...orders].sort((a, b) => new Date(a.date) - new Date(b.date));
+        let left = amount;
+        const allocations = [], updates = [];
+        for (const o of sorted) {
+            if (left <= 0) break;
+            const remain = Math.max(0, o.total - o.debtPaid);
+            if (remain <= 0) { updates.push({ id: o.id, debtPaid: o.debtPaid, paid: true }); continue; }
+            const pay = Math.min(remain, left);
+            left -= pay;
+            allocations.push({ order_id: o.id, amount: pay });
+            updates.push({ id: o.id, debtPaid: o.debtPaid + pay, paid: o.debtPaid + pay >= o.total });
         }
+        return { allocations, updates };
+    }
+
+    // amount = 'all' untuk melunasi seluruh sisa hutang. Mengembalikan { paid, remain }.
+    window.recordDebtPayment = async (custId, amount, method, note, kind) => {
+        const cust = STATE.data.customers.find(c => c.id === custId);
+        const payId = genId('PAY');
+        const by = (STATE.user && STATE.user.role === 'cashier') ? window.getCashierNameById(STATE.user.id, STATE.user.name) : 'Admin';
+        const record = (paid, allocations) => ({
+            id: payId, cust_id: custId, cust_name: cust ? cust.name : '', amount: paid, method: method || '-',
+            note: note || '', kind, date: new Date().toISOString(), recorded_by: by, allocations
+        });
+
+        if (!IS_PREVIEW && db) {
+            const snap = await db.collection('orders').where('cust_id', '==', custId).where('type', '==', 'Hutang').where('payment_status', '==', 'Unpaid').get();
+            const refs = snap.docs.map(d => d.ref);
+            let result = null;
+            await db.runTransaction(async t => {
+                const docs = await Promise.all(refs.map(r => t.get(r)));
+                const orders = docs.filter(d => d.exists && d.data().payment_status === 'Unpaid').map(d => ({
+                    id: d.id, total: Number(d.data().total || 0), debtPaid: Number(d.data().debt_paid || 0), date: d.data().date
+                }));
+                const remainTotal = orders.reduce((sum, o) => sum + Math.max(0, o.total - o.debtPaid), 0);
+                const pay = amount === 'all' ? remainTotal : amount;
+                if (remainTotal <= 0) throw new Error('Pelanggan ini tidak punya sisa hutang.');
+                if (!(pay > 0)) throw new Error('Nominal pembayaran harus lebih dari 0.');
+                if (pay > remainTotal) throw new Error('Nominal melebihi sisa hutang (' + formatWon(remainTotal) + ').');
+                const r = allocateDebtPayment(orders, pay);
+                r.updates.forEach(u => t.update(db.collection('orders').doc(u.id), { debt_paid: u.debtPaid, payment_status: u.paid ? 'Paid' : 'Unpaid' }));
+                t.set(db.collection('debt_payments').doc(payId), record(pay, r.allocations));
+                t.update(db.collection('customers').doc(custId), { debt: remainTotal - pay });
+                result = { paid: pay, remain: remainTotal - pay };
+            });
+            return result;
+        }
+
+        // Mode preview / tanpa database
+        const orders = unpaidDebtOrders(custId).map(o => ({ id: o.id, total: Number(o.total || 0), debtPaid: Number(o.debtPaid || 0), date: o.date }));
+        const remainTotal = orders.reduce((sum, o) => sum + Math.max(0, o.total - o.debtPaid), 0);
+        const pay = amount === 'all' ? remainTotal : amount;
+        if (remainTotal <= 0) throw new Error('Pelanggan ini tidak punya sisa hutang.');
+        if (!(pay > 0)) throw new Error('Nominal pembayaran harus lebih dari 0.');
+        if (pay > remainTotal) throw new Error('Nominal melebihi sisa hutang (' + formatWon(remainTotal) + ').');
+        const r = allocateDebtPayment(orders, pay);
+        r.updates.forEach(u => {
+            const o = STATE.data.orders.find(x => x.id === u.id);
+            if (o) { o.debtPaid = u.debtPaid; o.paymentStatus = u.paid ? 'Paid' : 'Unpaid'; }
+        });
+        STATE.data.debtPayments.push(record(pay, r.allocations));
+        window.recalcLocalDebt(custId);
+        return { paid: pay, remain: remainTotal - pay };
+    };
+
+    const afterDebtPaymentRefresh = async () => {
+        if (!IS_PREVIEW && db) await fetchAllData();
+        window.renderAdminCustomers();
+        if (document.getElementById('admin_history') && !document.getElementById('admin_history').classList.contains('d-none')) window.renderAdminHistory();
+        window.refreshBestSellers();
+    };
+
+    // ---------- Cicil ----------
+    window.openDebtInstallment = custId => {
+        const c = STATE.data.customers.find(x => x.id === custId);
+        if (!c) return;
+        if (!(Number(c.debt) > 0)) return window.customAlert('Pelanggan ini tidak punya sisa hutang.', 'Info');
+        document.getElementById('formDebtInstallment').reset();
+        document.getElementById('cicilCustId').value = custId;
+        document.getElementById('cicilCustName').textContent = c.name;
+        document.getElementById('cicilDebt').textContent = formatWon(c.debt);
+        const debt = Number(c.debt);
+        const quick = [0.25, 0.5, 0.75].map(f => Math.ceil(debt * f / 1000) * 1000).filter((v, i, arr) => v > 0 && v < debt && arr.indexOf(v) === i);
+        document.getElementById('cicilQuick').innerHTML = quick.map(v => `<button type="button" onclick="window.setCicilAmount(${v})" class="brutal-btn bg-white px-3 py-1.5 text-xs flex-1">${formatWon(v)}</button>`).join('')
+            + `<button type="button" onclick="window.setCicilAmount(${debt})" class="brutal-btn bg-main px-3 py-1.5 text-xs flex-1">Semua</button>`;
+        const methods = ['Cash', 'Transfer'].concat(STATE.data.settings.cardEnabled ? ['Kartu'] : []);
+        document.getElementById('cicilMethodWrap').className = `grid gap-2 grid-cols-${methods.length}`;
+        document.getElementById('cicilMethodWrap').innerHTML = methods.map((m, i) => `<label class="brutal-btn bg-white text-center py-2 px-1 cursor-pointer has-[:checked]:bg-main text-xs"><input type="radio" name="cicilMethod" value="${m}" class="hidden" ${i === 0 ? 'checked' : ''}>${m}</label>`).join('');
+        window.updateCicilPreview();
+        window.openModal('modalDebtInstallment');
+        setTimeout(() => { const el = document.getElementById('cicilAmount'); if (el) el.focus(); }, 100);
+    };
+    window.setCicilAmount = v => { document.getElementById('cicilAmount').value = v; window.sfx('select'); window.updateCicilPreview(); };
+    window.updateCicilPreview = () => {
+        const c = STATE.data.customers.find(x => x.id === document.getElementById('cicilCustId').value);
+        const debt = c ? Number(c.debt || 0) : 0;
+        const amt = Math.floor(Number(document.getElementById('cicilAmount').value) || 0);
+        const after = debt - amt;
+        const el = document.getElementById('cicilAfter');
+        el.textContent = after < 0 ? 'Melebihi hutang!' : formatWon(after);
+        el.classList.toggle('text-danger', after < 0);
+    };
+    window.saveDebtInstallment = async e => {
+        e.preventDefault();
+        const custId = document.getElementById('cicilCustId').value;
+        const c = STATE.data.customers.find(x => x.id === custId);
+        const amount = Math.floor(Number(document.getElementById('cicilAmount').value) || 0);
+        const method = document.querySelector('input[name="cicilMethod"]:checked')?.value || 'Cash';
+        const note = document.getElementById('cicilNote').value.trim();
+        if (!c) return;
+        if (amount <= 0) return await window.customAlert('Masukkan nominal cicilan.', 'Peringatan');
+        if (amount > Number(c.debt || 0)) return await window.customAlert('Nominal cicilan melebihi sisa hutang (' + formatWon(c.debt) + ').', 'Peringatan');
+        showLoad();
+        try {
+            const r = await window.recordDebtPayment(custId, amount, method, note, amount >= Number(c.debt) ? 'lunas' : 'cicil');
+            window.closeModal('modalDebtInstallment');
+            await afterDebtPaymentRefresh();
+            hideLoad();
+            window.sfx('success');
+            const msg = r.remain > 0
+                ? `Cicilan ${formatWon(r.paid)} dari ${c.name} tersimpan (${method}).\nSisa hutang: ${formatWon(r.remain)}.\n\nTampilkan nota hutang?`
+                : `Pembayaran ${formatWon(r.paid)} tersimpan. Hutang ${c.name} sudah LUNAS.\n\nTampilkan nota hutang?`;
+            if (await window.customConfirm(msg, 'Cicilan Tersimpan')) window.viewDebtReceipt(custId);
+        } catch (err) {
+            hideLoad();
+            await window.customAlert(err.message, 'Gagal');
+        }
+    };
+
+    // ---------- Lunas ----------
+    window.payDebt = async id => {
+        const cust = STATE.data.customers.find(c => c.id === id);
+        if (!cust || cust.debt <= 0) return await window.customAlert('Tidak ada hutang.', 'Info');
+        if (!(await window.customConfirm(`Lunasi seluruh sisa hutang ${cust.name} sebesar ${formatWon(cust.debt)}?`))) return;
+        showLoad();
+        try {
+            const r = await window.recordDebtPayment(id, 'all', 'Pelunasan', '', 'lunas');
+            await afterDebtPaymentRefresh();
+            hideLoad();
+            window.sfx('success');
+            if (await window.customConfirm(`Hutang ${cust.name} sebesar ${formatWon(r.paid)} sudah LUNAS.\n\nTampilkan nota hutang?`, 'Lunas')) window.viewDebtReceipt(id);
+        } catch (e) {
+            hideLoad();
+            await window.customAlert(e.message, 'Gagal');
+        }
+    };
+
+    // ---------- Nota hutang (rekap + riwayat cicilan) ----------
+    window.buildDebtRecapHtml = custId => {
+        const cust = STATE.data.customers.find(c => c.id === custId);
+        const orders = unpaidDebtOrders(custId);
+        const ids = new Set(orders.map(o => o.id));
+        const row = (l, r, extra = '') => `<div style="display:flex; justify-content:space-between; gap:8px;${extra}"><span>${l}</span><span>${r}</span></div>`;
+        let html = `<div class="receipt-88mm" id="printReceiptCore"><div style="text-align:center; border-bottom:2px dashed black; padding-bottom:12px; margin-bottom:12px;"><h2 style="margin:0; font-size:18px; font-weight:bold; text-transform:uppercase;">${escapeHTML(STATE.data.settings.storeName || 'WARUNG INDONESIA')}</h2><p style="margin:4px 0 0; font-size:12px; font-weight:bold;">NOTA HUTANG - ${escapeHTML(cust?.name || '-')}</p><p style="margin:2px 0 0; font-size:11px; color:#555;">Dicetak ${safeDate(new Date().toISOString())}</p></div>`;
+        if (orders.length === 0) {
+            html += `<div style="text-align:center; font-size:12px; font-weight:bold;">Tidak ada hutang belum lunas.</div>`;
+        } else {
+            html += orders.map(o => {
+                const paid = Number(o.debtPaid || 0);
+                return `<div style="border-bottom:1px dashed #aaa; padding-bottom:8px; margin-bottom:8px; font-size:12px;"><div style="font-weight:bold;">Tgl: ${safeDate(o.date)} (Inv: ${o.id})</div>${(o.items || []).map(i => row(`- ${i.qty}x ${escapeHTML(i.name)}`, formatWon(i.price * i.qty))).join('')}${o.ongkir > 0 ? row('- Ongkir', formatWon(o.ongkir)) : ''}<div style="margin-top:4px; font-weight:bold;">${row('Total:', formatWon(o.total))}${paid > 0 ? row('Sudah dicicil:', '−' + formatWon(paid)) + row('Sisa:', formatWon(window.debtRemain(o))) : ''}</div></div>`;
+            }).join('');
+        }
+        const pays = (STATE.data.debtPayments || [])
+            .filter(p => p.cust_id === custId && (p.allocations || []).some(a => ids.has(a.order_id)))
+            .sort((a, b) => new Date(a.date) - new Date(b.date));
+        if (pays.length) {
+            html += `<div style="font-size:12px; font-weight:bold; margin-top:4px; margin-bottom:4px;">RIWAYAT CICILAN</div>`;
+            html += `<div style="font-size:12px; border-bottom:2px dashed black; padding-bottom:8px; margin-bottom:8px;">` + pays.map(p => {
+                const amt = (p.allocations || []).filter(a => ids.has(a.order_id)).reduce((s2, a) => s2 + Number(a.amount || 0), 0);
+                return row(`${safeDate(p.date)} · ${escapeHTML(p.method || '-')}`, formatWon(amt)) + (p.note ? `<div style="font-size:10px; color:#555; margin-bottom:2px;">${escapeHTML(p.note)}</div>` : '');
+            }).join('') + `</div>`;
+        }
+        const totalAll = orders.reduce((s2, o) => s2 + Number(o.total || 0), 0);
+        const totalPaid = orders.reduce((s2, o) => s2 + Number(o.debtPaid || 0), 0);
+        const remainAll = orders.reduce((s2, o) => s2 + window.debtRemain(o), 0);
+        if (orders.length) {
+            html += `<div style="font-size:12px;">${row('Total hutang:', formatWon(totalAll))}${totalPaid > 0 ? row('Total dicicil:', '−' + formatWon(totalPaid)) : ''}</div>`;
+        }
+        html += `<div style="font-size:16px; font-weight:bold; text-align:right; margin-top:8px; padding-top:8px; border-top:2px solid black;">SISA HUTANG: ${formatWon(remainAll)}</div></div>`;
+        return html;
+    };
+
+    // ---------- Edit / Hapus pelanggan ----------
+    window.openEditCustomer = custId => {
+        const c = STATE.data.customers.find(x => x.id === custId);
+        if (!c) return;
+        document.getElementById('editCustId').value = c.id;
+        document.getElementById('editCustName').value = c.name || '';
+        document.getElementById('editCustWA').value = c.wa || '';
+        document.getElementById('editCustAddress').value = c.address || '';
+        document.getElementById('editCustDebtInfo').textContent = Number(c.debt) > 0 ? `Sisa hutang: ${formatWon(c.debt)}` : 'Tidak ada hutang.';
+        window.openModal('modalEditCustomer');
+    };
+    window.saveEditCustomer = async e => {
+        e.preventDefault();
+        const id = document.getElementById('editCustId').value;
+        const name = document.getElementById('editCustName').value.trim();
+        const wa = document.getElementById('editCustWA').value.trim();
+        const address = document.getElementById('editCustAddress').value.trim();
+        if (!name) return await window.customAlert('Nama pelanggan wajib diisi.', 'Peringatan');
+        if (STATE.data.customers.some(c => c.id !== id && (c.name || '').toLowerCase() === name.toLowerCase())) {
+            return await window.customAlert('Nama sudah dipakai pelanggan lain. Gunakan nama lain.', 'Peringatan');
+        }
+        showLoad();
+        try {
+            if (!IS_PREVIEW && db) {
+                const dup = await db.collection('customers').where('name', '==', name).limit(2).get();
+                if (dup.docs.some(d => d.id !== id)) throw new Error('Nama sudah dipakai pelanggan lain. Gunakan nama lain.');
+                await db.collection('customers').doc(id).update({ name, wa, address });
+                await fetchAllData();
+            } else {
+                const c = STATE.data.customers.find(x => x.id === id);
+                if (c) Object.assign(c, { name, wa, address });
+            }
+            window.closeModal('modalEditCustomer');
+            window.renderAdminCustomers();
+            hideLoad();
+            await window.customAlert('Data pelanggan diperbarui!', 'Sukses');
+        } catch (err) {
+            hideLoad();
+            await window.customAlert(err.message, 'Gagal');
+        }
+    };
+    window.deleteCustomerFromModal = async () => {
+        const id = document.getElementById('editCustId').value;
+        const ok = await window.deleteCustomer(id);
+        if (ok) window.closeModal('modalEditCustomer');
     };
 
     window.deleteCustomer = async (id) => {
         const cust = STATE.data.customers.find(c => c.id === id);
-        if(!cust) return;
-        if(await window.customConfirm(`Yakin ingin menghapus pelanggan ${cust.name}? Akun ini akan dihapus secara permanen.`)) {
-            showLoad();
-            try {
-                if(!IS_PREVIEW && db) {
-                    await db.collection('customers').doc(id).delete();
-                    await fetchAllData();
-                } else {
-                    STATE.data.customers = STATE.data.customers.filter(c => c.id !== id);
-                }
-                hideLoad();
-                await window.customAlert('Pelanggan berhasil dihapus.', 'Sukses');
-                window.renderAdminCustomers();
-            } catch(e) { 
-                hideLoad();
-                await window.customAlert(e.message, 'Gagal'); 
+        if (!cust) return false;
+        const warn = Number(cust.debt) > 0 ? `\n\nPERHATIAN: pelanggan ini masih punya sisa hutang ${formatWon(cust.debt)}.` : '';
+        if (!(await window.customConfirm(`Yakin ingin menghapus pelanggan ${cust.name}? Akun ini akan dihapus secara permanen.${warn}`))) return false;
+        showLoad();
+        try {
+            if (!IS_PREVIEW && db) {
+                const batch = db.batch();
+                batch.delete(db.collection('customers').doc(id));
+                const pSnap = await db.collection('debt_payments').where('cust_id', '==', id).get();
+                pSnap.docs.forEach(d => batch.delete(d.ref));
+                await batch.commit();
+                await fetchAllData();
+            } else {
+                STATE.data.customers = STATE.data.customers.filter(c => c.id !== id);
+                STATE.data.debtPayments = (STATE.data.debtPayments || []).filter(p => p.cust_id !== id);
             }
+            hideLoad();
+            window.renderAdminCustomers();
+            await window.customAlert('Pelanggan berhasil dihapus.', 'Sukses');
+            return true;
+        } catch (e) {
+            hideLoad();
+            await window.customAlert(e.message, 'Gagal');
+            return false;
         }
     };
 
@@ -4960,7 +5307,7 @@
         try { 
             const unpaidOrders = await db.collection('orders').where('cust_id', '==', custId).where('type', '==', 'Hutang').where('payment_status', '==', 'Unpaid').get(); 
             let totalDebt = 0; 
-            unpaidOrders.forEach(doc => { totalDebt += Number(doc.data().total || 0); }); 
+            unpaidOrders.forEach(doc => { const d = doc.data(); totalDebt += Math.max(0, Number(d.total || 0) - Number(d.debt_paid || 0)); });
             await db.collection('customers').doc(custId).update({ debt: totalDebt }); 
         } catch (e) { console.error(e); }
     };
@@ -5007,7 +5354,7 @@
         }).sort((a,b) => new Date(b.date) - new Date(a.date));
 
         const isCashierView = Boolean(STATE.user) && STATE.user.role === 'cashier';
-        const paidSum = arr => arr.reduce((sum, o) => (o.type === 'Hutang' && o.paymentStatus === 'Unpaid') ? sum : sum + o.total, 0);
+        const paidSum = arr => arr.reduce((sum, o) => (o.type === 'Hutang' && o.paymentStatus === 'Unpaid') ? sum + Number(o.debtPaid || 0) : sum + o.total, 0);
         const setVis = (id, on) => { const el = document.getElementById(id); if (el) el.classList.toggle('d-none', !on); };
         setVis('cashierHistoryExtras', isCashierView); setVis('cashierHistoryStats', isCashierView); setVis('adminIncomeBox', !isCashierView);
         const titleEl = document.getElementById('histTitle');
@@ -5030,6 +5377,7 @@
             document.getElementById('adminIncomeTotal').textContent = formatWon(paidSum(filtered));
         }
 
+        window.renderAdminHistoryCards(shown);
         if(shown.length === 0) return document.getElementById('adminHistoryTable').innerHTML = `<tr><td colspan="6" class="p-4 text-center font-bold">Kosong.</td></tr>`;
         document.getElementById('adminHistoryTable').innerHTML = shown.map(o => {
             let custName = o.custId ? (STATE.data.customers.find(x => x.id === o.custId)?.name || 'Umum') : 'Umum'; 
@@ -5038,6 +5386,67 @@
             const editedTag = o.isEdited ? `<div class="mt-0.5"><span class="bg-danger text-white text-[9px] font-bold px-1 rounded">TELAH DIEDIT</span>${o.editedBy ? ` <span class="text-[9px] text-gray-500">oleh ${escapeHTML(o.editedBy)}</span>` : ''}</div>` : '';
             const cashierTag = o.cashierId ? `<div class="text-[9px] text-gray-500">Kasir: ${escapeHTML(window.getCashierNameById(o.cashierId, o.cashierName))}</div>` : '';
             return `<tr class="border-b-2 border-black hover:bg-yellow-50"><td class="p-2 border-r-2 border-black text-xs md:text-sm">${safeDate(o.date)}</td><td class="p-2 border-r-2 border-black text-[10px] md:text-xs">${o.id}${cashierTag}${editedTag}</td><td class="p-2 border-r-2 border-black text-xs md:text-sm">${escapeHTML(custName)}</td><td class="p-2 border-r-2 border-black text-center"><span class="px-2 py-1 text-[9px] md:text-[10px] font-bold ${badgeColor}">${o.type}</span><br><span class="text-[9px] md:text-[10px] ${o.paymentStatus === 'Unpaid' ? 'text-danger' : 'text-success'}">${o.paymentStatus === 'Unpaid' ? 'Belum Lunas' : 'Lunas'}</span></td><td class="p-2 border-r-2 border-black font-bold text-sm">${formatWon(o.total)}</td><td class="p-2 text-center flex gap-1 justify-center flex-wrap w-full md:w-32"><button onclick="window.showReceiptPopup('${o.id}')" class="brutal-btn bg-accent border-2 border-black px-2 py-1 text-[10px] flex-1">Nota</button><button onclick="window.editTransaction('${o.id}')" class="brutal-btn bg-main border-2 border-black px-2 py-1 text-[10px] flex-1">Edit</button>${!isCashier ? `<button onclick="window.deleteTransaction('${o.id}')" class="brutal-btn bg-danger text-white border-2 border-black px-2 py-1 text-[10px] w-full mt-1">Hapus</button>` : ''}</td></tr>`;
+        }).join('');
+    };
+
+    // ---------- Riwayat versi HP: tampilan awal tanggal/jam, total & aksi; ketuk untuk detail ----------
+    STATE.histOpen = STATE.histOpen || new Set();
+    window.toggleHistCard = id => {
+        const el = document.getElementById('hc_' + id);
+        if (!el) return;
+        const open = el.classList.toggle('is-open');
+        if (open) STATE.histOpen.add(id); else STATE.histOpen.delete(id);
+    };
+    window.renderAdminHistoryCards = list => {
+        const wrap = document.getElementById('adminHistoryCards');
+        if (!wrap) return;
+        if (!list.length) { wrap.innerHTML = '<div class="brutal-box bg-white p-4 text-center font-bold">Kosong.</div>'; return; }
+        const isCashier = STATE.user && STATE.user.role === 'cashier';
+        const X = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" class="pointer-events-none"><line x1="5" y1="5" x2="19" y2="19"></line><line x1="19" y1="5" x2="5" y2="19"></line></svg>';
+        const kv = (k, v) => `<div class="hist-kv"><span>${k}</span><span>${v}</span></div>`;
+        wrap.innerHTML = list.map(o => {
+            const [d, t] = safeDate(o.date).split(' ');
+            const custName = o.custId ? (STATE.data.customers.find(x => x.id === o.custId)?.name || 'Umum') : 'Umum';
+            const unpaid = o.type === 'Hutang' && o.paymentStatus === 'Unpaid';
+            const badge = o.type === 'Hutang' ? 'bg-danger text-white' : (o.type === 'Transfer' ? 'bg-accent text-black' : (o.type === 'Kartu' ? 'bg-blue-600 text-white' : 'bg-black text-white'));
+            const debtPaid = Number(o.debtPaid || 0);
+            const items = (o.items || []).map(i => `<div class="hist-kv"><span>${i.qty}x ${escapeHTML(i.name)}</span><span>${formatWon(i.price * i.qty)}</span></div>`).join('');
+            const statusTxt = o.type === 'Hutang'
+                ? (unpaid ? `<span class="text-danger">Belum Lunas</span>` : `<span class="text-success">Lunas</span>`)
+                : 'Lunas';
+            return `<div id="hc_${o.id}" class="hist-card brutal-box bg-white ${STATE.histOpen.has(o.id) ? 'is-open' : ''}">
+                <div class="flex items-center gap-2 p-2.5 cursor-pointer select-none" onclick="window.toggleHistCard('${o.id}')">
+                    <span class="hist-chev">▶</span>
+                    <div class="min-w-0 flex-1">
+                        <div class="text-xs font-bold leading-tight">${d}</div>
+                        <div class="text-[11px] text-gray-600 leading-tight">${t || ''}</div>
+                    </div>
+                    <div class="text-right shrink-0">
+                        <div class="font-bold text-sm leading-tight">${formatWon(o.total)}</div>
+                        ${unpaid ? '<div class="text-[9px] font-bold text-danger leading-tight">BELUM LUNAS</div>' : ''}
+                    </div>
+                    <div class="flex gap-1 shrink-0" onclick="event.stopPropagation()">
+                        <button onclick="window.showReceiptPopup('${o.id}')" class="brutal-btn bg-accent border-2 border-black px-2 h-8 text-[10px]">Nota</button>
+                        <button onclick="window.editTransaction('${o.id}')" class="brutal-btn bg-main border-2 border-black px-2 h-8 text-[10px]">Edit</button>
+                        ${!isCashier ? `<button onclick="window.deleteTransaction('${o.id}')" class="brutal-btn bg-danger text-white border-2 border-black w-8 h-8 inline-flex items-center justify-center" aria-label="Hapus">${X}</button>` : ''}
+                    </div>
+                </div>
+                <div class="hist-detail border-t-2 border-black p-2.5 text-xs space-y-1.5">
+                    ${kv('No. Inv', escapeHTML(o.id))}
+                    ${kv('Pelanggan', escapeHTML(custName))}
+                    ${kv('Tipe', o.orderType === 'Delivery' ? 'Delivery' : 'Dine In / Takeaway')}
+                    ${o.table ? kv('Meja', escapeHTML(o.table)) : ''}
+                    ${kv('Metode', `<span class="px-1.5 py-0.5 text-[10px] font-bold ${badge}">${o.type}</span>`)}
+                    ${kv('Status', statusTxt)}
+                    ${o.type === 'Hutang' && debtPaid > 0 ? kv('Sudah dicicil', formatWon(debtPaid)) + (unpaid ? kv('Sisa hutang', formatWon(window.debtRemain(o))) : '') : ''}
+                    ${o.cashierId ? kv('Kasir', escapeHTML(window.getCashierNameById(o.cashierId, o.cashierName))) : ''}
+                    ${o.isEdited ? kv('Catatan', `<span class="bg-danger text-white text-[9px] font-bold px-1">TELAH DIEDIT</span>${o.editedBy ? ' oleh ' + escapeHTML(o.editedBy) : ''}`) : ''}
+                    <div class="border-t-2 border-dashed border-black pt-1.5 mt-1.5 space-y-1">${items || '<div class="italic">Tanpa item</div>'}</div>
+                    ${Number(o.ongkir) > 0 ? kv('Ongkir', formatWon(o.ongkir)) : ''}
+                    ${o.type === 'Cash' && Number(o.paidAmount) > 0 ? kv('Bayar', formatWon(o.paidAmount)) + kv('Kembalian', formatWon(o.changeAmount)) : ''}
+                    <div class="hist-kv border-t-2 border-black pt-1.5 text-sm"><span>Total</span><span>${formatWon(o.total)}</span></div>
+                </div>
+            </div>`;
         }).join('');
     };
 
@@ -5050,7 +5459,7 @@
         document.getElementById('editTrxDate').value = o.date.slice(0, 16);
         document.getElementById('editTrxOrderType').value = o.orderType; 
         document.getElementById('editTrxType').value = o.type;
-        document.getElementById('editTrxStatus').value = o.paymentStatus; 
+
         document.getElementById('editTrxTotal').value = o.total;
         document.getElementById('editTrxOngkir').value = o.ongkir || 0;
         
@@ -5093,15 +5502,33 @@
         window.renderEditTrxCart(); 
     };
     
+    // Status lunas tidak lagi dipilih manual; ditentukan dari metode bayar & cicilan yang sudah masuk.
+    window.deriveEditPayment = id => {
+        const o = STATE.data.orders.find(x => x.id === id);
+        const type = document.getElementById('editTrxType').value;
+        const total = parseInt(document.getElementById('editTrxTotal').value) || 0;
+        const debtPaid = (o && o.type === 'Hutang') ? Number(o.debtPaid || 0) : 0;
+        if (type !== 'Hutang') return { status: 'Paid', debtPaid };
+        if (!o || o.type !== 'Hutang') return { status: 'Unpaid', debtPaid: 0 };
+        if (o.paymentStatus === 'Paid') return { status: 'Paid', debtPaid };
+        return { status: (total > 0 && debtPaid >= total) ? 'Paid' : 'Unpaid', debtPaid };
+    };
+
     window.saveEditTransaction = async e => {
-        e.preventDefault(); 
-        showLoad(); 
+        e.preventDefault();
         const id = document.getElementById('editTrxId').value;
+        const editOrder = STATE.data.orders.find(x => x.id === id);
+        if (document.getElementById('editTrxType').value === 'Hutang' && !(editOrder && editOrder.custId)) {
+            return await window.customAlert('Transaksi ini tidak punya data pelanggan, jadi tidak bisa diubah ke metode Hutang.', 'Peringatan');
+        }
+        const derived = window.deriveEditPayment(id);
+        showLoad();
         const payload = { 
             date: new Date(document.getElementById('editTrxDate').value).toISOString(), 
             order_type: document.getElementById('editTrxOrderType').value, 
             type: document.getElementById('editTrxType').value, 
-            payment_status: document.getElementById('editTrxStatus').value, 
+            payment_status: derived.status,
+            debt_paid: derived.debtPaid,
             subtotal: parseInt(document.getElementById('editTrxSubtotal').value) || 0, 
             total: parseInt(document.getElementById('editTrxTotal').value) || 0, 
             ongkir: parseInt(document.getElementById('editTrxOngkir').value) || 0, 
@@ -5124,11 +5551,11 @@
                         date: payload.date, orderType: payload.order_type, type: payload.type, 
                         paymentStatus: payload.payment_status, subtotal: payload.subtotal, total: payload.total, 
                         ongkir: payload.ongkir, items: payload.items,
-                        isEdited: true, editedBy: payload.editedBy
-                    }; 
+                        isEdited: true, editedBy: payload.editedBy, debtPaid: payload.debt_paid
+                    };
                     if(o.custId) { 
                         const c = STATE.data.customers.find(c=>c.id===o.custId); 
-                        if(c) c.debt = (c.debt||0) + diffDebt; 
+                        if(c) window.recalcLocalDebt(o.custId);
                     } 
                 } 
             }
@@ -5157,7 +5584,7 @@
             } else { 
                 if(o.custId && o.paymentStatus === 'Unpaid') { 
                     const c = STATE.data.customers.find(c=>c.id===o.custId); 
-                    if(c) c.debt -= o.total; 
+                    if(c) c.debt = Math.max(0, (c.debt || 0) - window.debtRemain(o));
                 } 
                 STATE.data.orders = STATE.data.orders.filter(x=>x.id!==id); 
             }
@@ -7207,7 +7634,7 @@
         (STATE.data.orders || []).forEach(o => {
             const d = new Date(o.date);
             if (isNaN(d) || d < from || d >= to) return;
-            const paid = (o.type === 'Hutang' && o.paymentStatus === 'Unpaid') ? 0 : Number(o.total || 0);
+            const paid = (o.type === 'Hutang' && o.paymentStatus === 'Unpaid') ? Number(o.debtPaid || 0) : Number(o.total || 0);
             const bk = buckets.find(x => d >= x.start && d < x.end);
             if (bk) { bk.revenue += paid; bk.count += 1; }
             revenue += paid; count += 1;
