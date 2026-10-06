@@ -16,7 +16,7 @@
     <title>Warung Mbak Wiwin</title>
     
     <!-- PWA Settings & Standalone Mode -->
-    <meta name="theme-color" content="#FFFFFF">
+    <meta name="theme-color" content="#F6F7FB">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -30,7 +30,9 @@
 
     <!-- Tailwind CSS & Fonts -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     
@@ -43,9 +45,9 @@
         tailwind.config = {
             theme: {
                 extend: {
-                    fontFamily: { sans: ['Space Grotesk', 'sans-serif'] },
-                    colors: { bg: '#f4f4f0', main: '#FFD500', accent: '#00F0FF', danger: '#FF003C', success: '#00FF66', dark: '#000000' },
-                    boxShadow: { 'brutal': '4px 4px 0px 0px rgba(0,0,0,1)', 'brutal-sm': '2px 2px 0px 0px rgba(0,0,0,1)' }
+                    fontFamily: { sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'SF Pro Text', 'Segoe UI', 'Roboto', 'sans-serif'] },
+                    colors: { bg: '#F6F7FB', main: '#3B5BDB', accent: '#0B7FAB', danger: '#D93636', success: '#1E9E5A', dark: '#1A1C22' },
+                    boxShadow: { 'brutal': '0 1px 2px rgba(16,24,40,.05), 0 1px 3px rgba(16,24,40,.06)', 'brutal-sm': '0 1px 2px rgba(16,24,40,.06)' }
                 }
             }
         }
@@ -54,8 +56,8 @@
     <style>
         #gasapp-root {
             position: fixed; inset: 0; width: 100vw; height: 100vh; height: 100dvh;
-            z-index: 999999; background: #f4f4f0; color: #000000;
-            overflow-y: auto; overflow-x: hidden; margin: 0; padding: 0; font-family: 'Space Grotesk', sans-serif;
+            z-index: 999999; background: #F6F7FB; color: #1A1C22;
+            overflow-y: auto; overflow-x: hidden; margin: 0; padding: 0; font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
         }
         .brutal-box { border: 3px solid black; box-shadow: 4px 4px 0px 0px black; background-color: white; transition: all 0.1s ease; }
         .brutal-btn { border: 3px solid black; box-shadow: 4px 4px 0px 0px black; font-weight: bold; text-transform: uppercase; cursor: pointer; transition: all 0.1s ease; }
@@ -591,7 +593,7 @@
         .dash-chart .dash-slot.is-active .dash-hit { fill: rgba(0,0,0,0.05); }
         .dash-chart .dash-line { fill: none; stroke: #2457D6; stroke-width: 2.5; stroke-linejoin: round; stroke-linecap: round; }
         .dash-chart .dash-dot { fill: #fff; stroke: #2457D6; stroke-width: 2; }
-        .dash-chart .dash-txt { fill: #4b5563; font-size: 10px; font-family: 'Space Grotesk', sans-serif; }
+        .dash-chart .dash-txt { fill: #4b5563; font-size: 10px; font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
         .dash-chart .dash-txt-count { fill: #2457D6; }
         .dash-legend-bar { display:inline-block; width: 12px; height: 12px; background: #FFD500; border: 1.5px solid #000; vertical-align: -2px; }
         .dash-legend-line { display:inline-block; width: 16px; height: 0; border-top: 3px solid #2457D6; vertical-align: 3px; }
@@ -701,6 +703,411 @@
         .cicil-box-debt { background: #FEF2F2; }
         [data-theme="dark"] .cicil-box-debt { background: #3A1E24 !important; }
         [data-theme="dark"] .cicil-box-debt #cicilDebt { color: #FFB4BE !important; }
+
+        /* =====================================================================
+           TEMA: CLEAN MINIMALIST / SEMI-FLAT (Material Design 3 + Apple HIG)
+           Lapisan ini menimpa gaya brutalism lama: border tipis, sudut membulat,
+           bayangan lembut (elevation), warna tonal, tipografi bersih.
+           Semua warna diatur lewat token --c-* (light & dark).
+           ===================================================================== */
+        :root {
+            --c-bg: #F6F7FB;
+            --c-surface: #FFFFFF;
+            --c-surface-2: #F1F3F8;
+            --c-surface-3: #E7EAF1;
+            --c-outline: #E0E3EB;
+            --c-outline-strong: #C3C8D4;
+            --c-text: #1A1C22;
+            --c-text-muted: #5E6472;
+
+            --c-primary: #3B5BDB;
+            --c-primary-hover: #3250C8;
+            --c-on-primary: #FFFFFF;
+            --c-primary-container: #E3E8FF;
+            --c-on-primary-container: #1C2A7A;
+            --c-primary-text: #3B5BDB;
+
+            --c-secondary-container: #DCF0FA;
+            --c-on-secondary-container: #0A4A66;
+            --c-secondary: #0B7FAB;
+
+            --c-success: #1E9E5A;
+            --c-success-text: #17834A;
+            --c-success-container: #DDF5E7;
+            --c-on-success-container: #0C4A2A;
+
+            --c-danger: #D93636;
+            --c-danger-text: #C62828;
+            --c-danger-container: #FDE4E4;
+            --c-on-danger-container: #7A1717;
+
+            --c-warning-container: #FFF1D2;
+            --c-on-warning-container: #6B4500;
+
+            --c-inverse: #22252E;
+            --c-on-inverse: #F3F4F8;
+
+            --c-cart-row: #F4F6FF;
+
+            --elev-1: 0 1px 2px rgba(16, 24, 40, 0.05), 0 1px 3px rgba(16, 24, 40, 0.06);
+            --elev-2: 0 2px 4px rgba(16, 24, 40, 0.05), 0 6px 16px rgba(16, 24, 40, 0.08);
+            --elev-3: 0 12px 32px rgba(16, 24, 40, 0.18), 0 2px 6px rgba(16, 24, 40, 0.08);
+            --ring: 0 0 0 3px rgba(59, 91, 219, 0.22);
+
+            --r-sm: 8px;
+            --r-md: 12px;
+            --r-lg: 16px;
+            --r-xl: 22px;
+            --font-ui: "Inter", -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        }
+        [data-theme="dark"] {
+            --c-bg: #0F1115;
+            --c-surface: #171A21;
+            --c-surface-2: #1E222B;
+            --c-surface-3: #272C37;
+            --c-outline: #2C313D;
+            --c-outline-strong: #464D5E;
+            --c-text: #E7E9F0;
+            --c-text-muted: #A2A9B8;
+
+            --c-primary: #5570F0;
+            --c-primary-hover: #6680F5;
+            --c-on-primary: #FFFFFF;
+            --c-primary-container: #24305F;
+            --c-on-primary-container: #DCE2FF;
+            --c-primary-text: #9DB0FF;
+
+            --c-secondary-container: #10384A;
+            --c-on-secondary-container: #CDEEFF;
+            --c-secondary: #6CC4EC;
+
+            --c-success: #23955A;
+            --c-success-text: #63D69B;
+            --c-success-container: #123B28;
+            --c-on-success-container: #CFF5E0;
+
+            --c-danger: #D44848;
+            --c-danger-text: #FF8C8C;
+            --c-danger-container: #47191C;
+            --c-on-danger-container: #FFDADA;
+
+            --c-warning-container: #3F3112;
+            --c-on-warning-container: #FFE3A6;
+
+            --c-inverse: #E7E9F0;
+            --c-on-inverse: #171A21;
+
+            --c-cart-row: #1D2338;
+
+            --elev-1: 0 1px 2px rgba(0, 0, 0, 0.35);
+            --elev-2: 0 4px 14px rgba(0, 0, 0, 0.35);
+            --elev-3: 0 16px 40px rgba(0, 0, 0, 0.55);
+            --ring: 0 0 0 3px rgba(125, 147, 255, 0.28);
+
+            /* Variabel dark-mode lama dipetakan ke token baru supaya aturan lama ikut berganti warna */
+            --dk-bg: var(--c-bg);
+            --dk-surface: var(--c-surface);
+            --dk-surface-2: var(--c-surface-2);
+            --dk-border: var(--c-outline);
+            --dk-text: var(--c-text);
+            --dk-text-muted: var(--c-text-muted);
+            --dk-main: var(--c-primary-container);
+            --dk-danger: var(--c-danger-container);
+        }
+
+        /* ---------- Dasar ---------- */
+        #gasapp-root, [data-theme="dark"] #gasapp-root {
+            background: var(--c-bg) !important; color: var(--c-text);
+            font-family: var(--font-ui) !important;
+            -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
+            font-feature-settings: "cv11", "ss01";
+        }
+        #gasapp-root button, #gasapp-root input, #gasapp-root select, #gasapp-root textarea { font-family: inherit; }
+        #gasapp-root h1, #gasapp-root h2, #gasapp-root h3, #gasapp-root h4 { letter-spacing: -0.015em; }
+        #gasapp-root .uppercase { text-transform: none; }
+        #gasapp-root :is(.text-\[9px\], .text-\[10px\], .text-\[11px\]).uppercase { text-transform: uppercase; letter-spacing: 0.05em; }
+        #gasapp-root .font-black { font-weight: 800; }
+        #gasapp-root .italic:not(.product-info-badge) { font-style: normal; }
+        #gasapp-root input[type="checkbox"], #gasapp-root input[type="radio"] { accent-color: var(--c-primary); }
+
+        /* Hilangkan semua bayangan keras khas brutalism, lalu pasang elevation lembut di elemen tertentu */
+        #gasapp-root *:not(.receipt-88mm) { box-shadow: none !important; }
+        #gasapp-root .translate-x-\[2px\], #gasapp-root .translate-y-\[2px\] { --tw-translate-x: 0 !important; --tw-translate-y: 0 !important; }
+
+        /* Border: hitam tebal -> garis tipis netral */
+        #gasapp-root .border-black, #gasapp-root .border-t-black, #gasapp-root .border-b-black, #gasapp-root .border-l-dark { border-color: var(--c-outline) !important; }
+        #gasapp-root :is(.border-2, .border-3, .border-4, .border-\[3px\]) { border-width: 1px !important; }
+        #gasapp-root :is(.border-b-2, .border-b-4) { border-bottom-width: 1px !important; }
+        #gasapp-root :is(.border-t-2, .border-t-4) { border-top-width: 1px !important; }
+        #gasapp-root :is(.border-r-2, .border-r-4) { border-right-width: 1px !important; }
+        #gasapp-root :is(.border-l-2) { border-left-width: 1px !important; }
+        #gasapp-root :is(.border-l-4, .border-l-8) { border-left-width: 4px !important; }
+        #gasapp-root .border-dashed { border-style: dashed; }
+        #gasapp-root :is(.border, .border-2, .border-3, .border-4, .border-\[3px\]):not(td):not(th):not(tr):not(.rounded-full):not(.receipt-88mm) { border-radius: var(--r-sm); }
+
+        /* ---------- Permukaan (card) ---------- */
+        #gasapp-root .brutal-box {
+            border: 1px solid var(--c-outline) !important;
+            border-radius: var(--r-lg);
+            background-color: var(--c-surface);
+            box-shadow: var(--elev-1) !important;
+        }
+        #gasapp-root .bg-white { background-color: var(--c-surface) !important; }
+        #gasapp-root :is(.bg-gray-50, .bg-gray-100) { background-color: var(--c-surface-2) !important; }
+        #gasapp-root :is(.bg-gray-200, .bg-gray-300) { background-color: var(--c-surface-3) !important; }
+        #gasapp-root .brutal-box:has(> table), #gasapp-root .overflow-x-auto.brutal-box { overflow: hidden; overflow-x: auto; }
+
+        /* ---------- Tombol ---------- */
+        #gasapp-root .brutal-btn {
+            border: 1px solid var(--c-outline-strong) !important;
+            border-radius: var(--r-md);
+            background-color: var(--c-surface);
+            color: var(--c-text);
+            font-weight: 600; text-transform: none; letter-spacing: 0.005em;
+            transition: background-color .15s ease, color .15s ease, border-color .15s ease, transform .08s ease, filter .15s ease;
+            -webkit-tap-highlight-color: transparent;
+        }
+        #gasapp-root .brutal-btn:hover:not(:disabled) { filter: brightness(0.97); }
+        [data-theme="dark"] #gasapp-root .brutal-btn:hover:not(:disabled) { filter: brightness(1.12); }
+        #gasapp-root .brutal-btn:active:not(:disabled) { transform: scale(0.97); filter: brightness(0.94); }
+        #gasapp-root .brutal-btn:focus-visible { outline: none; box-shadow: var(--ring) !important; }
+        #gasapp-root .brutal-btn:disabled { opacity: 0.42; cursor: not-allowed; }
+
+        /* Filled primary (dulu kuning) & tombol "terpilih" (dulu hitam) */
+        #gasapp-root :is(.brutal-btn.bg-main, .brutal-btn.bg-black, [class~="!bg-main"], [class~="!bg-black"]) {
+            background-color: var(--c-primary) !important; color: var(--c-on-primary) !important; border-color: transparent !important;
+        }
+        /* Tonal secondary (dulu cyan) */
+        #gasapp-root :is(.brutal-btn.bg-accent, [class~="!bg-accent"]) {
+            background-color: var(--c-secondary-container) !important; color: var(--c-on-secondary-container) !important; border-color: transparent !important;
+        }
+        /* Filled success & danger */
+        #gasapp-root .brutal-btn.bg-success { background-color: var(--c-success) !important; color: #fff !important; border-color: transparent !important; }
+        #gasapp-root :is(.brutal-btn.bg-danger, [class~="!bg-danger"]) { background-color: var(--c-danger) !important; color: #fff !important; border-color: transparent !important; }
+        #gasapp-root .brutal-btn:is(.bg-gray-200, .bg-gray-300) { background-color: var(--c-surface-3) !important; color: var(--c-text-muted) !important; border-color: transparent !important; }
+        /* Anak elemen di dalam tombol berwarna ikut warna tombol (kecuali yang punya latar sendiri) */
+        #gasapp-root :is(.brutal-btn.bg-main, .brutal-btn.bg-black, .brutal-btn.bg-accent, .brutal-btn.bg-success, .brutal-btn.bg-danger, [class~="!bg-main"], [class~="!bg-danger"], [class~="!bg-black"], [class~="!bg-accent"]) *:not([class*="bg-"]) { color: inherit !important; }
+
+        /* Pilihan radio/checkbox berbentuk tombol: terpilih = tonal primary + garis primary */
+        #gasapp-root :is(.has-\[\:checked\]\:bg-main, .has-\[\:checked\]\:bg-danger, .has-\[\:checked\]\:bg-success, .has-\[\:checked\]\:bg-accent, .has-\[\:checked\]\:bg-violet-300):has(:checked) {
+            background-color: var(--c-primary-container) !important;
+            color: var(--c-on-primary-container) !important;
+            border-color: var(--c-primary) !important;
+            box-shadow: inset 0 0 0 1px var(--c-primary) !important;
+        }
+        #gasapp-root :is(.has-\[\:checked\]\:bg-main, .has-\[\:checked\]\:bg-danger, .has-\[\:checked\]\:bg-success, .has-\[\:checked\]\:bg-accent, .has-\[\:checked\]\:bg-violet-300):has(:checked) * { color: inherit !important; }
+
+        /* ---------- Warna tonal untuk elemen non-tombol ---------- */
+        #gasapp-root .bg-main:not(.brutal-btn):not(.rounded-full) { background-color: var(--c-primary-container) !important; color: var(--c-on-primary-container) !important; }
+        #gasapp-root .bg-accent:not(.brutal-btn) { background-color: var(--c-secondary-container) !important; color: var(--c-on-secondary-container) !important; }
+        #gasapp-root .bg-success:not(.brutal-btn) { background-color: var(--c-success-container) !important; color: var(--c-on-success-container) !important; }
+        #gasapp-root .bg-danger:not(.brutal-btn):not(.rounded-full) { background-color: var(--c-danger-container) !important; color: var(--c-on-danger-container) !important; }
+        #gasapp-root .bg-danger.rounded-full:not(.brutal-btn) { background-color: var(--c-danger) !important; color: #fff !important; }
+        #gasapp-root .bg-black:not(.brutal-btn):not(.cook-icon-circle) { background-color: var(--c-inverse) !important; color: var(--c-on-inverse) !important; }
+        #gasapp-root :is(.bg-main, .bg-accent, .bg-success, .bg-danger, .bg-black):not(.brutal-btn) :is(.text-white, .text-black):not([class*="bg-"]) { color: inherit !important; }
+        #gasapp-root :is(.bg-yellow-50, .bg-yellow-100, .bg-yellow-200) { background-color: var(--c-warning-container) !important; }
+        #gasapp-root :is(.bg-purple-50, .bg-purple-100, .bg-violet-100) { background-color: #F1ECFF !important; }
+        [data-theme="dark"] #gasapp-root :is(.bg-purple-50, .bg-purple-100, .bg-violet-100) { background-color: #2A2342 !important; }
+        #gasapp-root :is(.bg-blue-50) { background-color: var(--c-primary-container) !important; }
+        #gasapp-root :is(.bg-green-50, .bg-green-100) { background-color: var(--c-success-container) !important; }
+        #gasapp-root :is(.bg-red-50, .bg-red-100) { background-color: var(--c-danger-container) !important; }
+        [data-theme="dark"] #gasapp-root :is(.bg-yellow-50, .bg-yellow-100, .bg-yellow-200, .bg-blue-50, .bg-green-50, .bg-green-100, .bg-red-50, .bg-red-100) { color: var(--c-text); }
+
+        /* Warna teks status */
+        #gasapp-root .text-danger { color: var(--c-danger-text) !important; }
+        #gasapp-root .text-success { color: var(--c-success-text) !important; }
+        #gasapp-root .text-blue-700 { color: var(--c-primary-text) !important; }
+        #gasapp-root :is(.text-gray-400, .text-gray-500, .text-gray-600, .text-gray-700) { color: var(--c-text-muted) !important; }
+
+        /* Hover baris / kartu */
+        #gasapp-root :is(.hover\:bg-yellow-50, .hover\:bg-yellow-100, .hover\:bg-gray-100, .hover\:bg-gray-200):hover { background-color: var(--c-surface-2) !important; color: inherit !important; }
+        #gasapp-root .hover\:bg-yellow-400:hover { background-color: var(--c-primary-hover) !important; }
+        #gasapp-root .hover\:bg-red-500:hover { background-color: var(--c-danger-container) !important; color: var(--c-on-danger-container) !important; }
+
+        /* ---------- Input ---------- */
+        #gasapp-root .brutal-input, #gasapp-root select.brutal-input {
+            border: 1px solid var(--c-outline-strong) !important;
+            border-radius: var(--r-md);
+            background-color: var(--c-surface) !important;
+            color: var(--c-text) !important;
+            transition: border-color .15s ease, box-shadow .15s ease;
+        }
+        #gasapp-root .brutal-input:hover { border-color: var(--c-text-muted) !important; }
+        #gasapp-root .brutal-input:focus, [data-theme="dark"] #gasapp-root .brutal-input:focus {
+            background-color: var(--c-surface) !important;
+            border-color: var(--c-primary) !important;
+            box-shadow: var(--ring) !important;
+        }
+        #gasapp-root ::placeholder { color: var(--c-text-muted); opacity: 0.75; }
+
+        /* ---------- Header & area sticky ---------- */
+        #gasapp-root header.sticky {
+            background-color: rgba(246,247,251,0.85) !important;
+            background-color: color-mix(in srgb, var(--c-bg) 82%, transparent) !important;
+            -webkit-backdrop-filter: saturate(180%) blur(16px); backdrop-filter: saturate(180%) blur(16px);
+            border-bottom: 1px solid var(--c-outline) !important;
+        }
+        #gasapp-root #headerLogo { border-radius: var(--r-md); border-color: var(--c-outline) !important; }
+        #gasapp-root #headerTitle { font-weight: 700; letter-spacing: -0.02em; }
+        #gasapp-root #adminTabBar,
+        #gasapp-root #posProductsCol > div:nth-child(2),
+        #gasapp-root #posProductsCol > div:nth-child(3),
+        #gasapp-root #pagePublic > div:first-of-type + div,
+        #gasapp-root #pagePublic #publicSearchWrap,
+        #gasapp-root #custCatalogArea > div:first-child,
+        #gasapp-root #custCatalogArea #custSearchWrap {
+            background-color: var(--c-bg) !important;
+            -webkit-backdrop-filter: none !important; backdrop-filter: none !important;
+        }
+        #gasapp-root #storeStatusBadge, #gasapp-root #storeCloseStatusBadge {
+            clip-path: none !important; border: 0 !important; border-radius: 999px !important;
+            padding: 1px 7px !important; font-style: normal !important; font-weight: 600 !important; letter-spacing: 0;
+        }
+        #gasapp-root #storeStatusBadge.bg-emerald-600 { background-color: var(--c-success-container) !important; color: var(--c-on-success-container) !important; }
+        #gasapp-root :is(#storeStatusBadge, #storeCloseStatusBadge).bg-rose-600 { background-color: var(--c-danger-container) !important; color: var(--c-on-danger-container) !important; }
+        #gasapp-root #storeStatusBadge.bg-amber-200 { background-color: var(--c-warning-container) !important; color: var(--c-on-warning-container) !important; }
+
+        /* ---------- Tab Kelola Admin & chip kategori (pill) ---------- */
+        #gasapp-root .admin-tab {
+            border-radius: 999px; border-color: transparent !important; background-color: transparent !important;
+            color: var(--c-text-muted) !important; font-weight: 600;
+        }
+        #gasapp-root .admin-tab:hover { background-color: var(--c-surface-2) !important; filter: none; }
+        #gasapp-root .admin-tab.bg-main {
+            background-color: var(--c-primary-container) !important; color: var(--c-on-primary-container) !important;
+        }
+        #gasapp-root #adminTabBar { border-bottom: 1px solid var(--c-outline); }
+        @media (max-width: 767px) { #gasapp-root .admin-tab { font-size: 13px !important; padding: 0.45rem 0.9rem !important; } }
+        #gasapp-root :is(#adminPosCategoryFilter, #publicCategoryFilter, #custCategoryFilter) .brutal-btn,
+        #gasapp-root :is(.dash-filter-btn, .fin-mode) { border-radius: 999px; }
+        #gasapp-root :is(#adminPosCategoryFilter, #publicCategoryFilter, #custCategoryFilter) .brutal-btn:not(.bg-black) { background-color: var(--c-surface) !important; color: var(--c-text) !important; }
+
+        /* ---------- Modal ---------- */
+        #gasapp-root .modal-backdrop, [data-theme="dark"] #gasapp-root .modal-backdrop {
+            background: rgba(12, 14, 20, 0.45) !important;
+            -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
+        }
+        #gasapp-root .modal-backdrop > .brutal-box, #gasapp-root .modal-backdrop .brutal-box.max-w-sm, #gasapp-root .modal-backdrop .brutal-box.max-w-md {
+            border-radius: var(--r-xl); box-shadow: var(--elev-3) !important; border-color: transparent !important;
+        }
+        #gasapp-root .modal-backdrop .bg-main.border-b-4, #gasapp-root .modal-backdrop .border-b-4.bg-main { background-color: var(--c-surface) !important; color: var(--c-text) !important; }
+        #gasapp-root .modal-backdrop button.absolute.top-2.right-2 {
+            width: 34px; height: 34px; padding: 0 !important; border: 0 !important; border-radius: 999px !important;
+            background-color: var(--c-surface-2) !important; color: var(--c-text-muted) !important;
+        }
+
+        /* ---------- Loader ---------- */
+        #gasapp-root #globalLoader, [data-theme="dark"] #globalLoader { background: color-mix(in srgb, var(--c-bg) 88%, transparent) !important; color: var(--c-text); }
+        #globalLoader { background: rgba(246, 247, 251, 0.88); }
+        [data-theme="dark"] #globalLoader { background: rgba(15, 17, 21, 0.88) !important; }
+        .spinner { border: 4px solid var(--c-surface-3) !important; border-top-color: var(--c-primary) !important; width: 44px; height: 44px; }
+
+        /* ---------- Tabel ---------- */
+        #gasapp-root thead tr { background-color: var(--c-surface-2) !important; color: var(--c-text-muted) !important; border-bottom: 1px solid var(--c-outline) !important; }
+        #gasapp-root thead th { font-weight: 600; font-size: 12px; letter-spacing: 0.01em; color: var(--c-text-muted) !important; }
+        #gasapp-root table :is(td, th) { border-right-color: transparent !important; }
+        #gasapp-root tbody tr { border-color: var(--c-outline) !important; }
+
+        /* ---------- Kartu produk ---------- */
+        #gasapp-root .product-card { overflow: hidden; transition: transform .15s ease, box-shadow .15s ease; }
+        #gasapp-root .product-card:hover { background-color: var(--c-surface) !important; box-shadow: var(--elev-2) !important; }
+        #gasapp-root .product-card.active\:scale-95:active { transform: scale(0.97); }
+        #gasapp-root .product-card-img { border-bottom: 0 !important; }
+        #gasapp-root .product-card-price { border: 0 !important; border-radius: 999px !important; background-color: rgba(255,255,255,0.92) !important; color: var(--c-text) !important; -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); font-weight: 700; }
+        [data-theme="dark"] #gasapp-root .product-card-price { background-color: rgba(23,26,33,0.85) !important; color: var(--c-text) !important; }
+        #gasapp-root .product-card-btn { border: 0 !important; border-radius: var(--r-md) !important; text-transform: none !important; font-weight: 600 !important; }
+        #gasapp-root .product-card-btn.bg-main { background-color: var(--c-primary-container) !important; color: var(--c-on-primary-container) !important; }
+        #gasapp-root .product-info-badge { background: var(--c-primary) !important; color: #fff !important; border: 0 !important; font-family: Georgia, serif; }
+
+        /* Baris item keranjang */
+        #gasapp-root .cart-item-row, [data-theme="dark"] #gasapp-root .cart-item-row {
+            background-color: var(--c-cart-row) !important; border: 1px solid var(--c-outline) !important;
+            border-left: 3px solid var(--c-primary) !important; border-radius: var(--r-md) !important;
+        }
+        #gasapp-root .cart-item-row h4 { color: var(--c-text) !important; }
+        #gasapp-root .cart-item-row .cart-item-price { color: var(--c-primary-text) !important; }
+
+        /* Tombol keranjang melayang (FAB) */
+        #gasapp-root :is(#btnPosCart, #btnCustCartFloat) { box-shadow: var(--elev-3) !important; border-radius: 999px !important; }
+
+        /* ---------- Pengaturan ---------- */
+        #gasapp-root .set-card { border: 1px solid var(--c-outline) !important; background: var(--c-surface) !important; border-radius: var(--r-lg); box-shadow: var(--elev-1) !important; }
+        #gasapp-root .set-title { text-transform: none; font-size: 15px; font-weight: 700; border-bottom: 1px solid var(--c-outline) !important; padding-bottom: 0.5rem; }
+        #gasapp-root .set-hint { font-style: normal; color: var(--c-text-muted); }
+        #gasapp-root .instant-on { outline: 2px solid var(--c-primary) !important; outline-offset: 2px; }
+        #gasapp-root #adminSettingsBox form > button[type="submit"],
+        #gasapp-root #cashierSelfSettingsWrap form button[type="submit"] { box-shadow: var(--elev-3) !important; }
+
+        /* ---------- Poster splash ---------- */
+        #gasapp-root .poster-slide-float { background: linear-gradient(to top, var(--c-bg) 55%, transparent) !important; }
+        #gasapp-root .poster-slide-track { background: var(--c-primary-container) !important; color: var(--c-on-primary-container); border: 0 !important; box-shadow: var(--elev-2) !important; }
+        #gasapp-root .poster-slide-thumb { background: var(--c-primary) !important; color: #fff; }
+        #gasapp-root .poster-slide-label { font-style: normal; font-weight: 600; }
+
+        /* ---------- Dashboard ---------- */
+        #gasapp-root .dash-chart .dash-grid { stroke: var(--c-outline); stroke-dasharray: 0; }
+        #gasapp-root .dash-chart .dash-axis { stroke: var(--c-outline-strong); stroke-width: 1; }
+        #gasapp-root .dash-chart .dash-bar { fill: var(--c-primary); stroke: none; opacity: 0.85; }
+        #gasapp-root .dash-chart .dash-slot.is-active .dash-bar { fill: var(--c-primary); opacity: 1; }
+        #gasapp-root .dash-chart .dash-slot.is-active .dash-hit { fill: var(--c-surface-2); }
+        #gasapp-root .dash-chart .dash-line { stroke: #12A0A0; }
+        #gasapp-root .dash-chart .dash-dot { fill: var(--c-surface); stroke: #12A0A0; }
+        #gasapp-root .dash-chart .dash-txt { fill: var(--c-text-muted); font-family: var(--font-ui); }
+        #gasapp-root .dash-chart .dash-txt-count { fill: #12A0A0; }
+        [data-theme="dark"] #gasapp-root .dash-chart .dash-line, [data-theme="dark"] #gasapp-root .dash-chart .dash-dot { stroke: #4FD1C5; }
+        [data-theme="dark"] #gasapp-root .dash-chart .dash-txt-count { fill: #4FD1C5; }
+        [data-theme="dark"] #gasapp-root .dash-chart .dash-bar { fill: #7C93FF; }
+        #gasapp-root .dash-legend-bar { background: var(--c-primary) !important; border: 0 !important; border-radius: 3px; }
+        #gasapp-root .dash-legend-line { border-top-color: #12A0A0 !important; border-radius: 2px; }
+        [data-theme="dark"] #gasapp-root .dash-legend-line { border-top-color: #4FD1C5 !important; }
+        #gasapp-root .dash-rank { border: 0 !important; border-radius: 999px; background: var(--c-surface-2) !important; color: var(--c-text-muted); }
+        #gasapp-root .dash-rank.r1 { background: #FFE8A3 !important; color: #6B4A00; }
+        #gasapp-root .dash-rank.r2 { background: #E3E7EE !important; color: #3B4252; }
+        #gasapp-root .dash-rank.r3 { background: #F8D9BF !important; color: #6A3A12; }
+        [data-theme="dark"] #gasapp-root .dash-rank.r1 { background: #4A3B0E !important; color: #FFE3A6; }
+        [data-theme="dark"] #gasapp-root .dash-rank.r2 { background: #313746 !important; color: #DDE2EC; }
+        [data-theme="dark"] #gasapp-root .dash-rank.r3 { background: #46301E !important; color: #F8D9BF; }
+        #gasapp-root .dash-meter { border: 0 !important; border-radius: 999px; background: var(--c-surface-3) !important; overflow: hidden; }
+        #gasapp-root .dash-meter > span { background: var(--c-primary) !important; border-radius: 999px; }
+        #gasapp-root .dash-sold { border: 0 !important; border-radius: 999px; background: var(--c-success-container) !important; color: var(--c-on-success-container) !important; }
+        #gasapp-root .dash-pager-btn { border-radius: 999px !important; }
+
+        /* ---------- Riwayat, pelanggan, catatan keuangan ---------- */
+        #gasapp-root :is(.hist-card, .cust-card).is-open { border-left: 4px solid var(--c-primary) !important; }
+        #gasapp-root .hist-chev { color: var(--c-text-muted); }
+        #gasapp-root .hist-kv > span:first-child { color: var(--c-text-muted); }
+        #gasapp-root .cust-head, #gasapp-root .cust-head.bg-danger { background-color: var(--c-surface-2) !important; color: var(--c-text-muted) !important; border: 1px solid var(--c-outline) !important; border-radius: var(--r-md); }
+        #gasapp-root .cust-actions .brutal-btn { border-radius: var(--r-sm); font-weight: 600; letter-spacing: 0; }
+        #gasapp-root .prod-cat-chip { border: 0 !important; border-radius: 999px; background: var(--c-surface-2) !important; color: var(--c-text-muted) !important; padding: 2px 9px; }
+        #gasapp-root .cicil-info { color: var(--c-text-muted); font-weight: 500; }
+        #gasapp-root .cicil-box-debt, [data-theme="dark"] #gasapp-root .cicil-box-debt { background: var(--c-danger-container) !important; }
+        #gasapp-root .fin-row { border: 1px solid var(--c-outline); border-left: 4px solid var(--fin-bar); border-radius: var(--r-lg); background: var(--c-surface); box-shadow: var(--elev-1) !important; }
+        #gasapp-root .fin-row.is-note { border-style: dashed; border-left-style: solid; background: var(--c-surface-2); }
+        #gasapp-root .fin-badge { border-radius: 999px; padding: 2px 9px; font-size: 10px; font-weight: 700; letter-spacing: 0.03em; }
+        #gasapp-root .fin-amt { color: var(--fin-amt); }
+        #gasapp-root .fin-pemasukan { --fin-bar: var(--c-success); --fin-amt: var(--c-success-text); }
+        #gasapp-root .fin-pengeluaran { --fin-bar: var(--c-danger); --fin-amt: var(--c-danger-text); }
+        #gasapp-root .fin-catatan { --fin-bar: #7C5CDB; --fin-amt: #6D4BC9; }
+        [data-theme="dark"] #gasapp-root .fin-catatan { --fin-amt: #B9A4FF; }
+        #gasapp-root .fin-badge.fin-pemasukan { background: var(--c-success-container); color: var(--c-on-success-container); }
+        #gasapp-root .fin-badge.fin-pengeluaran { background: var(--c-danger-container); color: var(--c-on-danger-container); }
+        #gasapp-root .fin-badge.fin-catatan { background: #ECE5FF; color: #4A2FA0; }
+        [data-theme="dark"] #gasapp-root .fin-badge.fin-catatan { background: #2A2342; color: #DCD0FF; }
+        #gasapp-root .info-stripe { border-left: 4px solid var(--c-secondary) !important; }
+        #gasapp-root .fin-bar .fin-sel { background-color: var(--c-surface) !important; color: var(--c-text) !important; }
+
+        /* Kombinasi tombol masak lama */
+        #gasapp-root .kirim-keranjang-btn { background-color: var(--c-success-container) !important; color: var(--c-on-success-container) !important; }
+        #gasapp-root .cook-icon-circle { background: var(--c-inverse); }
+        #gasapp-root .cook-icon-circle.is-cooking { background: var(--c-primary); }
+
+        /* Judul halaman yang dulu berupa blok kuning tebal (mis. KASIR) -> judul bersih */
+        #gasapp-root h2.bg-main:not(.brutal-btn):not(.rounded-full), [data-theme="dark"] #gasapp-root h2.bg-main:not(.brutal-btn):not(.rounded-full) {
+            background-color: transparent !important; color: var(--c-text) !important; border: 0 !important;
+            padding-left: 0 !important; letter-spacing: -0.02em;
+        }
+        /* Tombol ikon kecil (tema & suara) */
+        #gasapp-root :is(.theme-toggle-btn, .sfx-toggle-btn) { border-radius: 999px !important; background-color: var(--c-surface) !important; }
     </style>
 </head>
 <body>
@@ -719,7 +1126,7 @@
         <header class="border-b-4 border-black bg-white/90 backdrop-blur-md sticky top-0 z-40 no-print shadow-sm">
             <div class="container mx-auto px-3 md:px-4 py-2 min-h-[60px] md:min-h-[70px] flex items-center justify-between">
                 <div class="flex items-center gap-2 md:gap-4 cursor-pointer" onclick="window.goHome()">
-                    <img id="headerLogo" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='60' height='60'><rect width='60' height='60' fill='%23FFD500'/><text x='50%' y='60%' font-size='22' font-weight='bold' text-anchor='middle' fill='black'>WI</text></svg>" class="w-10 h-10 md:w-14 md:h-14 border-2 border-black object-cover shrink-0 shadow-brutal-sm" alt="Logo">
+                    <img id="headerLogo" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='60' height='60'><rect width='60' height='60' rx='14' fill='%233B5BDB'/><text x='50%' y='62%' font-size='22' font-weight='700' text-anchor='middle' fill='white' font-family='sans-serif'>WI</text></svg>" class="w-10 h-10 md:w-14 md:h-14 border-2 border-black object-cover shrink-0 shadow-brutal-sm" alt="Logo">
                     <h1 id="headerTitle" class="text-sm md:text-2xl font-bold uppercase tracking-tight leading-tight">WARUNG<br><span class="text-[10px] md:text-xs text-gray-600 leading-none">INDONESIA</span></h1>
                     <div class="relative flex flex-col md:gap-0.5 items-start">
                         <div id="storeStatusBadge" class="hidden italic font-bold text-[8px] md:text-[10px] px-1 py-0 leading-tight border border-black tracking-tight whitespace-nowrap shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] z-10 [clip-path:polygon(0%_0%,100%_0%,96%_100%,0%_100%)]"></div>
@@ -2072,7 +2479,7 @@
     // Solusi 100% mandiri untuk Blogger tanpa perlu upload manifest.json
     (function initPWAManifest() {
         try {
-            const svgIcon = `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect width='512' height='512' fill='%23FFD500'/><rect x='32' y='32' width='448' height='448' fill='none' stroke='black' stroke-width='24'/><text x='50%' y='58%' font-size='180' font-weight='900' text-anchor='middle' fill='black' font-family='sans-serif'>WI</text></svg>`;
+            const svgIcon = `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect width='512' height='512' rx='112' fill='%233B5BDB'/><text x='50%' y='60%' font-size='190' font-weight='700' text-anchor='middle' fill='white' font-family='sans-serif'>WI</text></svg>`;
             const svgDataUri = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svgIcon);
 
             const manifestContent = {
@@ -2082,7 +2489,7 @@
                 start_url: window.location.href,
                 display: "standalone",
                 background_color: "#f4f4f0",
-                theme_color: "#FFD500",
+                theme_color: "#3B5BDB",
                 icons: [
                     { src: svgDataUri, sizes: "192x192 512x512", type: "image/svg+xml" }
                 ]
@@ -2245,8 +2652,15 @@
         const next = current === 'dark' ? 'light' : 'dark';
         try { localStorage.setItem('wi_theme', next); } catch(e) {}
         document.documentElement.setAttribute('data-theme', next === 'dark' ? 'dark' : 'light');
+        window.syncThemeColorMeta();
         window.updateThemeToggleIcons();
     };
+    // Warna status bar HP mengikuti tema terang/gelap
+    window.syncThemeColorMeta = () => {
+        const m = document.querySelector('meta[name="theme-color"]');
+        if (m) m.setAttribute('content', document.documentElement.getAttribute('data-theme') === 'dark' ? '#0F1115' : '#F6F7FB');
+    };
+    window.syncThemeColorMeta();
 
     // Hash satu arah (SHA-256) untuk password. Password TIDAK PERNAH disimpan mentah lagi ke Firestore/localStorage;
     // yang tersimpan hanya hash-nya, sehingga kalaupun dokumen settings/customers/cashier_config bisa terbaca
@@ -6860,7 +7274,7 @@
             return;
         }
         wrap.innerHTML = list.map(c => `
-            <div class="brutal-box bg-white p-4 flex gap-3 sm:gap-4 items-start" style="border-left:12px solid #00F0FF;">
+            <div class="brutal-box bg-white p-4 flex gap-3 sm:gap-4 items-start info-stripe">
                 <img src="${c.photo || 'https://placehold.co/100x100?text=Kasir'}" class="w-16 h-16 sm:w-20 sm:h-20 object-cover border-2 border-black shrink-0">
                 <div class="flex-1 min-w-0 space-y-1">
                     <div class="font-bold text-base sm:text-lg uppercase break-words leading-tight">${escapeHTML(c.username)}</div>
@@ -7306,17 +7720,17 @@
     const finRowHtml = n => {
         const t = FIN_TYPES[n.type];
         const isNote = n.type === 'catatan';
-        return `<div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 p-3" style="background:${t.bg};border:3px ${isNote ? 'dashed' : 'solid'} #000;border-left:12px solid ${t.bar};box-shadow:4px 4px 0 #000;">
+        return `<div class="fin-row fin-${n.type} ${isNote ? 'is-note' : ''} flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 p-3">
             <div class="flex-1 min-w-0">
                 <div class="flex items-center gap-2 flex-wrap mb-1">
-                    <span class="px-2 py-0.5 text-[10px] font-bold border-2 border-black uppercase" style="${t.badge}">${t.icon} ${t.label}</span>
+                    <span class="fin-badge fin-${n.type}">${t.icon} ${t.label}</span>
                     ${isNote ? '<span class="text-[10px] font-bold italic text-violet-700">tidak dihitung dalam total</span>' : ''}
                 </div>
                 <div class="font-bold text-sm md:text-base break-words">${escapeHTML(n.name)}</div>
                 ${n.desc ? `<div class="text-xs text-gray-700 break-words whitespace-pre-wrap mt-0.5">${escapeHTML(n.desc)}</div>` : ''}
             </div>
             <div class="flex sm:flex-col items-center sm:items-end justify-between gap-2 shrink-0">
-                <div class="font-bold text-lg md:text-xl whitespace-nowrap" style="color:${t.amt}">${t.sign}${formatWon(n.amount)}</div>
+                <div class="fin-amt font-bold text-lg md:text-xl whitespace-nowrap">${t.sign}${formatWon(n.amount)}</div>
                 <div class="flex gap-1">
                     <button onclick="window.openFinanceModal('${n.id}')" class="brutal-btn bg-main border-2 border-black px-3 py-1 text-[10px]">Edit</button>
                     <button onclick="window.deleteFinanceNote('${n.id}')" class="brutal-btn bg-danger text-white border-2 border-black px-3 py-1 text-[10px]">Hapus</button>
