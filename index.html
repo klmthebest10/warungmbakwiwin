@@ -1106,6 +1106,98 @@
             background-color: transparent !important; color: var(--c-text) !important; border: 0 !important;
             padding-left: 0 !important; letter-spacing: -0.02em;
         }
+        /* Catatan per produk di keranjang */
+        #gasapp-root .item-note-btn {
+            width: 24px; height: 24px; min-width: 24px; border-radius: 999px; display: inline-flex; align-items: center; justify-content: center;
+            background: var(--c-surface-2); color: var(--c-text-muted); border: 1px solid var(--c-outline); transition: background-color .15s, color .15s;
+        }
+        #gasapp-root .leading-tight > .item-note-btn { vertical-align: middle; margin-left: 5px; width: 22px; height: 22px; min-width: 22px; }
+        #gasapp-root .item-note-btn:hover { background: var(--c-surface-3); color: var(--c-text); }
+        #gasapp-root .item-note-btn.has-note { background: var(--c-primary); color: #fff; border-color: transparent; }
+        #gasapp-root .item-note {
+            margin-top: 4px; padding: 3px 8px; border-radius: 8px; font-size: 11px; line-height: 1.35; font-weight: 500;
+            background: var(--c-warning-container); color: var(--c-on-warning-container) !important; word-break: break-word;
+            display: inline-block; max-width: 100%;
+        }
+        /* Kartu produk POS tanpa tombol Tambah */
+        #gasapp-root .product-card-soldout { color: var(--c-danger-text); }
+        /* Tanda: tombol Simpan tidak perlu isian di bawahnya */
+        #gasapp-root .save-hint {
+            display: flex; gap: 8px; align-items: flex-start; padding: 8px 10px; border-radius: var(--r-md);
+            background: var(--c-secondary-container); color: var(--c-on-secondary-container); font-size: 11.5px; line-height: 1.4;
+        }
+        #gasapp-root .save-hint * { color: inherit !important; }
+        #gasapp-root .save-hint-ico { font-size: 15px; line-height: 1.1; }
+        #gasapp-root .save-btn-sub { font-size: 9px; font-weight: 500; text-transform: none; letter-spacing: 0; color: var(--c-text-muted) !important; line-height: 1; }
+        /* ===== Baris produk keranjang: nama 1 baris penuh, kuantitas di bawah, catatan di bawahnya ===== */
+        #gasapp-root .cart-item-top { display: flex; align-items: center; gap: 6px; min-width: 0; }
+        #gasapp-root .cart-item-name { flex: 0 1 auto; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; line-height: 1.3; }
+        #gasapp-root .cart-item-top .item-note-btn { flex-shrink: 0; }
+        #gasapp-root .cart-item-bottom { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-top: 6px; }
+        #gasapp-root .cart-item-note { display: block; width: 100%; margin-top: 6px; }
+
+        /* ===== Promo ===== */
+        #gasapp-root .promo-chip-card {
+            position: absolute; top: 6px; left: 6px; z-index: 1; max-width: calc(100% - 12px);
+            padding: 2px 8px; border-radius: 999px; font-size: 10px; font-weight: 700; line-height: 1.5;
+            background: var(--c-danger); color: #fff !important; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+        }
+        #gasapp-root .promo-chip-mini {
+            flex-shrink: 0; padding: 1px 7px; border-radius: 999px; font-size: 9.5px; font-weight: 700; white-space: nowrap;
+            background: var(--c-danger-container); color: var(--c-on-danger-container) !important;
+        }
+        #gasapp-root .promo-box { border: 1px solid var(--c-outline); border-radius: var(--r-md); padding: 10px 12px; background: var(--c-surface); display: flex; flex-direction: column; gap: 6px; }
+        #gasapp-root .promo-box-title { font-weight: 700; font-size: 13px; }
+        #gasapp-root .promo-code-row { display: flex; gap: 6px; }
+        #gasapp-root .promo-code-row .brutal-input { min-height: 38px; padding: 0.35rem 0.6rem; text-transform: uppercase; }
+        #gasapp-root .promo-err { font-size: 11px; color: var(--c-danger-text) !important; font-weight: 600; }
+        #gasapp-root .promo-line { display: flex; align-items: center; gap: 8px; font-size: 12px; padding: 6px 8px; border-radius: 8px; background: var(--c-success-container); color: var(--c-on-success-container) !important; cursor: pointer; }
+        #gasapp-root .promo-line * { color: inherit !important; }
+        #gasapp-root .promo-line input { width: 16px; height: 16px; flex-shrink: 0; }
+        #gasapp-root .promo-line-ico { font-weight: 800; }
+        #gasapp-root .promo-line-name { flex: 1; min-width: 0; font-weight: 600; }
+        #gasapp-root .promo-line-name small { font-weight: 500; opacity: 0.85; }
+        #gasapp-root .promo-line-amt { font-weight: 700; white-space: nowrap; }
+        #gasapp-root .promo-line.is-off { background: var(--c-surface-2); color: var(--c-text-muted) !important; }
+        #gasapp-root .promo-gift { font-size: 12px; padding: 6px 8px; border-radius: 8px; background: var(--c-warning-container); color: var(--c-on-warning-container) !important; }
+        #gasapp-root .promo-gift * { color: inherit !important; }
+        #gasapp-root .promo-total { display: flex; justify-content: space-between; font-weight: 700; font-size: 13px; color: var(--c-success-text) !important; padding-top: 4px; }
+        #gasapp-root .promo-total * { color: inherit !important; }
+        #gasapp-root .promo-hint { font-size: 11px; color: var(--c-text-muted) !important; }
+        #gasapp-root .promo-hint b { color: var(--c-text) !important; }
+
+        #gasapp-root .promo-card.is-muted { opacity: 0.72; }
+        #gasapp-root .promo-type-chip { display: inline-block; padding: 2px 9px; border-radius: 999px; font-size: 11px; font-weight: 700; background: var(--c-primary-container); color: var(--c-on-primary-container) !important; }
+        #gasapp-root .promo-meta { font-size: 11px; padding: 2px 8px; border-radius: 999px; background: var(--c-surface-2); color: var(--c-text-muted) !important; }
+        #gasapp-root .promo-meta b { color: var(--c-text) !important; }
+        #gasapp-root .promo-status { font-size: 11.5px; font-weight: 700; }
+        #gasapp-root .promo-status.is-live { color: var(--c-success-text) !important; }
+        #gasapp-root .promo-status.is-wait { color: #B7791F !important; }
+        [data-theme="dark"] #gasapp-root .promo-status.is-wait { color: #F6C26B !important; }
+        #gasapp-root .promo-status.is-off, #gasapp-root .promo-status.is-ended { color: var(--c-text-muted) !important; }
+        #gasapp-root .promo-switch { position: relative; width: 44px; height: 26px; flex-shrink: 0; cursor: pointer; }
+        #gasapp-root .promo-switch input { position: absolute; opacity: 0; width: 0; height: 0; }
+        #gasapp-root .promo-switch span { position: absolute; inset: 0; border-radius: 999px; background: var(--c-surface-3); transition: background-color .2s; }
+        #gasapp-root .promo-switch span::after { content: ''; position: absolute; top: 3px; left: 3px; width: 20px; height: 20px; border-radius: 999px; background: #fff; box-shadow: 0 1px 3px rgba(0,0,0,.25); transition: transform .2s; }
+        #gasapp-root .promo-switch input:checked + span { background: var(--c-success); }
+        #gasapp-root .promo-switch input:checked + span::after { transform: translateX(18px); }
+
+        #gasapp-root .promo-preset { padding: 6px 11px; border-radius: 999px; font-size: 12px; font-weight: 600; border: 1px solid var(--c-outline-strong); background: var(--c-surface); color: var(--c-text); transition: background-color .15s; }
+        #gasapp-root .promo-preset:hover { background: var(--c-surface-2); }
+        #gasapp-root .promo-preset.is-on { background: var(--c-primary-container); color: var(--c-on-primary-container) !important; border-color: var(--c-primary); }
+        #gasapp-root .promo-group { border: 1px solid var(--c-outline); border-radius: var(--r-md); padding: 12px; }
+        #gasapp-root .promo-group-title { font-weight: 700; font-size: 13px; margin-bottom: 10px; }
+        #gasapp-root .promo-target-box { border: 1px solid var(--c-outline); border-radius: var(--r-md); padding: 8px; }
+        #gasapp-root .promo-target-list { max-height: 190px; overflow-y: auto; display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 4px; }
+        #gasapp-root .promo-target { display: flex; align-items: center; gap: 6px; padding: 6px 8px; border-radius: 8px; font-size: 12.5px; cursor: pointer; }
+        #gasapp-root .promo-target:hover { background: var(--c-surface-2); }
+        #gasapp-root .promo-target:has(:checked) { background: var(--c-primary-container); color: var(--c-on-primary-container) !important; }
+        #gasapp-root .promo-target:has(:checked) * { color: inherit !important; }
+        #gasapp-root .promo-target small { color: var(--c-text-muted); font-size: 10.5px; }
+        #gasapp-root .promo-day span { display: inline-flex; align-items: center; justify-content: center; min-width: 44px; padding: 6px 10px; border-radius: 999px; font-size: 12px; font-weight: 600; border: 1px solid var(--c-outline-strong); cursor: pointer; }
+        #gasapp-root .promo-day:has(:checked) span { background: var(--c-primary); color: #fff !important; border-color: transparent; }
+        #gasapp-root .uppercase-input { text-transform: uppercase; }
+        #gasapp-root .promo-x-btn { width: 34px; height: 34px; border-radius: 999px; display: inline-flex; align-items: center; justify-content: center; background: var(--c-surface-2); color: var(--c-text-muted); }
         /* Tombol ikon kecil (tema & suara) */
         #gasapp-root :is(.theme-toggle-btn, .sfx-toggle-btn) { border-radius: 999px !important; background-color: var(--c-surface) !important; }
     </style>
@@ -1406,13 +1498,14 @@
                 </div>
                 <div id="adminTabBar" class="flex overflow-x-auto lg:overflow-visible gap-2 md:gap-3 mb-6 border-b-4 border-black pb-3 no-scrollbar flex-nowrap lg:flex-wrap">
                     <button onclick="window.switchAdminTab('dashboard')" id="tab_dashboard" class="admin-tab brutal-btn bg-white px-4 py-2 whitespace-nowrap d-none">📊 Dashboard</button>
-                    <button onclick="window.switchAdminTab('products')" id="tab_products"class="admin-tab brutal-btn bg-white px-4 py-2 whitespace-nowrap">Produk</button>
+                    <button onclick="window.switchAdminTab('products')" id="tab_products" class="admin-tab brutal-btn bg-white px-4 py-2 whitespace-nowrap">Produk</button>
                     <button onclick="window.switchAdminTab('categories')" id="tab_categories" class="admin-tab brutal-btn bg-white px-4 py-2 whitespace-nowrap">Kategori</button>
                     <button onclick="window.switchAdminTab('tables')" id="tab_tables" class="admin-tab brutal-btn bg-white px-4 py-2 whitespace-nowrap d-none">Meja</button>
                     <button onclick="window.switchAdminTab('customers')" id="tab_customers" class="admin-tab brutal-btn bg-white px-4 py-2 whitespace-nowrap d-none">Pelanggan</button>
                     <button onclick="window.switchAdminTab('cashier')" id="tab_cashier" class="admin-tab brutal-btn bg-white px-4 py-2 whitespace-nowrap d-none">Kasir</button>
                     <button onclick="window.switchAdminTab('history')" id="tab_history" class="admin-tab brutal-btn bg-white px-4 py-2 whitespace-nowrap">Riwayat</button>
-                    <button onclick="window.switchAdminTab('finance')" id="tab_finance" class="admin-tab brutal-btn bg-white px-4 py-2 whitespace-nowrap d-none">Catatan Keuangan</button>
+                    <button onclick="window.switchAdminTab('promo')" id="tab_promo" class="admin-tab brutal-btn bg-white px-4 py-2 whitespace-nowrap d-none">🏷️ Promo</button>
+                    <button onclick="window.switchAdminTab('finance')" id="tab_finance"  class="admin-tab brutal-btn bg-white px-4 py-2 whitespace-nowrap d-none">Catatan Keuangan</button>
                     <button onclick="window.switchAdminTab('settings')" id="tab_settings" class="admin-tab brutal-btn bg-white px-4 py-2 whitespace-nowrap">Pengaturan</button>
                 </div>
 
@@ -1597,6 +1690,19 @@
                 </div>
 
                 <!-- Admin: Catatan Keuangan -->
+                <!-- Admin: Promo -->
+                <div id="admin_promo" class="admin-content d-none w-full">
+                    <div class="flex flex-row justify-between items-start gap-3 mb-4">
+                        <div class="min-w-0">
+                            <h3 class="text-lg sm:text-xl font-bold leading-tight">Promo</h3>
+                            <p class="text-[11px] md:text-xs text-gray-600 leading-tight mt-1">Promo aktif & sesuai jadwal otomatis dihitung di keranjang kasir, pelanggan & publik.</p>
+                        </div>
+                        <button onclick="window.openPromoModal()" class="brutal-btn bg-main px-3 py-2.5 sm:px-4 sm:py-3 text-[11px] sm:text-sm whitespace-nowrap shrink-0">+ Buat Promo</button>
+                    </div>
+                    <div id="promoFilterBar" class="flex gap-2 mb-3 flex-wrap"></div>
+                    <div id="promoList" class="grid gap-3 md:grid-cols-2 xl:grid-cols-3"></div>
+                </div>
+
                 <div id="admin_finance" class="admin-content d-none w-full">
                     <div class="flex flex-row justify-between items-start gap-3 mb-4">
                         <div class="min-w-0">
@@ -1861,6 +1967,15 @@
                                 <p class="set-hint">Tab "Catatan Keuangan" muncul di Kelola Admin, lengkap dengan laporan PDF A4. Data yang sudah tersimpan tidak hilang saat di-OFF-kan.</p>
                             </div>
 
+                            <!-- 10b. Promo -->
+                            <div class="set-card">
+                                <h4 class="set-title">Promo</h4>
+                                <label class="flex items-center gap-2 font-bold cursor-pointer bg-green-50 p-3 border-2 border-black w-full">
+                                    <input type="checkbox" id="setPromoEnabled" class="w-5 h-5 accent-black"> Aktifkan Promo (Menu Kelola Admin)
+                                </label>
+                                <p class="set-hint">Tab "Promo" muncul di Kelola Admin: diskon %, potongan harga, beli X gratis Y, paket bundling, hadiah gratis, happy hour, voucher/kode promo &amp; diskon member. Promo otomatis dihitung di keranjang. Daftar promo tidak hilang saat di-OFF-kan.</p>
+                            </div>
+
                             <!-- 11. Manajemen Data Riwayat -->
                             <div class="set-card">
                                 <h4 class="set-title">Manajemen Data Riwayat</h4>
@@ -1935,6 +2050,7 @@
             <div class="p-4 overflow-y-auto flex-1 bg-white">
                 <div id="custCartItemsList" class="mb-4 border-b-2 border-black pb-4"></div>
                 <div class="flex justify-between items-center font-bold mb-4"><span>Subtotal:</span><span id="custCartTotal">₩0</span></div>
+                <div id="custPromoBox" class="promo-box mb-4 d-none"></div>
                 
                 <div id="custCartTableWrap" class="mb-3 d-none">
                     <label class="block font-bold mb-1 text-sm">Pilih Meja <span class="text-danger">*</span></label>
@@ -2007,6 +2123,7 @@
                 <div class="flex justify-between items-center font-bold mb-4">
                     <span>Subtotal:</span><span id="cartSubtotal">₩0</span>
                 </div>
+                <div id="cartPromoBox" class="promo-box mb-4 d-none"></div>
 
                 <!-- Tipe Pesanan -->
                 <div class="mb-4 border-t-2 border-black pt-4">
@@ -2086,6 +2203,7 @@
             <div class="p-4 border-t-4 border-black bg-gray-100 grid grid-cols-3 gap-2 shrink-0">
                 <button onclick="window.saveToWaitList()" class="brutal-btn bg-white text-black py-2 md:py-3 text-[10px] md:text-sm uppercase flex flex-col items-center justify-center aspect-square gap-1">
                     <span class="text-xl md:text-2xl leading-none">💾</span> <span class="font-bold">Simpan</span>
+                    <span class="save-btn-sub">tanpa isi bayar</span>
                 </button>
                 <button id="btnCheckoutProcess" onclick="window.processCheckout(false)" class="brutal-btn bg-success text-black py-2 md:py-3 text-[10px] md:text-sm uppercase flex flex-col items-center justify-center aspect-square gap-1">
                     <span class="text-xl md:text-2xl leading-none">✅</span> <span class="font-bold">Proses</span>
@@ -2408,6 +2526,116 @@
         </div>
     </div>
 
+    <!-- Modal Promo (buat / edit) -->
+    <div id="modalPromo" class="fixed inset-0 modal-backdrop d-none z-50 flex items-center justify-center p-2 md:p-4">
+        <div class="brutal-box bg-white w-full max-w-xl max-h-[95vh] flex flex-col relative overflow-hidden">
+            <div class="p-4 border-b-2 border-black flex items-center justify-between gap-2 shrink-0">
+                <h2 id="promoModalTitle" class="text-lg md:text-xl font-bold">Buat Promo</h2>
+                <button type="button" onclick="window.closeModal('modalPromo')" class="promo-x-btn" aria-label="Tutup"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" class="pointer-events-none"><line x1="5" y1="5" x2="19" y2="19"></line><line x1="19" y1="5" x2="5" y2="19"></line></svg></button>
+            </div>
+            <form id="formPromo" onsubmit="window.savePromo(event)" class="p-4 overflow-y-auto flex-1 space-y-4">
+                <input type="hidden" id="promoId">
+                <div id="promoPresetWrap">
+                    <label class="block font-bold mb-1.5 text-sm">Template cepat</label>
+                    <div id="promoPresets" class="flex gap-2 flex-wrap"></div>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                        <label class="block font-bold mb-1 text-sm">Nama Promo</label>
+                        <input type="text" id="promoName" maxlength="60" class="brutal-input bg-white" placeholder="Contoh: Happy Hour Minuman" required>
+                    </div>
+                    <div>
+                        <label class="block font-bold mb-1 text-sm">Jenis Promo</label>
+                        <select id="promoType" class="brutal-input bg-white" onchange="window.onPromoTypeChange()">
+                            <option value="percent">Diskon Persen (%)</option>
+                            <option value="nominal">Potongan Harga (₩)</option>
+                            <option value="bxgy">Beli X Gratis / Diskon Y (BOGO)</option>
+                            <option value="bundle">Paket / Bundling Hemat</option>
+                            <option value="gift">Hadiah Gratis (Min. Belanja)</option>
+                        </select>
+                    </div>
+                </div>
+                <p id="promoTypeHint" class="set-hint !mt-1"></p>
+
+                <!-- Nilai diskon -->
+                <div class="promo-sec grid grid-cols-2 gap-3" data-types="percent nominal">
+                    <div>
+                        <label id="promoValueLabel" class="block font-bold mb-1 text-sm">Diskon (%)</label>
+                        <input type="number" id="promoValue" min="0" step="1" inputmode="numeric" class="brutal-input bg-white">
+                    </div>
+                    <div class="promo-sec" data-types="percent">
+                        <label class="block font-bold mb-1 text-sm">Maks. Potongan (₩) <span class="font-normal text-gray-500">opsional</span></label>
+                        <input type="number" id="promoMaxDisc" min="0" step="1" inputmode="numeric" class="brutal-input bg-white" placeholder="Tanpa batas">
+                    </div>
+                </div>
+
+                <!-- Beli X dapat Y -->
+                <div class="promo-sec grid grid-cols-3 gap-3" data-types="bxgy">
+                    <div><label class="block font-bold mb-1 text-sm">Beli (qty)</label><input type="number" id="promoBuyQty" min="1" value="1" inputmode="numeric" class="brutal-input bg-white"></div>
+                    <div><label class="block font-bold mb-1 text-sm">Dapat (qty)</label><input type="number" id="promoGetQty" min="1" value="1" inputmode="numeric" class="brutal-input bg-white"></div>
+                    <div><label class="block font-bold mb-1 text-sm">Diskon item Y (%)</label><input type="number" id="promoGetPct" min="1" max="100" value="100" inputmode="numeric" class="brutal-input bg-white"></div>
+                    <p class="set-hint col-span-3 !mt-0">100% = gratis. Contoh "Beli 2 Gratis 1", atau "Item ke-2 diskon 50%" (Beli 1, Dapat 1, 50%). Berlaku per menu yang sama.</p>
+                </div>
+
+                <!-- Target menu -->
+                <div class="promo-sec" data-types="percent bxgy">
+                    <label class="block font-bold mb-1 text-sm">Berlaku untuk</label>
+                    <select id="promoScope" class="brutal-input bg-white mb-2" onchange="window.renderPromoTargets()"></select>
+                    <div id="promoTargetBox" class="promo-target-box"></div>
+                </div>
+
+                <!-- Paket -->
+                <div class="promo-sec space-y-2" data-types="bundle">
+                    <label class="block font-bold text-sm">Isi Paket</label>
+                    <div id="promoBundleRows" class="space-y-2"></div>
+                    <button type="button" onclick="window.addPromoBundleRow()" class="brutal-btn bg-white px-3 py-2 text-xs">+ Tambah Menu ke Paket</button>
+                    <div class="grid grid-cols-2 gap-3 items-end">
+                        <div><label class="block font-bold mb-1 text-sm">Harga Paket (₩)</label><input type="number" id="promoBundlePrice" min="0" inputmode="numeric" class="brutal-input bg-white" oninput="window.updateBundleInfo()"></div>
+                        <div id="promoBundleInfo" class="text-xs font-semibold pb-2"></div>
+                    </div>
+                </div>
+
+                <!-- Hadiah -->
+                <div class="promo-sec grid grid-cols-3 gap-3" data-types="gift">
+                    <div class="col-span-2"><label class="block font-bold mb-1 text-sm">Produk Hadiah</label><select id="promoGiftProduct" class="brutal-input bg-white"></select></div>
+                    <div><label class="block font-bold mb-1 text-sm">Jumlah</label><input type="number" id="promoGiftQty" min="1" value="1" inputmode="numeric" class="brutal-input bg-white"></div>
+                </div>
+
+                <!-- Syarat -->
+                <div class="promo-group">
+                    <div class="promo-group-title">Syarat</div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div><label class="block font-bold mb-1 text-sm">Min. Belanja (₩)</label><input type="number" id="promoMinSpend" min="0" inputmode="numeric" class="brutal-input bg-white" placeholder="0 = tanpa minimum"></div>
+                        <div><label class="block font-bold mb-1 text-sm">Kode Voucher <span class="font-normal text-gray-500">opsional</span></label><input type="text" id="promoCode" maxlength="20" autocomplete="off" class="brutal-input bg-white uppercase-input" placeholder="Kosong = otomatis"></div>
+                        <div><label class="block font-bold mb-1 text-sm">Tipe Pesanan</label>
+                            <select id="promoOrderType" class="brutal-input bg-white"><option value="all">Semua</option><option value="DineInTakeaway">Dine In / Takeaway</option><option value="Delivery">Delivery</option></select>
+                        </div>
+                        <label class="flex items-center gap-2 font-semibold text-sm cursor-pointer self-end pb-2"><input type="checkbox" id="promoMemberOnly" class="w-5 h-5"> Khusus pelanggan terdaftar (member)</label>
+                    </div>
+                </div>
+
+                <!-- Jadwal -->
+                <div class="promo-group">
+                    <div class="promo-group-title">Jadwal <span class="font-normal text-gray-500">(kosongkan = berlaku terus)</span></div>
+                    <div class="grid grid-cols-2 gap-3">
+                        <div><label class="block font-bold mb-1 text-sm">Tanggal Mulai</label><input type="date" id="promoStartDate" class="brutal-input bg-white"></div>
+                        <div><label class="block font-bold mb-1 text-sm">Tanggal Selesai</label><input type="date" id="promoEndDate" class="brutal-input bg-white"></div>
+                        <div><label class="block font-bold mb-1 text-sm">Jam Mulai</label><input type="time" id="promoTimeStart" class="brutal-input bg-white"></div>
+                        <div><label class="block font-bold mb-1 text-sm">Jam Selesai</label><input type="time" id="promoTimeEnd" class="brutal-input bg-white"></div>
+                    </div>
+                    <label class="block font-bold mt-3 mb-1.5 text-sm">Hari Berlaku <span class="font-normal text-gray-500">(tidak dipilih = setiap hari)</span></label>
+                    <div id="promoDays" class="flex gap-1.5 flex-wrap"></div>
+                </div>
+
+                <label class="flex items-center gap-2 font-bold cursor-pointer"><input type="checkbox" id="promoActive" class="w-5 h-5" checked> Promo aktif</label>
+            </form>
+            <div class="p-4 border-t-2 border-black grid grid-cols-2 gap-2 shrink-0">
+                <button type="button" onclick="window.closeModal('modalPromo')" class="brutal-btn bg-white py-3">Batal</button>
+                <button type="submit" form="formPromo" class="brutal-btn bg-main py-3">Simpan Promo</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Modal Kamera Foto Produk -->
     <div id="modalCamera" class="fixed inset-0 modal-backdrop d-none z-[60] flex items-center justify-center p-3">
         <div class="brutal-box bg-white w-full max-w-md flex flex-col overflow-hidden max-h-[95vh]">
@@ -2583,6 +2811,8 @@
                 posGridMobile: "2",
                 cashierEnabled: false,
                 financeEnabled: false,
+                promoEnabled: false,
+                promos: [],
                 hideStoreStatusBadge: false,
                 scheduleOpenEnabled: false,
                 scheduleOpenDateTime: "",
@@ -3154,6 +3384,8 @@
                     posGridMobile: s.pos_grid_mobile === "3" ? "3" : "2",
                     cashierEnabled: Boolean(s.cashier_enabled),
                     financeEnabled: Boolean(s.finance_enabled),
+                    promoEnabled: Boolean(s.promo_enabled),
+                    promos: Array.isArray(s.promos) ? s.promos : [],
                     hideStoreStatusBadge: Boolean(s.hide_store_status_badge),
                     scheduleOpenEnabled: Boolean(s.schedule_open_enabled),
                     scheduleOpenDateTime: s.schedule_open_datetime || "",
@@ -3237,6 +3469,8 @@
         paidAmount: Number(o.paid_amount || 0),      // << TAMBAHKAN
         changeAmount: Number(o.change_amount || 0),  // << TAMBAHKAN
         debtPaid: Number(o.debt_paid || 0),          // total cicilan yang sudah dibayar untuk order Hutang
+        discount: Number(o.discount || 0),
+        promos: Array.isArray(o.promos) ? o.promos : [],
         address: o.address || '',
         table: o.table_name || o.table || '',
         isEdited: Boolean(o.isEdited),
@@ -3864,7 +4098,8 @@
 
     function buildProductCard(p, mode) {
         const imgFillHtml = p.img ? `<img src="${p.img}" class="absolute inset-0 w-full h-full object-cover pointer-events-none">` : `<div class="absolute inset-0 w-full h-full bg-gray-200 flex items-center justify-center text-gray-500 font-bold pointer-events-none text-xs">NO IMAGE</div>`;
-        const imgBlock = `<div class="product-card-img relative w-full h-32 md:h-40 border-b-2 border-black overflow-hidden pointer-events-none">${imgFillHtml}<div class="absolute bottom-0 left-0 right-0 flex justify-end items-end p-1.5"><span class="product-card-price text-[10px] md:text-sm font-bold bg-main border-2 border-black px-1.5 py-0.5 whitespace-nowrap">${formatWon(p.price)}</span></div></div>`;
+        const promoBadge = window.promoBadgeForProduct ? window.promoBadgeForProduct(p) : '';
+        const imgBlock = `<div class="product-card-img relative w-full h-32 md:h-40 border-b-2 border-black overflow-hidden pointer-events-none">${imgFillHtml}${promoBadge ? `<span class="promo-chip-card">${escapeHTML(promoBadge)}</span>` : ''}<div class="absolute bottom-0 left-0 right-0 flex justify-end items-end p-1.5"><span class="product-card-price text-[10px] md:text-sm font-bold bg-main border-2 border-black px-1.5 py-0.5 whitespace-nowrap">${formatWon(p.price)}</span></div></div>`;
         let opacity = p.available ? 'opacity-100' : 'opacity-50';
         const isCustOn = Boolean(STATE.data.settings.customerEnabled);
         const isPosOn = Boolean(STATE.data.settings.posEnabled);
@@ -3874,7 +4109,7 @@
         const infoIconHtml = hasInfo
             ? `<button type="button" onclick="event.stopPropagation(); window.showProductInfo('${p.id}')" class="product-info-badge" style="pointer-events:auto;" title="Info Produk" aria-label="Info Produk">i</button>`
             : '';
-        const nameRowHtml = `<div class="flex items-start justify-between gap-1 mb-2 flex-1"><h3 class="product-card-name font-bold text-xs md:text-sm leading-tight">${escapeHTML(p.name)}</h3>${infoIconHtml}</div>`;
+        const nameRowHtml = `<div class="flex items-start justify-between gap-1 ${mode === 'pos' ? '' : 'mb-2'} flex-1"><h3 class="product-card-name font-bold text-xs md:text-sm leading-tight">${escapeHTML(p.name)}</h3>${infoIconHtml}</div>`;
         // Keterangan produk ini hanya TERLIHAT (via CSS) saat tampilan katalog 1 kolom di HP (akses umum/pelanggan);
         // di layout lain elemen ini tetap ada di HTML tapi disembunyikan, jadi tidak perlu render ulang kartu saat
         // admin berganti pilihan jumlah kolom.
@@ -3883,7 +4118,10 @@
         if(mode === 'pos' || (isPosOn && isCustOn)) {
             const actionClass = p.available ? 'cursor-pointer hover:bg-yellow-100 active:scale-95' : 'cursor-not-allowed'; 
             const clickAttr = p.available ? `onclick="${mode === 'pos' ? `window.addToCart('${p.id}')` : `window.addCustCart('${p.id}')`}"` : '';
-            const btnHTML = p.available ? `<div class="product-card-btn w-full text-center border-2 border-black bg-main py-1 md:py-2 mt-2 text-xs md:text-sm uppercase font-bold">Tambah</div>` : `<div class="product-card-btn w-full text-center border-2 border-black bg-gray-300 py-1 md:py-2 mt-2 text-xs md:text-sm uppercase font-bold text-gray-500">Kosong</div>`;
+            // POS admin/kasir: kartu langsung bisa diklik, jadi tanpa tombol "Tambah" (hanya label "Kosong" bila stok habis)
+            const btnHTML = mode === 'pos'
+                ? (p.available ? '' : `<div class="product-card-soldout mt-1 text-[10px] md:text-xs font-bold">Kosong</div>`)
+                : (p.available ? `<div class="product-card-btn w-full text-center border-2 border-black bg-main py-1 md:py-2 mt-2 text-xs md:text-sm uppercase font-bold">Tambah</div>` : `<div class="product-card-btn w-full text-center border-2 border-black bg-gray-300 py-1 md:py-2 mt-2 text-xs md:text-sm uppercase font-bold text-gray-500">Kosong</div>`);
             return `<div ${clickAttr} class="product-card brutal-box flex flex-col h-full transition-transform ${opacity} ${actionClass}">${imgBlock}<div class="product-card-body p-2 flex-1 flex flex-col pointer-events-none">${nameRowHtml}${descHtml}${btnHTML}</div></div>`;
         }
         if(!p.available) return ''; 
@@ -4190,8 +4428,9 @@
 
     window.updateCartUI = () => { 
         const totalQty = STATE.cart.reduce((sum, item) => sum + item.qty, 0);
-        const totalNominal = STATE.cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
-        document.getElementById('cartCount').textContent = totalQty; 
+        const rawNominal = STATE.cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+        const totalNominal = Math.max(0, rawNominal - (window.computeCartPromo ? window.computeCartPromo('admin').discount : 0));
+        document.getElementById('cartCount').textContent = totalQty;  
         const badge = document.getElementById('cartTotalBadge');
         if (badge) {
             badge.textContent = formatWon(totalNominal);
@@ -4212,6 +4451,548 @@
         if (!window.isPosDocked()) window.openModal('modalCart'); 
     };
     
+    // ======================================================= //
+    // PROMO (fitur on/off di Pengaturan) — disimpan di settings/app_config.promos
+    // Jenis: percent (diskon %), nominal (potongan ₩), bxgy (beli X gratis/diskon Y),
+    //        bundle (paket hemat), gift (hadiah gratis min. belanja).
+    // Semua jenis bisa diberi syarat: min. belanja, kode voucher, khusus member,
+    // tipe pesanan, tanggal, hari & jam (happy hour).
+    // Aturan gabung: promo per-menu (paket -> BOGO -> diskon % menu) boleh bertumpuk tapi
+    // 1 porsi hanya kena 1 promo; promo total belanja (diskon % semua menu / potongan ₩)
+    // dipilih SATU yang paling hemat; hadiah gratis selalu ditambahkan bila syarat terpenuhi.
+    // ======================================================= //
+    const PROMO_TYPES = {
+        percent: { label: 'Diskon %', icon: '🏷️', hint: 'Potong harga dalam persen — untuk semua menu (total belanja), kategori, atau menu tertentu.' },
+        nominal: { label: 'Potongan Harga', icon: '💸', hint: 'Potong total belanja dengan nominal tetap (₩). Cocok dipadukan dengan min. belanja atau kode voucher.' },
+        bxgy:    { label: 'Beli X Gratis Y', icon: '🎁', hint: 'BOGO: beli sejumlah menu, dapat tambahan menu yang sama gratis atau diskon (mis. item ke-2 diskon 50%).' },
+        bundle:  { label: 'Paket Hemat', icon: '🍱', hint: 'Gabungan beberapa menu dengan harga paket khusus (combo). Otomatis terdeteksi saat semua isi paket ada di keranjang.' },
+        gift:    { label: 'Hadiah Gratis', icon: '🥤', hint: 'Bonus menu gratis bila total belanja mencapai minimum tertentu.' }
+    };
+    const PROMO_DAY_NAMES = ['Min', 'Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab'];
+    const PROMO_PRESETS = [
+        { label: '⏰ Happy Hour', d: { name: 'Happy Hour', type: 'percent', value: 20, scope: 'category', timeStart: '14:00', timeEnd: '17:00', days: [1, 2, 3, 4, 5] } },
+        { label: '🎁 Beli 1 Gratis 1', d: { name: 'Beli 1 Gratis 1', type: 'bxgy', buyQty: 1, getQty: 1, getPct: 100, scope: 'product' } },
+        { label: '✌️ Item ke-2 Diskon 50%', d: { name: 'Item Kedua Diskon 50%', type: 'bxgy', buyQty: 1, getQty: 1, getPct: 50, scope: 'product' } },
+        { label: '🍱 Paket Combo', d: { name: 'Paket Combo Hemat', type: 'bundle' } },
+        { label: '🏷️ Diskon % Semua Menu', d: { name: 'Diskon Spesial', type: 'percent', value: 10, scope: 'all' } },
+        { label: '💸 Potongan Min. Belanja', d: { name: 'Potongan Belanja', type: 'nominal', value: 5000, minSpend: 50000 } },
+        { label: '🎟️ Voucher Kode', d: { name: 'Voucher Hemat', type: 'nominal', value: 3000, code: 'HEMAT' } },
+        { label: '👑 Diskon Member', d: { name: 'Diskon Member', type: 'percent', value: 10, scope: 'all', memberOnly: true } },
+        { label: '🥤 Gratis Item', d: { name: 'Gratis Minuman', type: 'gift', minSpend: 100000, giftQty: 1 } },
+        { label: '📅 Promo Akhir Pekan', d: { name: 'Promo Akhir Pekan', type: 'percent', value: 15, scope: 'all', days: [0, 6] } },
+        { label: '🛵 Promo Delivery', d: { name: 'Diskon Delivery', type: 'nominal', value: 2000, orderType: 'Delivery' } }
+    ];
+    const pad2 = n => String(n).padStart(2, '0');
+
+    window.isPromoAvailable = () => Boolean(STATE.data.settings.promoEnabled) && Boolean(STATE.user) && STATE.user.role === 'admin';
+    STATE.promoSkip = { admin: new Set(), cust: new Set() };
+    STATE.cartPromoCode = '';
+    STATE.custPromoCode = '';
+    window.emptyPromoResult = sub => ({ subtotal: sub || 0, discount: 0, applied: [], gifts: [], hints: [], skipped: [], codeError: '', hasCodePromos: false });
+
+    const promoNowOk = (p, now) => {
+        const ymd = `${now.getFullYear()}-${pad2(now.getMonth() + 1)}-${pad2(now.getDate())}`;
+        if (p.startDate && ymd < p.startDate) return false;
+        if (p.endDate && ymd > p.endDate) return false;
+        if (Array.isArray(p.days) && p.days.length && !p.days.includes(now.getDay())) return false;
+        if (p.timeStart || p.timeEnd) {
+            const hm = `${pad2(now.getHours())}:${pad2(now.getMinutes())}`;
+            const a = p.timeStart || '00:00', b = p.timeEnd || '23:59';
+            if (a <= b) { if (hm < a || hm > b) return false; }
+            else if (hm < a && hm > b) return false; // melewati tengah malam (mis. 22:00–02:00)
+        }
+        return true;
+    };
+    const promoTargets = (p, item, cat) => {
+        const scope = p.scope || 'all';
+        if (scope === 'all') return true;
+        const t = Array.isArray(p.targets) ? p.targets : [];
+        return scope === 'category' ? t.includes(cat) : t.includes(item.id);
+    };
+    const prodById = id => STATE.data.products.find(x => x.id === id);
+
+    window.computePromo = (items, ctx = {}) => {
+        const st = STATE.data.settings;
+        const lines = (items || []).filter(i => i && !i.free).map(i => {
+            const qty = Math.max(0, Math.floor(Number(i.qty) || 0));
+            return { id: i.id, price: Number(i.price) || 0, qty, left: qty, cat: (prodById(i.id) || {}).cat || '' };
+        });
+        const subtotal = lines.reduce((sum, l) => sum + l.price * l.qty, 0);
+        const res = window.emptyPromoResult(subtotal);
+        if (!st.promoEnabled || !lines.length) return res;
+
+        const now = ctx.now || new Date();
+        const code = String(ctx.code || '').trim().toUpperCase();
+        const skip = ctx.skip || new Set();
+        const all = (st.promos || []).filter(p => p && p.active !== false);
+        res.hasCodePromos = all.some(p => p.code && promoNowOk(p, now));
+        const baseOk = p => promoNowOk(p, now) && (!p.memberOnly || ctx.custId) &&
+            (!p.orderType || p.orderType === 'all' || !ctx.orderType || p.orderType === ctx.orderType);
+
+        let codeMatched = false;
+        const eligible = all.filter(p => {
+            if (!baseOk(p)) return false;
+            if (p.code) {
+                if (code && String(p.code).toUpperCase() === code) { codeMatched = true; return true; }
+                return false;
+            }
+            return true;
+        });
+        if (code && !codeMatched) {
+            const pc = all.find(p => p.code && String(p.code).toUpperCase() === code);
+            res.codeError = !pc ? 'kode tidak ditemukan' : (!promoNowOk(pc, now) ? 'di luar jadwal promo' : (pc.memberOnly && !ctx.custId ? 'khusus pelanggan terdaftar' : 'tidak berlaku untuk tipe pesanan ini'));
+        }
+        res.skipped = eligible.filter(p => skip.has(p.id)).map(p => ({ id: p.id, name: p.name }));
+        const active = eligible.filter(p => !skip.has(p.id));
+        const minOk = p => subtotal >= (Number(p.minSpend) || 0);
+        const push = (p, amount, detail) => {
+            amount = Math.round(amount);
+            if (amount > 0) res.applied.push({ id: p.id, name: p.name, type: p.type, amount, detail: detail || '' });
+        };
+        const leftOf = id => lines.filter(l => l.id === id).reduce((sum, l) => sum + l.left, 0);
+        const consume = (id, n) => { lines.filter(l => l.id === id).forEach(l => { const t = Math.min(l.left, n); l.left -= t; n -= t; }); };
+
+        // 1) Paket hemat
+        active.filter(p => p.type === 'bundle' && minOk(p)).forEach(p => {
+            const need = {};
+            (p.bundleItems || []).forEach(b => { if (b && b.id && Number(b.qty) > 0) need[b.id] = (need[b.id] || 0) + Math.floor(Number(b.qty)); });
+            const ids = Object.keys(need);
+            if (!ids.length) return;
+            const count = Math.min(...ids.map(id => Math.floor(leftOf(id) / need[id])));
+            if (!(count > 0)) return;
+            const normal = ids.reduce((sum, id) => sum + ((lines.find(l => l.id === id) || {}).price || 0) * need[id], 0);
+            const save = (normal - (Number(p.bundlePrice) || 0)) * count;
+            if (save <= 0) return;
+            ids.forEach(id => consume(id, need[id] * count));
+            push(p, save, `${count}x paket`);
+        });
+        // 2) Beli X gratis / diskon Y (per menu yang sama)
+        active.filter(p => p.type === 'bxgy' && minOk(p)).forEach(p => {
+            const buy = Math.max(1, parseInt(p.buyQty) || 1), get = Math.max(1, parseInt(p.getQty) || 1);
+            const pct = Math.min(100, Math.max(1, Number(p.getPct) || 100));
+            let amt = 0, n = 0;
+            [...new Set(lines.filter(l => promoTargets(p, l, l.cat)).map(l => l.id))].forEach(id => {
+                const g = Math.floor(leftOf(id) / (buy + get));
+                if (g > 0) {
+                    amt += g * get * ((lines.find(l => l.id === id) || {}).price || 0) * pct / 100;
+                    consume(id, g * (buy + get));
+                    n += g * get;
+                }
+            });
+            push(p, amt, n ? `${n} porsi ${pct >= 100 ? 'gratis' : '-' + pct + '%'}` : '');
+        });
+        // 3) Diskon % untuk kategori / menu tertentu
+        active.filter(p => p.type === 'percent' && (p.scope === 'category' || p.scope === 'product') && minOk(p)).forEach(p => {
+            let base = 0;
+            lines.filter(l => l.left > 0 && promoTargets(p, l, l.cat)).forEach(l => { base += l.left * l.price; l.left = 0; });
+            let amt = base * (Number(p.value) || 0) / 100;
+            if (Number(p.maxDiscount) > 0) amt = Math.min(amt, Number(p.maxDiscount));
+            push(p, amt, `${Number(p.value) || 0}%`);
+        });
+        // 4) Promo total belanja: pilih satu yang paling hemat
+        const itemDisc = res.applied.reduce((sum, a) => sum + a.amount, 0);
+        const base = Math.max(0, subtotal - itemDisc);
+        const cands = active.filter(p => (p.type === 'nominal' || (p.type === 'percent' && (!p.scope || p.scope === 'all'))) && minOk(p)).map(p => {
+            let a = p.type === 'nominal' ? Math.min(Number(p.value) || 0, base) : base * (Number(p.value) || 0) / 100;
+            if (p.type === 'percent' && Number(p.maxDiscount) > 0) a = Math.min(a, Number(p.maxDiscount));
+            return { p, a };
+        }).sort((x, y) => y.a - x.a);
+        if (cands.length && cands[0].a > 0) push(cands[0].p, cands[0].a, cands[0].p.type === 'percent' ? `${cands[0].p.value}%` : '');
+        // 5) Hadiah gratis
+        active.filter(p => p.type === 'gift' && minOk(p)).forEach(p => {
+            const prod = prodById(p.giftProductId);
+            if (!prod) return;
+            const qty = Math.max(1, parseInt(p.giftQty) || 1);
+            res.gifts.push({ id: prod.id, name: prod.name, qty, promoName: p.name, promoId: p.id });
+            res.applied.push({ id: p.id, name: p.name, type: 'gift', amount: 0, detail: `gratis ${qty}x ${prod.name}` });
+        });
+        // Saran: belanja sedikit lagi untuk promo bermin. belanja
+        eligible.filter(p => !skip.has(p.id) && Number(p.minSpend) > subtotal).sort((a, b) => a.minSpend - b.minSpend).slice(0, 2)
+            .forEach(p => res.hints.push(`Tambah belanja <b>${formatWon(Number(p.minSpend) - subtotal)}</b> lagi untuk promo "${escapeHTML(p.name)}"`));
+
+        res.discount = Math.min(subtotal, Math.round(res.applied.reduce((sum, a) => sum + a.amount, 0)));
+        return res;
+    };
+
+    window.computeCartPromo = kind => {
+        if (kind === 'cust') {
+            const custId = STATE.user && STATE.user.role === 'customer' ? STATE.user.id : null;
+            return window.computePromo(STATE.custCart, { code: STATE.custPromoCode, custId, skip: STATE.promoSkip.cust });
+        }
+        const orderType = document.querySelector('input[name="orderType"]:checked')?.value || 'DineInTakeaway';
+        const method = document.querySelector('input[name="payMethod"]:checked')?.value;
+        const custId = (method === 'Hutang' ? document.getElementById('selectHutangCustomer')?.value : '')
+            || (orderType === 'Delivery' ? document.getElementById('selectDeliveryCustomer')?.value : '') || '';
+        return window.computePromo(STATE.cart, { code: STATE.cartPromoCode, custId, orderType, skip: STATE.promoSkip.admin });
+    };
+
+    window.renderPromoBox = (boxId, res, kind) => {
+        const box = document.getElementById(boxId);
+        if (!box) return;
+        const cart = kind === 'cust' ? STATE.custCart : STATE.cart;
+        const hide = () => { box.classList.add('d-none'); box.innerHTML = ''; };
+        if (!STATE.data.settings.promoEnabled || !cart.length) return hide();
+        const codeVal = kind === 'cust' ? STATE.custPromoCode : STATE.cartPromoCode;
+        const codeHtml = (res.hasCodePromos || codeVal) ? `<div class="promo-code-row">
+                <input id="${boxId}Code" class="brutal-input bg-white text-sm" placeholder="Punya kode voucher?" value="${escapeHTML(codeVal || '')}" maxlength="20" autocomplete="off" onkeydown="if(event.key==='Enter'){event.preventDefault();window.applyPromoCode('${kind}')}">
+                <button type="button" class="brutal-btn bg-white px-3 text-xs whitespace-nowrap" onclick="window.applyPromoCode('${kind}')">${codeVal ? 'Ganti' : 'Pakai'}</button>
+            </div>${res.codeError ? `<div class="promo-err">⚠️ Kode "${escapeHTML(codeVal)}" ${res.codeError}.</div>` : ''}` : '';
+        const rows = res.applied.map(a => `<label class="promo-line">${kind === 'admin' ? `<input type="checkbox" checked onchange="window.togglePromoSkip('${a.id}', this.checked)">` : '<span class="promo-line-ico">✓</span>'}<span class="promo-line-name">${escapeHTML(a.name)}${a.detail ? ` <small>· ${escapeHTML(a.detail)}</small>` : ''}</span><span class="promo-line-amt">${a.amount > 0 ? '-' + formatWon(a.amount) : 'Bonus'}</span></label>`).join('');
+        const skipped = kind === 'admin' ? res.skipped.map(p => `<label class="promo-line is-off"><input type="checkbox" onchange="window.togglePromoSkip('${p.id}', this.checked)"><span class="promo-line-name">${escapeHTML(p.name)} <small>· tidak dipakai</small></span><span></span></label>`).join('') : '';
+        const gifts = res.gifts.map(g => `<div class="promo-gift">🎁 ${g.qty}x ${escapeHTML(g.name)} <b>GRATIS</b></div>`).join('');
+        const hints = res.hints.map(h => `<div class="promo-hint">💡 ${h}</div>`).join('');
+        if (!rows && !skipped && !codeHtml && !hints) return hide();
+        const after = kind === 'cust' && res.discount > 0 ? `<div class="promo-total"><span>Estimasi total</span><span>${formatWon(res.subtotal - res.discount)}</span></div>` : '';
+        box.innerHTML = `<div class="promo-box-title">🏷️ Promo</div>${codeHtml}${rows}${skipped}${gifts}${res.discount > 0 ? `<div class="promo-total"><span>Total hemat</span><span>-${formatWon(res.discount)}</span></div>` : ''}${after}${hints}`;
+        box.classList.remove('d-none');
+    };
+    window.applyPromoCode = kind => {
+        const el = document.getElementById(kind === 'cust' ? 'custPromoBoxCode' : 'cartPromoBoxCode');
+        const val = (el ? el.value : '').trim().toUpperCase().slice(0, 20);
+        if (kind === 'cust') { STATE.custPromoCode = val; window.renderCustCartModal(); }
+        else { STATE.cartPromoCode = val; window.calculateTotal(); window.updateCartUI(); }
+        if (window.sfx) window.sfx('select');
+    };
+    window.togglePromoSkip = (id, on) => {
+        if (on) STATE.promoSkip.admin.delete(id); else STATE.promoSkip.admin.add(id);
+        window.calculateTotal();
+        window.updateCartUI();
+    };
+    window.resetCartPromo = kind => {
+        if (kind === 'cust') { STATE.custPromoCode = ''; STATE.promoSkip.cust = new Set(); }
+        else { STATE.cartPromoCode = ''; STATE.promoSkip.admin = new Set(); }
+    };
+    // Pilihan pelanggan (untuk promo member) ikut menghitung ulang
+    document.addEventListener('change', e => {
+        if (e.target && ['selectHutangCustomer', 'selectDeliveryCustomer'].includes(e.target.id) && STATE.data.settings.promoEnabled) window.calculateTotal();
+    });
+
+    // Label promo di kartu produk & baris keranjang (promo otomatis tanpa kode/member)
+    window.promoBadgeForProduct = p => {
+        const st = STATE.data.settings;
+        if (!st.promoEnabled || !p) return '';
+        const now = new Date();
+        for (const pr of (st.promos || [])) {
+            if (!pr || pr.active === false || pr.code || pr.memberOnly || !promoNowOk(pr, now)) continue;
+            if (pr.type === 'bxgy' && promoTargets(pr, p, p.cat)) {
+                const b = parseInt(pr.buyQty) || 1, g = parseInt(pr.getQty) || 1, pct = Number(pr.getPct) || 100;
+                return pct >= 100 ? `Beli ${b} Gratis ${g}` : `Beli ${b}, +${g} -${pct}%`;
+            }
+            if (pr.type === 'percent' && pr.scope && pr.scope !== 'all' && promoTargets(pr, p, p.cat)) return `-${pr.value}%`;
+            if (pr.type === 'bundle' && (pr.bundleItems || []).some(b => b.id === p.id)) return 'Paket Hemat';
+        }
+        return '';
+    };
+    window.promoChipForItem = item => {
+        const b = window.promoBadgeForProduct(prodById(item.id));
+        return b ? `<span class="promo-chip-mini">${escapeHTML(b)}</span>` : '';
+    };
+
+    // ---------------- Admin: daftar promo ----------------
+    STATE.promoFilter = 'all';
+    const promoScopeText = p => {
+        const t = Array.isArray(p.targets) ? p.targets : [];
+        const short = arr => arr.length > 3 ? `${arr.slice(0, 3).join(', ')} +${arr.length - 3} lainnya` : arr.join(', ');
+        if (!p.scope || p.scope === 'all') return 'semua menu';
+        if (p.scope === 'category') return `kategori ${short(t)}`;
+        return `menu ${short(t.map(id => (prodById(id) || {}).name || '(dihapus)'))}`;
+    };
+    const promoSummary = p => {
+        if (p.type === 'percent') return `Diskon ${p.value}% untuk ${promoScopeText(p)}${Number(p.maxDiscount) > 0 ? `, maks. ${formatWon(p.maxDiscount)}` : ''}`;
+        if (p.type === 'nominal') return `Potongan ${formatWon(p.value)} dari total belanja`;
+        if (p.type === 'bxgy') {
+            const pct = Number(p.getPct) || 100;
+            return `Beli ${p.buyQty}, ${pct >= 100 ? 'gratis' : 'dapat'} ${p.getQty}${pct < 100 ? ` diskon ${pct}%` : ''} — ${promoScopeText(p)}`;
+        }
+        if (p.type === 'bundle') {
+            const items = (p.bundleItems || []).map(b => `${b.qty}x ${(prodById(b.id) || {}).name || '(dihapus)'}`).join(' + ');
+            const normal = (p.bundleItems || []).reduce((sum, b) => sum + ((prodById(b.id) || {}).price || 0) * b.qty, 0);
+            return `${items} = ${formatWon(p.bundlePrice)}${normal > p.bundlePrice ? ` (hemat ${formatWon(normal - p.bundlePrice)})` : ''}`;
+        }
+        if (p.type === 'gift') return `Gratis ${p.giftQty}x ${(prodById(p.giftProductId) || {}).name || '(produk dihapus)'}`;
+        return '';
+    };
+    const promoScheduleText = p => {
+        const parts = [];
+        if (p.startDate || p.endDate) parts.push(`📅 ${p.startDate ? p.startDate.split('-').reverse().join('/') : '…'} – ${p.endDate ? p.endDate.split('-').reverse().join('/') : '…'}`);
+        if (Array.isArray(p.days) && p.days.length && p.days.length < 7) parts.push('🗓️ ' + [...p.days].sort().map(d => PROMO_DAY_NAMES[d]).join(', '));
+        if (p.timeStart || p.timeEnd) parts.push(`⏰ ${p.timeStart || '00:00'}–${p.timeEnd || '23:59'}`);
+        return parts;
+    };
+    const promoStatus = p => {
+        if (p.active === false) return { key: 'off', label: 'Nonaktif' };
+        const now = new Date();
+        const ymd = `${now.getFullYear()}-${pad2(now.getMonth() + 1)}-${pad2(now.getDate())}`;
+        if (p.endDate && ymd > p.endDate) return { key: 'ended', label: 'Sudah berakhir' };
+        return promoNowOk(p, now) ? { key: 'live', label: 'Sedang berlaku' } : { key: 'wait', label: 'Di luar jadwal' };
+    };
+    window.setPromoFilter = f => { STATE.promoFilter = f; window.renderPromoAdmin(); };
+    window.renderPromoAdmin = () => {
+        const wrap = document.getElementById('promoList');
+        if (!wrap) return;
+        const promos = STATE.data.settings.promos || [];
+        const counts = { all: promos.length, live: promos.filter(p => promoStatus(p).key === 'live').length };
+        counts.other = counts.all - counts.live;
+        const fBtn = (k, label) => `<button onclick="window.setPromoFilter('${k}')" class="dash-filter-btn brutal-btn ${STATE.promoFilter === k ? 'bg-black text-white' : 'bg-white'} px-3 py-1.5 text-xs md:text-sm">${label} <span class="opacity-70">${counts[k]}</span></button>`;
+        document.getElementById('promoFilterBar').innerHTML = fBtn('all', 'Semua') + fBtn('live', 'Sedang berlaku') + fBtn('other', 'Lainnya');
+        const list = promos.filter(p => STATE.promoFilter === 'all' || (STATE.promoFilter === 'live' ? promoStatus(p).key === 'live' : promoStatus(p).key !== 'live'));
+        if (!list.length) {
+            wrap.innerHTML = `<div class="brutal-box bg-white p-6 text-center md:col-span-2 xl:col-span-3">
+                <div class="text-3xl mb-2">🏷️</div>
+                <div class="font-bold mb-1">${promos.length ? 'Tidak ada promo di filter ini.' : 'Belum ada promo.'}</div>
+                <div class="text-xs text-gray-600 mb-3">Buat promo seperti Happy Hour, Beli 1 Gratis 1, Paket Combo, Voucher, atau Diskon Member.</div>
+                <button onclick="window.openPromoModal()" class="brutal-btn bg-main px-4 py-2 text-sm">+ Buat Promo</button></div>`;
+            return;
+        }
+        wrap.innerHTML = list.map(p => {
+            const t = PROMO_TYPES[p.type] || { label: p.type, icon: '🏷️' };
+            const stt = promoStatus(p);
+            const meta = [];
+            if (Number(p.minSpend) > 0) meta.push(`Min. ${formatWon(p.minSpend)}`);
+            if (p.code) meta.push(`Kode: <b>${escapeHTML(p.code)}</b>`);
+            if (p.memberOnly) meta.push('Khusus member');
+            if (p.orderType && p.orderType !== 'all') meta.push(p.orderType === 'Delivery' ? 'Khusus Delivery' : 'Dine In / Takeaway');
+            const sched = promoScheduleText(p);
+            return `<div class="promo-card brutal-box bg-white p-4 flex flex-col ${stt.key === 'live' ? '' : 'is-muted'}">
+                <div class="flex items-start justify-between gap-3">
+                    <div class="min-w-0">
+                        <span class="promo-type-chip">${t.icon} ${t.label}</span>
+                        <div class="font-bold text-base leading-tight mt-2 break-words">${escapeHTML(p.name)}</div>
+                    </div>
+                    <label class="promo-switch" title="Aktif / nonaktif"><input type="checkbox" ${p.active !== false ? 'checked' : ''} onchange="window.togglePromoActive('${p.id}', this.checked)"><span></span></label>
+                </div>
+                <div class="text-sm mt-2 leading-snug">${escapeHTML(promoSummary(p))}</div>
+                ${meta.length || sched.length ? `<div class="flex flex-wrap gap-1.5 mt-2">${meta.concat(sched).map(m => `<span class="promo-meta">${m}</span>`).join('')}</div>` : ''}
+                <div class="mt-3 pt-3 border-t-2 border-black flex items-center justify-between gap-2">
+                    <span class="promo-status is-${stt.key}">● ${stt.label}</span>
+                    <div class="flex gap-1.5">
+                        <button onclick="window.openPromoModal('${p.id}')" class="brutal-btn bg-white px-3 py-1.5 text-xs">Edit</button>
+                        <button onclick="window.duplicatePromo('${p.id}')" class="brutal-btn bg-white px-3 py-1.5 text-xs" title="Duplikat">Salin</button>
+                        <button onclick="window.deletePromo('${p.id}')" class="brutal-btn bg-danger text-white px-2.5 py-1.5 text-xs" aria-label="Hapus">Hapus</button>
+                    </div>
+                </div>
+            </div>`;
+        }).join('');
+    };
+
+    const persistPromos = async promos => {
+        if (!IS_PREVIEW && db) await db.collection('settings').doc('app_config').set({ promos }, { merge: true });
+        STATE.data.settings.promos = promos;
+        if (window.renderAdminPOS && document.getElementById('pageAdminPOS') && !document.getElementById('pageAdminPOS').classList.contains('d-none')) window.renderAdminPOS();
+    };
+    window.togglePromoActive = async (id, on) => {
+        const promos = (STATE.data.settings.promos || []).map(p => p.id === id ? { ...p, active: Boolean(on) } : p);
+        try { await persistPromos(promos); } catch (e) { await window.customAlert('Gagal menyimpan: ' + e.message, 'Gagal'); }
+        window.renderPromoAdmin();
+    };
+    window.deletePromo = async id => {
+        const p = (STATE.data.settings.promos || []).find(x => x.id === id);
+        if (!p || !(await window.customConfirm(`Hapus promo "${p.name}"? Transaksi lama yang memakai promo ini tidak berubah.`, 'Hapus Promo'))) return;
+        showLoad();
+        try { await persistPromos((STATE.data.settings.promos || []).filter(x => x.id !== id)); hideLoad(); }
+        catch (e) { hideLoad(); await window.customAlert('Gagal menghapus: ' + e.message, 'Gagal'); }
+        window.renderPromoAdmin();
+    };
+    window.duplicatePromo = async id => {
+        const p = (STATE.data.settings.promos || []).find(x => x.id === id);
+        if (!p) return;
+        const copy = { ...JSON.parse(JSON.stringify(p)), id: genId('PRM'), name: (p.name + ' (salinan)').slice(0, 60), code: '', active: false };
+        showLoad();
+        try { await persistPromos([...(STATE.data.settings.promos || []), copy]); hideLoad(); }
+        catch (e) { hideLoad(); await window.customAlert('Gagal menyalin: ' + e.message, 'Gagal'); }
+        window.renderPromoAdmin();
+    };
+
+    // ---------------- Admin: form promo ----------------
+    const promoDefaults = () => ({ id: '', name: '', type: 'percent', active: true, value: 10, maxDiscount: 0, scope: 'all', targets: [],
+        buyQty: 1, getQty: 1, getPct: 100, bundleItems: [], bundlePrice: 0, giftProductId: '', giftQty: 1,
+        minSpend: 0, code: '', memberOnly: false, orderType: 'all', startDate: '', endDate: '', timeStart: '', timeEnd: '', days: [] });
+    const val = id => document.getElementById(id);
+    const fillPromoForm = p => {
+        val('promoId').value = p.id || '';
+        val('promoName').value = p.name || '';
+        val('promoType').value = p.type || 'percent';
+        val('promoValue').value = p.value || '';
+        val('promoMaxDisc').value = Number(p.maxDiscount) > 0 ? p.maxDiscount : '';
+        val('promoBuyQty').value = p.buyQty || 1;
+        val('promoGetQty').value = p.getQty || 1;
+        val('promoGetPct').value = p.getPct || 100;
+        val('promoBundlePrice').value = Number(p.bundlePrice) > 0 ? p.bundlePrice : '';
+        val('promoGiftQty').value = p.giftQty || 1;
+        val('promoMinSpend').value = Number(p.minSpend) > 0 ? p.minSpend : '';
+        val('promoCode').value = p.code || '';
+        val('promoOrderType').value = p.orderType || 'all';
+        val('promoMemberOnly').checked = Boolean(p.memberOnly);
+        val('promoStartDate').value = p.startDate || '';
+        val('promoEndDate').value = p.endDate || '';
+        val('promoTimeStart').value = p.timeStart || '';
+        val('promoTimeEnd').value = p.timeEnd || '';
+        val('promoActive').checked = p.active !== false;
+        val('promoDays').innerHTML = PROMO_DAY_NAMES.map((n, i) => `<label class="promo-day"><input type="checkbox" class="hidden promo-day-cb" value="${i}" ${(p.days || []).includes(i) ? 'checked' : ''}><span>${n}</span></label>`).join('');
+        const prods = [...STATE.data.products].sort((a, b) => a.name.localeCompare(b.name));
+        val('promoGiftProduct').innerHTML = '<option value="">- Pilih produk hadiah -</option>' + prods.map(x => `<option value="${x.id}" ${x.id === p.giftProductId ? 'selected' : ''}>${escapeHTML(x.name)} (${formatWon(x.price)})</option>`).join('');
+        STATE.promoTargetSel = new Set(p.targets || []);
+        STATE.promoTargetScopeInit = p.scope || 'all';
+        STATE.promoBundle = (p.bundleItems || []).map(b => ({ id: b.id, qty: b.qty }));
+        if (!STATE.promoBundle.length) STATE.promoBundle = [{ id: '', qty: 1 }, { id: '', qty: 1 }];
+        const memberWrap = val('promoMemberOnly').closest('label');
+        if (memberWrap) memberWrap.classList.toggle('d-none', !STATE.data.settings.customerEnabled && !p.memberOnly);
+        window.onPromoTypeChange(true);
+    };
+    window.onPromoTypeChange = keepScope => {
+        const type = val('promoType').value;
+        document.querySelectorAll('#formPromo .promo-sec').forEach(el => el.classList.toggle('d-none', !(el.dataset.types || '').split(' ').includes(type)));
+        val('promoTypeHint').textContent = (PROMO_TYPES[type] || {}).hint || '';
+        val('promoValueLabel').textContent = type === 'nominal' ? 'Potongan (₩)' : 'Diskon (%)';
+        const scopeSel = val('promoScope');
+        const opts = type === 'percent'
+            ? [['all', 'Semua menu (dari total belanja)'], ['category', 'Kategori tertentu'], ['product', 'Menu tertentu']]
+            : [['product', 'Menu tertentu'], ['category', 'Semua menu dalam kategori']];
+        const prev = keepScope === true ? STATE.promoTargetScopeInit : scopeSel.value;
+        scopeSel.innerHTML = opts.map(o => `<option value="${o[0]}">${o[1]}</option>`).join('');
+        scopeSel.value = opts.some(o => o[0] === prev) ? prev : opts[0][0];
+        window.renderPromoTargets();
+        window.renderPromoBundleRows();
+    };
+    window.renderPromoTargets = () => {
+        const box = val('promoTargetBox');
+        const scope = val('promoScope').value;
+        if (scope === 'all') { box.innerHTML = ''; box.classList.add('d-none'); return; }
+        box.classList.remove('d-none');
+        if (STATE.promoTargetScope && STATE.promoTargetScope !== scope) STATE.promoTargetSel = new Set();
+        STATE.promoTargetScope = scope;
+        const items = scope === 'category'
+            ? STATE.data.categories.map(c => ({ v: c, label: c }))
+            : [...STATE.data.products].sort((a, b) => a.name.localeCompare(b.name)).map(p => ({ v: p.id, label: p.name, sub: p.cat }));
+        box.innerHTML = (scope === 'product' ? `<input type="text" class="brutal-input bg-white text-sm mb-2" placeholder="Cari menu..." oninput="window.filterPromoTargets(this.value)">` : '')
+            + `<div class="promo-target-list">${items.map(it => `<label class="promo-target" data-q="${escapeHTML((it.label || '').toLowerCase())}"><input type="checkbox" value="${escapeHTML(it.v)}" ${STATE.promoTargetSel.has(it.v) ? 'checked' : ''} onchange="window.togglePromoTarget(this)"><span>${escapeHTML(it.label)}${it.sub ? ` <small>${escapeHTML(it.sub)}</small>` : ''}</span></label>`).join('') || '<div class="text-xs text-gray-500 p-2">Belum ada data.</div>'}</div>`;
+    };
+    window.filterPromoTargets = q => {
+        q = (q || '').toLowerCase().trim();
+        document.querySelectorAll('#promoTargetBox .promo-target').forEach(el => el.classList.toggle('d-none', Boolean(q) && !el.dataset.q.includes(q)));
+    };
+    window.togglePromoTarget = el => { if (el.checked) STATE.promoTargetSel.add(el.value); else STATE.promoTargetSel.delete(el.value); };
+    window.renderPromoBundleRows = () => {
+        const wrap = val('promoBundleRows');
+        if (!wrap) return;
+        const prods = [...STATE.data.products].sort((a, b) => a.name.localeCompare(b.name));
+        wrap.innerHTML = STATE.promoBundle.map((b, i) => `<div class="flex gap-2 items-center">
+            <select class="brutal-input bg-white text-sm flex-1 min-w-0" onchange="window.setPromoBundle(${i}, 'id', this.value)"><option value="">- Pilih menu -</option>${prods.map(p => `<option value="${p.id}" ${p.id === b.id ? 'selected' : ''}>${escapeHTML(p.name)} (${formatWon(p.price)})</option>`).join('')}</select>
+            <input type="number" min="1" value="${b.qty}" inputmode="numeric" class="brutal-input bg-white text-sm !w-16 text-center" onchange="window.setPromoBundle(${i}, 'qty', this.value)">
+            <button type="button" onclick="window.removePromoBundleRow(${i})" class="brutal-btn bg-white w-9 h-9 p-0 shrink-0" aria-label="Hapus">✕</button>
+        </div>`).join('');
+        window.updateBundleInfo();
+    };
+    window.setPromoBundle = (i, key, v) => {
+        if (!STATE.promoBundle[i]) return;
+        STATE.promoBundle[i][key] = key === 'qty' ? Math.max(1, parseInt(v) || 1) : v;
+        window.updateBundleInfo();
+    };
+    window.addPromoBundleRow = () => { STATE.promoBundle.push({ id: '', qty: 1 }); window.renderPromoBundleRows(); };
+    window.removePromoBundleRow = i => { STATE.promoBundle.splice(i, 1); window.renderPromoBundleRows(); };
+    window.updateBundleInfo = () => {
+        const info = val('promoBundleInfo');
+        if (!info) return;
+        const normal = STATE.promoBundle.reduce((sum, b) => sum + ((prodById(b.id) || {}).price || 0) * (b.qty || 0), 0);
+        const price = Number(val('promoBundlePrice').value) || 0;
+        info.innerHTML = normal ? `Harga normal ${formatWon(normal)}${price > 0 ? (price < normal ? ` · <span class="text-success">hemat ${formatWon(normal - price)}</span>` : ` · <span class="text-danger">harga paket harus lebih murah</span>`) : ''}` : '';
+    };
+    window.applyPromoPreset = i => {
+        const pr = PROMO_PRESETS[i];
+        if (!pr) return;
+        fillPromoForm(Object.assign(promoDefaults(), JSON.parse(JSON.stringify(pr.d))));
+        document.querySelectorAll('#promoPresets .promo-preset').forEach((el, k) => el.classList.toggle('is-on', k === i));
+        if (window.sfx) window.sfx('select');
+    };
+    window.openPromoModal = id => {
+        const p = id ? (STATE.data.settings.promos || []).find(x => x.id === id) : null;
+        val('promoModalTitle').textContent = p ? 'Edit Promo' : 'Buat Promo';
+        val('promoPresetWrap').classList.toggle('d-none', Boolean(p));
+        val('promoPresets').innerHTML = PROMO_PRESETS.map((x, i) => `<button type="button" class="promo-preset" onclick="window.applyPromoPreset(${i})">${x.label}</button>`).join('');
+        STATE.promoTargetScope = null;
+        fillPromoForm(p ? Object.assign(promoDefaults(), JSON.parse(JSON.stringify(p))) : promoDefaults());
+        window.openModal('modalPromo');
+    };
+    window.savePromo = async e => {
+        e.preventDefault();
+        const type = val('promoType').value;
+        const num = id => Math.max(0, Math.floor(Number(val(id).value) || 0));
+        const scope = ['percent', 'bxgy'].includes(type) ? val('promoScope').value : 'all';
+        const p = Object.assign(promoDefaults(), {
+            id: val('promoId').value || genId('PRM'),
+            name: val('promoName').value.trim().slice(0, 60),
+            type, active: val('promoActive').checked,
+            value: ['percent', 'nominal'].includes(type) ? num('promoValue') : 0,
+            maxDiscount: type === 'percent' ? num('promoMaxDisc') : 0,
+            scope, targets: scope === 'all' ? [] : [...STATE.promoTargetSel],
+            buyQty: Math.max(1, num('promoBuyQty')), getQty: Math.max(1, num('promoGetQty')), getPct: Math.min(100, Math.max(1, num('promoGetPct') || 100)),
+            bundleItems: type === 'bundle' ? STATE.promoBundle.filter(b => b.id).map(b => ({ id: b.id, qty: Math.max(1, parseInt(b.qty) || 1) })) : [],
+            bundlePrice: type === 'bundle' ? num('promoBundlePrice') : 0,
+            giftProductId: type === 'gift' ? val('promoGiftProduct').value : '',
+            giftQty: Math.max(1, num('promoGiftQty')),
+            minSpend: num('promoMinSpend'),
+            code: val('promoCode').value.trim().toUpperCase().replace(/\s+/g, '').slice(0, 20),
+            memberOnly: val('promoMemberOnly').checked,
+            orderType: val('promoOrderType').value || 'all',
+            startDate: val('promoStartDate').value || '', endDate: val('promoEndDate').value || '',
+            timeStart: val('promoTimeStart').value || '', timeEnd: val('promoTimeEnd').value || '',
+            days: [...document.querySelectorAll('#promoDays .promo-day-cb:checked')].map(c => parseInt(c.value))
+        });
+        const err = m => window.customAlert(m, 'Peringatan');
+        if (!p.name) return err('Nama promo wajib diisi.');
+        if (type === 'percent' && !(p.value >= 1 && p.value <= 100)) return err('Diskon persen harus 1–100%.');
+        if (type === 'nominal' && !(p.value > 0)) return err('Isi nominal potongan.');
+        if (['percent', 'bxgy'].includes(type) && scope !== 'all' && !p.targets.length) return err(scope === 'category' ? 'Pilih minimal satu kategori.' : 'Pilih minimal satu menu.');
+        if (type === 'bundle') {
+            const totalQty = p.bundleItems.reduce((sum, b) => sum + b.qty, 0);
+            const normal = p.bundleItems.reduce((sum, b) => sum + ((prodById(b.id) || {}).price || 0) * b.qty, 0);
+            if (totalQty < 2) return err('Paket minimal berisi 2 porsi menu.');
+            if (!(p.bundlePrice > 0) || p.bundlePrice >= normal) return err(`Harga paket harus lebih murah dari harga normal (${formatWon(normal)}).`);
+        }
+        if (type === 'gift' && !p.giftProductId) return err('Pilih produk hadiah.');
+        if (type === 'gift' && !(p.minSpend > 0)) return err('Isi min. belanja untuk hadiah gratis.');
+        if (p.startDate && p.endDate && p.endDate < p.startDate) return err('Tanggal selesai tidak boleh sebelum tanggal mulai.');
+        if (p.code && (STATE.data.settings.promos || []).some(x => x.id !== p.id && String(x.code || '').toUpperCase() === p.code)) return err(`Kode "${p.code}" sudah dipakai promo lain.`);
+        const promos = [...(STATE.data.settings.promos || [])];
+        const idx = promos.findIndex(x => x.id === p.id);
+        if (idx > -1) promos[idx] = p; else promos.push(p);
+        showLoad();
+        try {
+            await persistPromos(promos);
+            hideLoad();
+            window.closeModal('modalPromo');
+            window.renderPromoAdmin();
+            window.sfx && window.sfx('success');
+        } catch (ex) {
+            hideLoad();
+            await window.customAlert('Gagal menyimpan promo: ' + ex.message, 'Gagal');
+        }
+    };
+
+
+    // ======================================================= //
+    // CATATAN PER PRODUK DI KERANJANG (mis. "pedas", "tanpa bawang")
+    // Disimpan sebagai field `note` pada item, ikut ke Waiting List, transaksi & nota.
+    // ======================================================= //
+    const ITEM_NOTE_ICON = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" class="pointer-events-none"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>';
+    window.itemNoteBtn = (key, index, item) =>
+        `<button type="button" onclick="event.stopPropagation(); window.editItemNote('${key}', ${index})" class="item-note-btn ${item.note ? 'has-note' : ''}" title="${item.note ? 'Ubah catatan' : 'Tambah catatan'}" aria-label="Catatan pesanan">${ITEM_NOTE_ICON}</button>`;
+    window.itemNoteText = (item, extraClass = '') => item && item.note
+        ? `<div class="item-note ${extraClass}">📝 ${escapeHTML(item.note)}</div>` : '';
+    window.editItemNote = async (key, index) => {
+        const arr = STATE[key];
+        const item = arr && arr[index];
+        if (!item) return;
+        const val = await window.customPrompt(`Catatan untuk "${item.name}" (contoh: pedas, tanpa bawang, es sedikit). Kosongkan untuk menghapus catatan.`, 'Catatan Pesanan', item.note || '');
+        if (val === null) return;
+        const text = String(val).replace(/\s+/g, ' ').trim().slice(0, 200);
+        if (text) item.note = text; else delete item.note;
+        if (window.sfx) window.sfx('select');
+        if (key === 'cart') window.renderCartModal();
+        else if (key === 'custCart') window.renderCustCartModal();
+        else if (key === 'editCart') window.renderEditWaitCart();
+    };
+
     window.renderCartModal = () => {
         const list = document.getElementById('cartItemsList');
         const noteWrap = document.getElementById('cartNoteWrapper');
@@ -4224,7 +5005,7 @@
             list.innerHTML = '<p class="font-bold text-center p-4">Keranjang kosong</p>'; 
             noteWrap.classList.add('d-none'); 
         } else { 
-            list.innerHTML = STATE.cart.map((item, index) => `<div class="cart-item-row flex justify-between items-center mb-2 p-2 border-2 border-black"><div class="flex-1"><h4 class="font-bold text-xs md:text-sm leading-tight">${escapeHTML(item.name)}</h4><div class="cart-item-price text-xs md:text-sm">${formatWon(item.price)}</div></div><div class="flex items-center gap-1 md:gap-2"><button onclick="window.changeQty(${index}, -1)" class="w-6 h-6 md:w-8 md:h-8 font-bold bg-white border-2 border-black">-</button><input type="number" min="1" inputmode="numeric" value="${item.qty}" onchange="window.setCartQty(${index}, this.value)" onclick="this.select()" class="w-11 md:w-12 text-center font-bold text-sm md:text-base border-2 border-black bg-white py-0.5"><button onclick="window.changeQty(${index}, 1)" class="w-6 h-6 md:w-8 md:h-8 font-bold bg-main border-2 border-black">+</button><button onclick="window.changeQty(${index}, -999)" class="w-6 h-6 md:w-8 md:h-8 font-bold bg-danger text-white border-2 border-black ml-1 md:ml-2 inline-flex items-center justify-center"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" class="pointer-events-none"><line x1="5" y1="5" x2="19" y2="19"></line><line x1="19" y1="5" x2="5" y2="19"></line></svg></button></div></div>`).join(''); 
+            list.innerHTML = STATE.cart.map((item, index) => `<div class="cart-item-row mb-2 p-2 border-2 border-black"><div class="cart-item-top"><h4 class="cart-item-name font-bold text-xs md:text-sm" title="${escapeHTML(item.name)}">${escapeHTML(item.name)}</h4>${window.itemNoteBtn('cart', index, item)}${window.promoChipForItem(item)}</div><div class="cart-item-bottom"><div class="cart-item-price text-xs md:text-sm">${formatWon(item.price)}</div><div class="flex items-center gap-1 md:gap-2"><button onclick="window.changeQty(${index}, -1)" class="w-6 h-6 md:w-8 md:h-8 font-bold bg-white border-2 border-black">-</button><input type="number" min="1" inputmode="numeric" value="${item.qty}" onchange="window.setCartQty(${index}, this.value)" onclick="this.select()" class="w-11 md:w-12 text-center font-bold text-sm md:text-base border-2 border-black bg-white py-0.5"><button onclick="window.changeQty(${index}, 1)" class="w-6 h-6 md:w-8 md:h-8 font-bold bg-main border-2 border-black">+</button><button onclick="window.changeQty(${index}, -999)" class="w-6 h-6 md:w-8 md:h-8 font-bold bg-danger text-white border-2 border-black ml-1 md:ml-2 inline-flex items-center justify-center"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" class="pointer-events-none"><line x1="5" y1="5" x2="19" y2="19"></line><line x1="19" y1="5" x2="5" y2="19"></line></svg></button></div></div>${window.itemNoteText(item, 'cart-item-note')}</div>`).join(''); 
             noteWrap.classList.remove('d-none'); 
         }
 
@@ -4350,11 +5131,15 @@
         disp.classList.add('text-gray-500', 'italic'); 
     };
     
-    window.calculateTotal = () => { 
-        const subtotal = STATE.cart.reduce((sum, item) => sum + (item.price * item.qty), 0); 
+    window.calculateTotal = () => {
+        const subtotal = STATE.cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
         const isDeliv = document.querySelector('input[name="orderType"]:checked')?.value === 'Delivery';
-        STATE.ongkir = isDeliv ? (parseInt(document.getElementById('cartOngkir').value) || 0) : 0; 
-        const total = subtotal + STATE.ongkir; 
+        STATE.ongkir = isDeliv ? (parseInt(document.getElementById('cartOngkir').value) || 0) : 0;
+        const promo = window.computeCartPromo('admin');
+        STATE.cartPromoResult = promo;
+        window.renderPromoBox('cartPromoBox', promo, 'admin');
+        const total = Math.max(0, subtotal - promo.discount) + STATE.ongkir;
+        STATE.cartTotalNow = total; 
         document.getElementById('cartSubtotal').textContent = formatWon(subtotal); 
         document.getElementById('cartTotal').textContent = formatWon(total); 
         const bayar = parseInt(document.getElementById('inputBayar').value) || 0; 
@@ -4394,7 +5179,7 @@
     };
     
     window.setCashNominal = val => { 
-        if(val === 'pas') document.getElementById('inputBayar').value = STATE.cart.reduce((s, i) => s + (i.price * i.qty), 0) + STATE.ongkir; 
+        if(val === 'pas') { window.calculateTotal(); document.getElementById('inputBayar').value = STATE.cartTotalNow || 0; } 
         else document.getElementById('inputBayar').value = val; 
         window.calculateTotal(); 
     };
@@ -4424,9 +5209,12 @@
         const isCustOn = Boolean(STATE.data.settings.customerEnabled);
         const orderType = document.querySelector('input[name="orderType"]:checked')?.value || 'DineInTakeaway';
         const method = document.querySelector('input[name="payMethod"]:checked')?.value || 'Cash';
-        const subtotal = STATE.cart.reduce((sum, item) => sum + (item.price * item.qty), 0); 
-        const total = subtotal + STATE.ongkir;
-        
+        const subtotal = STATE.cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+        window.calculateTotal();
+        const promo = STATE.cartPromoResult || window.emptyPromoResult(subtotal);
+        if (promo.codeError && (STATE.cartPromoCode || '').trim() && !(await window.customConfirm(`Kode promo "${STATE.cartPromoCode}" tidak berlaku (${promo.codeError}). Lanjut tanpa kode?`, 'Kode Promo'))) return;
+        const total = Math.max(0, subtotal - promo.discount) + STATE.ongkir;
+
         let custId = null;
         let directAddress = '';
         const tableName = document.getElementById('posCartTable')?.value || '';
@@ -4460,9 +5248,11 @@
             order_type: orderType, 
             type: method, 
             payment_status: method === 'Hutang' ? 'Unpaid' : 'Paid', 
-            items: STATE.cart, 
-            subtotal, 
-            ongkir: STATE.ongkir, 
+            items: STATE.cart.concat(promo.gifts.map(g => ({ id: g.id, name: g.name, price: 0, qty: g.qty, free: true, note: 'Hadiah promo: ' + g.promoName }))),
+            subtotal,
+            ongkir: STATE.ongkir,
+            discount: promo.discount,
+            promos: promo.applied.map(a => ({ id: a.id, name: a.name, amount: a.amount })),
             total,
             paid_amount: bayarNominal,
             change_amount: kembalianNominal,
@@ -4494,6 +5284,7 @@
     orderType: payload.order_type, type: payload.type, paymentStatus: payload.payment_status,
     items: payload.items, subtotal: payload.subtotal, ongkir: payload.ongkir,
     total: payload.total, address: payload.address, table: payload.table_name,
+    discount: payload.discount || 0, promos: payload.promos || [],
     paidAmount: payload.paid_amount || 0,        // << TAMBAHKAN
     changeAmount: payload.change_amount || 0,    // << TAMBAHKAN
     cashierId: payload.cashier_id || '', cashierName: payload.cashier_name || ''
@@ -4505,11 +5296,12 @@
                 }
             }
             
-            STATE.cart = []; 
-            STATE.ongkir = 0; 
+            STATE.cart = [];
+            STATE.ongkir = 0;
             STATE.adminCartTable = '';
-            document.getElementById('cartOngkir').value = 0; 
-            document.getElementById('inputBayar').value = ''; 
+            window.resetCartPromo('admin');
+            document.getElementById('cartOngkir').value = 0;
+            document.getElementById('inputBayar').value = '';
             if(document.getElementById('cartNote')) document.getElementById('cartNote').value = '';
             if(document.getElementById('cartDirectAddress')) document.getElementById('cartDirectAddress').value = '';
             if(document.getElementById('posCartTable')) document.getElementById('posCartTable').value = '';
@@ -4555,9 +5347,10 @@
             notes: note, 
             items: STATE.cart, 
             total: total, 
-            status: 'waiting', 
+            status: 'waiting',
             user_id: null,
-            table_name: tableName
+            table_name: tableName,
+            promo_code: (STATE.cartPromoCode || '').trim()
         };
         STATE.ownWaitIds = STATE.ownWaitIds || new Set();
         STATE.ownWaitIds.add(payload.id);
@@ -4570,9 +5363,11 @@
             STATE.waitingList.push({
                 id: payload.id, date: payload.date, buyerName: payload.buyer_name,
                 notes: payload.notes, items: payload.items, total: payload.total,
-                status: payload.status, userId: payload.user_id, table: payload.table_name
-            }); 
-            STATE.cart = []; 
+                status: payload.status, userId: payload.user_id, table: payload.table_name,
+                promoCode: payload.promo_code || ''
+            });
+            STATE.cart = [];
+            window.resetCartPromo('admin'); 
             STATE.ongkir = 0; 
             STATE.adminCartTable = '';
             document.getElementById('cartOngkir').value = 0; 
@@ -4602,7 +5397,7 @@
     };
 
     window.generateReceiptHtml = (order, custName, targetId, receiptType) => {
-    let itemsHtml = (order.items || []).map(i => `<div style="display:flex; justify-content:space-between; margin-bottom:4px;"><span>${i.qty}x ${escapeHTML(i.name)}</span><span>${formatWon(i.price * i.qty)}</span></div>`).join('');
+    let itemsHtml = (order.items || []).map(i => `<div style="display:flex; justify-content:space-between; margin-bottom:${i.note ? '0' : '4px'};"><span>${i.qty}x ${escapeHTML(i.name)}</span><span>${formatWon(i.price * i.qty)}</span></div>${i.note ? `<div style="font-size:11px; font-style:italic; margin:0 0 4px 14px; color:#444;">* ${escapeHTML(i.note)}</div>` : ''}`).join('');
 
     if(receiptType === 'DEBT_RECAP') {
         document.getElementById(targetId).innerHTML = window.buildDebtRecapHtml(order.custId);
@@ -4632,7 +5427,7 @@
             <div style="text-align:center; border-bottom:2px dashed black; padding-bottom:12px; margin-bottom:12px;"><h2 style="margin:0; font-size:18px; font-weight:bold; text-transform:uppercase;">${escapeHTML(STATE.data.settings.storeName||'WARUNG INDONESIA')}</h2><p style="margin:4px 0 0; font-size:12px; color:#555;">${safeDate(order.date)}</p></div>
             <div style="font-size:12px; margin-bottom:12px; display:flex; flex-direction:column; gap:4px;"><div style="display:flex; justify-content:space-between;"><span>No:</span> <span style="font-weight:bold">${order.id}</span></div><div style="display:flex; justify-content:space-between;"><span>Plg:</span> <span style="font-weight:bold">${escapeHTML(custName)}</span></div>${tableRow}<div style="display:flex; justify-content:space-between;"><span>Tipe:</span> <span>${order.orderType === 'Delivery'?'Delivery':'Dine In/TA'}</span></div>${addressRow}<div style="display:flex; justify-content:space-between;"><span>Metode:</span> <span style="font-weight:bold">${order.type}</span></div>${statusRow}</div>
             <div style="font-size:12px; border-bottom:2px dashed black; padding-bottom:12px; margin-bottom:12px;">${itemsHtml}</div>
-            <div style="font-size:13px; font-weight:bold;"><div style="display:flex; justify-content:space-between; margin-bottom:4px;"><span>Subtotal:</span> <span>${formatWon(order.subtotal)}</span></div>${order.ongkir > 0 ? `<div style="display:flex; justify-content:space-between; margin-bottom:4px;"><span>Ongkir:</span> <span>${formatWon(order.ongkir)}</span></div>` : ''}<div style="display:flex; justify-content:space-between; font-size:16px; margin-top:8px; border-top:2px solid black; padding-top:8px;"><span>TOTAL:</span> <span>${formatWon(order.total)}</span></div>${cashRows}${debtRows}</div>
+            <div style="font-size:13px; font-weight:bold;"><div style="display:flex; justify-content:space-between; margin-bottom:4px;"><span>Subtotal:</span> <span>${formatWon(order.subtotal)}</span></div>${order.ongkir > 0 ? `<div style="display:flex; justify-content:space-between; margin-bottom:4px;"><span>Ongkir:</span> <span>${formatWon(order.ongkir)}</span></div>` : ''}${(order.promos || []).length ? order.promos.map(pr => `<div style="display:flex; justify-content:space-between; margin-bottom:4px; font-weight:normal;"><span>Promo: ${escapeHTML(pr.name)}</span> <span>${Number(pr.amount) > 0 ? '-' + formatWon(pr.amount) : 'Bonus'}</span></div>`).join('') : (Number(order.discount) > 0 ? `<div style="display:flex; justify-content:space-between; margin-bottom:4px;"><span>Diskon:</span> <span>-${formatWon(order.discount)}</span></div>` : '')}<div style="display:flex; justify-content:space-between; font-size:16px; margin-top:8px; border-top:2px solid black; padding-top:8px;"><span>TOTAL:</span> <span>${formatWon(order.total)}</span></div>${cashRows}${debtRows}</div>
             <div style="text-align:center; margin-top:24px; font-size:11px; font-weight:bold;"><p>~ Terima Kasih ~</p></div></div>`;
     document.getElementById(targetId).innerHTML = html;
 };
@@ -4776,6 +5571,7 @@
         if (!isCustOn && tabName === 'customers') tabName = 'products';
         if (!isTableOn && tabName === 'tables') tabName = 'products';
         if (!isFinanceOn && tabName === 'finance') tabName = 'products';
+        if (!window.isPromoAvailable() && tabName === 'promo') tabName = 'products';
         if (STATE.user && STATE.user.role === 'cashier' && ['categories', 'customers', 'cashier', 'finance'].includes(tabName)) tabName = 'products';
         if (tabName === 'dashboard' && !(STATE.user && STATE.user.role === 'admin')) tabName = 'products';
 
@@ -4798,6 +5594,7 @@
         if(tabName === 'history') window.renderAdminHistory();
         if(tabName === 'settings') window.renderAdminSettings();
         if(tabName === 'finance' && isFinanceOn) window.openFinanceTab();
+        if(tabName === 'promo') window.renderPromoAdmin();
         if(tabName === 'dashboard') window.renderDashboard();
     };
 
@@ -5055,7 +5852,7 @@
                     });
                     if (changed) {
                         const newSubtotal = newItems.reduce((s, it) => s + (Number(it.price) || 0) * (Number(it.qty) || 0), 0);
-                        const newTotal = newSubtotal + Number(o.ongkir || 0);
+                        const newTotal = Math.max(0, newSubtotal - Number(o.discount || 0)) + Number(o.ongkir || 0);
                         batch.update(doc.ref, { items: newItems, subtotal: newSubtotal, total: newTotal, payment_status: newTotal <= Number(o.debt_paid || 0) ? 'Paid' : 'Unpaid' });
                         if (o.cust_id) affectedCustIds.add(o.cust_id);
                         touched = true;
@@ -5853,7 +6650,7 @@
             const unpaid = o.type === 'Hutang' && o.paymentStatus === 'Unpaid';
             const badge = o.type === 'Hutang' ? 'bg-danger text-white' : (o.type === 'Transfer' ? 'bg-accent text-black' : (o.type === 'Kartu' ? 'bg-blue-600 text-white' : 'bg-black text-white'));
             const debtPaid = Number(o.debtPaid || 0);
-            const items = (o.items || []).map(i => `<div class="hist-kv"><span>${i.qty}x ${escapeHTML(i.name)}</span><span>${formatWon(i.price * i.qty)}</span></div>`).join('');
+            const items = (o.items || []).map(i => `<div class="hist-kv"><span>${i.qty}x ${escapeHTML(i.name)}</span><span>${formatWon(i.price * i.qty)}</span></div>${window.itemNoteText(i, 'ml-4')}`).join('');
             const statusTxt = o.type === 'Hutang'
                 ? (unpaid ? `<span class="text-danger">Belum Lunas</span>` : `<span class="text-success">Lunas</span>`)
                 : 'Lunas';
@@ -5886,6 +6683,7 @@
                     ${o.isEdited ? kv('Catatan', `<span class="bg-danger text-white text-[9px] font-bold px-1">TELAH DIEDIT</span>${o.editedBy ? ' oleh ' + escapeHTML(o.editedBy) : ''}`) : ''}
                     <div class="border-t-2 border-dashed border-black pt-1.5 mt-1.5 space-y-1">${items || '<div class="italic">Tanpa item</div>'}</div>
                     ${Number(o.ongkir) > 0 ? kv('Ongkir', formatWon(o.ongkir)) : ''}
+                    ${(o.promos || []).map(pr => kv('Promo: ' + escapeHTML(pr.name), '-' + formatWon(pr.amount))).join('')}
                     ${o.type === 'Cash' && Number(o.paidAmount) > 0 ? kv('Bayar', formatWon(o.paidAmount)) + kv('Kembalian', formatWon(o.changeAmount)) : ''}
                     <div class="hist-kv border-t-2 border-black pt-1.5 text-sm"><span>Total</span><span>${formatWon(o.total)}</span></div>
                 </div>
@@ -5905,6 +6703,7 @@
 
         document.getElementById('editTrxTotal').value = o.total;
         document.getElementById('editTrxOngkir').value = o.ongkir || 0;
+        STATE.editTrxDiscount = Number(o.discount || 0);
         
         STATE.editCart = JSON.parse(JSON.stringify(o.items));
         document.getElementById('editTrxAddProduct').innerHTML = '<option value="">- Pilih Produk -</option>' + STATE.data.products.map(p => `<option value="${p.id}">${escapeHTML(p.name)} (${formatWon(p.price)})</option>`).join('');
@@ -5919,7 +6718,7 @@
         
         const subtotal = STATE.editCart.reduce((sum, item) => sum + (item.price * item.qty), 0);
         document.getElementById('editTrxSubtotal').value = subtotal; 
-        document.getElementById('editTrxTotal').value = subtotal + parseInt(document.getElementById('editTrxOngkir').value || 0);
+        document.getElementById('editTrxTotal').value = Math.max(0, subtotal - Number(STATE.editTrxDiscount || 0)) + parseInt(document.getElementById('editTrxOngkir').value || 0);
     };
 
     window.changeEditQty = (index, delta) => { 
@@ -6100,6 +6899,7 @@
         // Seluruh switch default OFF
         if(document.getElementById('setCashierEnabled')) document.getElementById('setCashierEnabled').checked = Boolean(STATE.data.settings.cashierEnabled);
         if(document.getElementById('setFinanceEnabled')) document.getElementById('setFinanceEnabled').checked = Boolean(STATE.data.settings.financeEnabled);
+        if(document.getElementById('setPromoEnabled')) document.getElementById('setPromoEnabled').checked = Boolean(STATE.data.settings.promoEnabled);
 
         STATE.tempInstantOverride = undefined;
         const sOpenCheck = document.getElementById('setScheduleOpenEnabled');
@@ -6229,7 +7029,8 @@
             product_grid_mobile: ["1", "3"].includes(document.getElementById('setProductGridMobile')?.value) ? document.getElementById('setProductGridMobile').value : '2',
             pos_grid_mobile: document.getElementById('setPosGridMobile')?.value === '3' ? '3' : '2',
             cashier_enabled: document.getElementById('setCashierEnabled') ? document.getElementById('setCashierEnabled').checked : Boolean(STATE.data.settings.cashierEnabled),
-            finance_enabled: document.getElementById('setFinanceEnabled') ? document.getElementById('setFinanceEnabled').checked : Boolean(STATE.data.settings.financeEnabled)
+            finance_enabled: document.getElementById('setFinanceEnabled') ? document.getElementById('setFinanceEnabled').checked : Boolean(STATE.data.settings.financeEnabled),
+            promo_enabled: document.getElementById('setPromoEnabled') ? document.getElementById('setPromoEnabled').checked : Boolean(STATE.data.settings.promoEnabled)
         };
         // Password admin hanya ikut disimpan/di-hash kalau kolomnya benar-benar diisi ulang.
         // Kalau dikosongkan, password lama (hash-nya) tidak disentuh sama sekali.
@@ -6279,6 +7080,7 @@
                 posGridMobile: payload.pos_grid_mobile,
                 cashierEnabled: payload.cashier_enabled,
                 financeEnabled: payload.finance_enabled,
+                promoEnabled: payload.promo_enabled,
                 scheduleOpenEnabled: payload.schedule_open_enabled,
                 scheduleOpenDateTime: payload.schedule_open_datetime,
                 scheduleCloseEnabled: payload.schedule_close_enabled,
@@ -6410,9 +7212,10 @@
         if(STATE.custCart.length === 0) {
             list.innerHTML = '<p class="font-bold text-center p-4">Keranjang kosong</p>';
         } else {
-            list.innerHTML = STATE.custCart.map((item, index) => `<div class="cart-item-row flex justify-between items-center mb-2 p-2 border-2 border-black"><div class="flex-1"><h4 class="font-bold text-xs md:text-sm leading-tight">${escapeHTML(item.name)}</h4><div class="cart-item-price text-xs md:text-sm">${formatWon(item.price)}</div></div><div class="flex items-center gap-1 md:gap-2"><button onclick="window.changeCustQty(${index}, -1)" class="w-6 h-6 md:w-8 md:h-8 font-bold bg-white border-2 border-black">-</button><input type="number" min="1" inputmode="numeric" value="${item.qty}" onchange="window.setCustQty(${index}, this.value)" onclick="this.select()" class="w-11 md:w-12 text-center font-bold text-sm md:text-base border-2 border-black bg-white py-0.5"><button onclick="window.changeCustQty(${index}, 1)" class="w-6 h-6 md:w-8 md:h-8 font-bold bg-main border-2 border-black">+</button></div></div>`).join('');
+            list.innerHTML = STATE.custCart.map((item, index) => `<div class="cart-item-row mb-2 p-2 border-2 border-black"><div class="cart-item-top"><h4 class="cart-item-name font-bold text-xs md:text-sm" title="${escapeHTML(item.name)}">${escapeHTML(item.name)}</h4>${window.itemNoteBtn('custCart', index, item)}${window.promoChipForItem(item)}</div><div class="cart-item-bottom"><div class="cart-item-price text-xs md:text-sm">${formatWon(item.price)}</div><div class="flex items-center gap-1 md:gap-2"><button onclick="window.changeCustQty(${index}, -1)" class="w-6 h-6 md:w-8 md:h-8 font-bold bg-white border-2 border-black">-</button><input type="number" min="1" inputmode="numeric" value="${item.qty}" onchange="window.setCustQty(${index}, this.value)" onclick="this.select()" class="w-11 md:w-12 text-center font-bold text-sm md:text-base border-2 border-black bg-white py-0.5"><button onclick="window.changeCustQty(${index}, 1)" class="w-6 h-6 md:w-8 md:h-8 font-bold bg-main border-2 border-black">+</button></div></div>${window.itemNoteText(item, 'cart-item-note')}</div>`).join('');
         }
         document.getElementById('custCartTotal').textContent = formatWon(STATE.custCart.reduce((s, i) => s + (i.price * i.qty), 0));
+        window.renderPromoBox('custPromoBox', window.computeCartPromo('cust'), 'cust');
     };
     
     window.changeCustQty = (index, delta) => { 
@@ -6453,11 +7256,12 @@
             date: new Date().toISOString(), 
             buyer_name: nama, 
             notes: document.getElementById('custOrderNotes').value, 
-            items: STATE.custCart, 
-            total: STATE.custCart.reduce((s, i) => s + (i.price * i.qty), 0), 
-            status: 'waiting', 
+            items: STATE.custCart,
+            total: (() => { const pr = window.computeCartPromo('cust'); return Math.max(0, pr.subtotal - pr.discount); })(),
+            status: 'waiting',
             user_id: STATE.user ? STATE.user.id : null,
-            table_name: selectedTable
+            table_name: selectedTable,
+            promo_code: (STATE.custPromoCode || '').trim()
         };
         
         showLoad();
@@ -6468,9 +7272,11 @@
             STATE.waitingList.push({
                 id: payload.id, date: payload.date, buyerName: payload.buyer_name,
                 notes: payload.notes, items: payload.items, total: payload.total,
-                status: payload.status, userId: payload.user_id, table: payload.table_name
-            }); 
-            STATE.custCart = []; 
+                status: payload.status, userId: payload.user_id, table: payload.table_name,
+                promoCode: payload.promo_code || ''
+            });
+            STATE.custCart = [];
+            window.resetCartPromo('cust'); 
             document.getElementById('custOrderNotes').value = '';
             
             if(!STATE.user) {
@@ -6510,7 +7316,7 @@
             list = STATE.waitingList.filter(x => gw.includes(x.id));
         }
 
-        document.getElementById('custWaitListAreaPage').innerHTML = list.length ? list.map(w => `<div class="brutal-box p-4 bg-white border-l-8 ${w.status === 'ready' ? 'border-l-accent' : (w.status === 'cooking' ? 'border-l-success' : 'border-l-main')}"><div class="font-bold border-b-2 border-black pb-2 mb-2 flex justify-between text-lg flex-wrap"><span>${safeDate(w.date)}</span><span>${escapeHTML(w.buyerName)}</span></div>${w.table ? `<div class="mb-2 inline-block font-bold text-xs bg-purple-100 border-2 border-black px-2 py-0.5">🪑 ${escapeHTML(w.table)}</div>` : ''}<div class="flex-1">${w.items.map(i=>`<div class="text-sm font-bold">- ${i.qty}x ${escapeHTML(i.name)}</div>`).join('')}</div><div class="mt-4 font-bold bg-yellow-200 p-2 text-lg border-2 border-black">Total: ${formatWon(w.total)}</div><div class="mt-2 text-sm font-bold p-2 border-2 border-black text-center ${w.status === 'ready' ? 'bg-accent text-black' : (w.status === 'cooking' ? 'bg-success text-black' : 'bg-gray-200 text-gray-700')}">Status: ${w.status === 'ready' ? '✅ SIAP DISAJIKAN' : (w.status === 'cooking' ? '🔥 SEDANG DIMASAK' : '⏳ Menunggu Kasir')}</div></div>`).join('') : '<p class="font-bold text-center col-span-full">Pesanan sudah diproses kasir atau kosong.</p>';
+        document.getElementById('custWaitListAreaPage').innerHTML = list.length ? list.map(w => `<div class="brutal-box p-4 bg-white border-l-8 ${w.status === 'ready' ? 'border-l-accent' : (w.status === 'cooking' ? 'border-l-success' : 'border-l-main')}"><div class="font-bold border-b-2 border-black pb-2 mb-2 flex justify-between text-lg flex-wrap"><span>${safeDate(w.date)}</span><span>${escapeHTML(w.buyerName)}</span></div>${w.table ? `<div class="mb-2 inline-block font-bold text-xs bg-purple-100 border-2 border-black px-2 py-0.5">🪑 ${escapeHTML(w.table)}</div>` : ''}<div class="flex-1 space-y-1">${w.items.map(i=>`<div><div class="text-sm font-bold">- ${i.qty}x ${escapeHTML(i.name)}</div>${window.itemNoteText(i, 'ml-5')}</div>`).join('')}</div><div class="mt-4 font-bold bg-yellow-200 p-2 text-lg border-2 border-black">Total: ${formatWon(w.total)}</div><div class="mt-2 text-sm font-bold p-2 border-2 border-black text-center ${w.status === 'ready' ? 'bg-accent text-black' : (w.status === 'cooking' ? 'bg-success text-black' : 'bg-gray-200 text-gray-700')}">Status: ${w.status === 'ready' ? '✅ SIAP DISAJIKAN' : (w.status === 'cooking' ? '🔥 SEDANG DIMASAK' : '⏳ Menunggu Kasir')}</div></div>`).join('') : '<p class="font-bold text-center col-span-full">Pesanan sudah diproses kasir atau kosong.</p>';
         window.showPage('pageCustWaitList');
     };
 
@@ -6782,7 +7588,7 @@
                         </button>`}
                     </div>
                 </div>`;
-        return `<div class="brutal-box bg-white p-4 flex flex-col border-l-8 ${isReadyTab ? 'border-l-accent' : (isCooking ? 'border-l-success' : 'border-l-main')}"><div class="flex justify-between items-start gap-2 border-b-2 border-black pb-2 mb-2"><div class="min-w-0"><div class="font-bold text-lg uppercase break-words">${escapeHTML(w.buyerName)} <span class="text-[10px] bg-black text-white px-1">${w.userId ? 'Pelanggan' : 'Tamu'}</span></div>${w.table ? `<div class="mt-1 font-bold text-xs bg-purple-100 border-2 border-black px-2 py-0.5 inline-block">🪑 ${escapeHTML(w.table)}</div>` : ''}<div>${timeChip}</div></div><button onclick="window.editWaitList('${w.id}')" class="brutal-btn bg-accent px-2 py-1 text-xs font-bold shrink-0">✏️ Edit</button></div><div class="flex-1">${w.items.map(i => `<div class="text-sm font-bold">${i.qty}x ${escapeHTML(i.name)}</div>`).join('')}</div>${w.notes ? `<div class="mt-2 p-2 bg-gray-100 text-xs italic border-2 border-black">Catatan: ${escapeHTML(w.notes)}</div>` : ''}<div class="mt-4">${actionRow}</div></div>`;
+        return `<div class="brutal-box bg-white p-4 flex flex-col border-l-8 ${isReadyTab ? 'border-l-accent' : (isCooking ? 'border-l-success' : 'border-l-main')}"><div class="flex justify-between items-start gap-2 border-b-2 border-black pb-2 mb-2"><div class="min-w-0"><div class="font-bold text-lg uppercase break-words">${escapeHTML(w.buyerName)} <span class="text-[10px] bg-black text-white px-1">${w.userId ? 'Pelanggan' : 'Tamu'}</span></div>${w.table ? `<div class="mt-1 font-bold text-xs bg-purple-100 border-2 border-black px-2 py-0.5 inline-block">🪑 ${escapeHTML(w.table)}</div>` : ''}<div>${timeChip}</div></div><button onclick="window.editWaitList('${w.id}')" class="brutal-btn bg-accent px-2 py-1 text-xs font-bold shrink-0">✏️ Edit</button></div><div class="flex-1 space-y-1">${w.items.map(i => `<div><div class="text-sm font-bold">${i.qty}x ${escapeHTML(i.name)}</div>${window.itemNoteText(i, 'ml-5')}</div>`).join('')}</div>${w.notes ? `<div class="mt-2 p-2 bg-gray-100 text-xs italic border-2 border-black">Catatan: ${escapeHTML(w.notes)}</div>` : ''}<div class="mt-4">${actionRow}</div></div>`;
     };
 
     window.filterAdminWaitList = () => {
@@ -6868,8 +7674,10 @@
     window.pullToCart = async (waitId) => {
         if(!(await window.customConfirm('Tarik pesanan ini ke keranjang kasir?'))) return;
         const w = STATE.waitingList.find(x => x.id === waitId); if(!w) return;
-        STATE.cart = [...w.items]; 
+        STATE.cart = [...w.items];
         STATE.adminCartTable = w.table || '';
+        STATE.cartPromoCode = w.promoCode || '';
+        STATE.promoSkip = { admin: new Set(), cust: (STATE.promoSkip && STATE.promoSkip.cust) || new Set() };
         window.updateCartUI();
         
         try {
@@ -7051,7 +7859,7 @@
     window.renderEditWaitCart = () => {
         const list = document.getElementById('editWaitItems');
         if(STATE.editCart.length === 0) list.innerHTML = '<p class="text-xs text-center text-gray-500 italic">Produk kosong</p>';
-        else list.innerHTML = STATE.editCart.map((item, index) => `<div class="flex justify-between items-center bg-gray-50 border border-black p-2"><div class="text-sm font-bold flex-1 truncate">${escapeHTML(item.name)}</div><div class="flex items-center gap-1"><button type="button" onclick="window.changeEditWaitQty(${index}, -1)" class="w-6 h-6 font-bold border border-black bg-white">-</button><input type="number" min="1" inputmode="numeric" value="${item.qty}" onchange="window.setEditWaitQty(${index}, this.value)" onclick="this.select()" class="w-11 text-center font-bold border border-black bg-white py-0.5"><button type="button" onclick="window.changeEditWaitQty(${index}, 1)" class="w-6 h-6 font-bold border border-black bg-main">+</button><button type="button" onclick="window.changeEditWaitQty(${index}, -999)" class="w-6 h-6 font-bold border border-black bg-danger text-white ml-2 inline-flex items-center justify-center"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" class="pointer-events-none"><line x1="5" y1="5" x2="19" y2="19"></line><line x1="19" y1="5" x2="5" y2="19"></line></svg></button></div></div>`).join('');
+        else list.innerHTML = STATE.editCart.map((item, index) => `<div class="flex justify-between items-center gap-2 bg-gray-50 border border-black p-2"><div class="flex-1 min-w-0"><div class="flex items-center gap-1.5"><div class="text-sm font-bold truncate">${escapeHTML(item.name)}</div>${window.itemNoteBtn('editCart', index, item)}</div>${window.itemNoteText(item)}</div><div class="flex items-center gap-1"><button type="button" onclick="window.changeEditWaitQty(${index}, -1)" class="w-6 h-6 font-bold border border-black bg-white">-</button><input type="number" min="1" inputmode="numeric" value="${item.qty}" onchange="window.setEditWaitQty(${index}, this.value)" onclick="this.select()" class="w-11 text-center font-bold border border-black bg-white py-0.5"><button type="button" onclick="window.changeEditWaitQty(${index}, 1)" class="w-6 h-6 font-bold border border-black bg-main">+</button><button type="button" onclick="window.changeEditWaitQty(${index}, -999)" class="w-6 h-6 font-bold border border-black bg-danger text-white ml-2 inline-flex items-center justify-center"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" class="pointer-events-none"><line x1="5" y1="5" x2="19" y2="19"></line><line x1="19" y1="5" x2="5" y2="19"></line></svg></button></div></div>`).join('');
         document.getElementById('editWaitTotal').textContent = formatWon(STATE.editCart.reduce((sum, item) => sum + (item.price * item.qty), 0));
     };
 
@@ -7632,6 +8440,7 @@
         set('tab_customers', Boolean(st.customerEnabled) && !isCashier);
         set('tab_cashier', Boolean(st.cashierEnabled) && !isCashier);
         set('cashierMgmtBar', isCashier);
+        set('tab_promo', window.isPromoAvailable());
         window.syncFinanceTab();
     };
     window.syncFinanceTab = () => {
