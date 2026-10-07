@@ -1198,6 +1198,42 @@
         #gasapp-root .promo-day:has(:checked) span { background: var(--c-primary); color: #fff !important; border-color: transparent; }
         #gasapp-root .uppercase-input { text-transform: uppercase; }
         #gasapp-root .promo-x-btn { width: 34px; height: 34px; border-radius: 999px; display: inline-flex; align-items: center; justify-content: center; background: var(--c-surface-2); color: var(--c-text-muted); }
+        /* ===== Split Bill ===== */
+        #gasapp-root .split-panel { border: 1px solid var(--c-outline); border-radius: var(--r-md); padding: 12px; background: var(--c-surface-2); }
+        #gasapp-root .split-sum-row { display: flex; align-items: center; gap: 8px; font-size: 13px; padding: 6px 8px; border-radius: 8px; background: var(--c-surface); }
+        #gasapp-root .split-badge { width: 22px; height: 22px; min-width: 22px; border-radius: 999px; display: inline-flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; background: var(--c-primary-container); color: var(--c-on-primary-container) !important; }
+        #gasapp-root .split-segbar { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; padding: 4px; border-radius: 12px; background: var(--c-surface-2); }
+        #gasapp-root .split-seg { padding: 8px 4px; border-radius: 9px; font-size: 12.5px; font-weight: 600; color: var(--c-text-muted); transition: background-color .15s, color .15s; }
+        #gasapp-root .split-seg.is-on { background: var(--c-surface); color: var(--c-text) !important; box-shadow: var(--elev-1) !important; }
+        #gasapp-root .split-stepper { display: inline-flex; align-items: center; border: 1px solid var(--c-outline-strong); border-radius: 999px; overflow: hidden; }
+        #gasapp-root .split-stepper button { width: 38px; height: 34px; font-size: 18px; font-weight: 600; color: var(--c-text); }
+        #gasapp-root .split-stepper button:hover { background: var(--c-surface-2); }
+        #gasapp-root .split-stepper span { min-width: 32px; text-align: center; font-weight: 700; }
+        #gasapp-root .split-items { border: 1px solid var(--c-outline); border-radius: var(--r-md); padding: 8px; max-height: 260px; overflow-y: auto; }
+        #gasapp-root .split-sub-title { font-size: 12px; font-weight: 700; margin: 2px 4px 6px; }
+        #gasapp-root .split-unit { display: flex; align-items: center; gap: 8px; padding: 6px 4px; border-bottom: 1px solid var(--c-outline); }
+        #gasapp-root .split-unit:last-child { border-bottom: 0; }
+        #gasapp-root .split-who { display: flex; gap: 4px; flex-wrap: wrap; justify-content: flex-end; max-width: 60%; }
+        #gasapp-root .split-who button { width: 28px; height: 28px; border-radius: 999px; font-size: 12px; font-weight: 700; border: 1px solid var(--c-outline-strong); color: var(--c-text); }
+        #gasapp-root .split-who button.is-on { background: var(--c-primary); border-color: transparent; color: #fff !important; }
+        #gasapp-root .split-part { border: 1px solid var(--c-outline); border-radius: var(--r-md); padding: 10px; background: var(--c-surface); }
+        #gasapp-root .split-name { flex: 1; min-width: 0; font-weight: 600; font-size: 14px; background: transparent; border: 0; border-bottom: 1px dashed var(--c-outline-strong); padding: 2px 0; outline: none; color: var(--c-text); }
+        #gasapp-root .split-name:focus { border-bottom-color: var(--c-primary); }
+        #gasapp-root .split-amt { font-weight: 800; font-size: 15px; white-space: nowrap; }
+        #gasapp-root .split-amt-input { width: 120px !important; min-height: 36px; padding: 0.3rem 0.5rem; text-align: right; font-weight: 700; }
+        #gasapp-root .split-items-txt { font-size: 11px; color: var(--c-text-muted) !important; margin: 4px 0 0 30px; line-height: 1.35; }
+        #gasapp-root .split-method { padding: 5px 12px; border-radius: 999px; font-size: 12px; font-weight: 600; border: 1px solid var(--c-outline-strong); color: var(--c-text); }
+        #gasapp-root .split-method.is-on { background: var(--c-primary-container); border-color: var(--c-primary); color: var(--c-on-primary-container) !important; }
+        #gasapp-root .split-cash { display: flex; align-items: center; gap: 8px; flex: 1; min-width: 180px; }
+        #gasapp-root .split-cash .brutal-input { min-height: 34px; padding: 0.3rem 0.5rem; width: 110px; text-align: right; }
+        #gasapp-root .split-change { font-size: 11.5px; font-weight: 600; color: var(--c-text-muted) !important; white-space: nowrap; }
+        #gasapp-root .split-change.is-ok { color: var(--c-success-text) !important; }
+        #gasapp-root .split-change.is-short { color: var(--c-danger-text) !important; }
+        #gasapp-root .split-status { font-size: 12.5px; font-weight: 600; padding: 8px 10px; border-radius: 10px; }
+        #gasapp-root .split-status.is-ok { background: var(--c-success-container); color: var(--c-on-success-container) !important; }
+        #gasapp-root .split-status.is-warn { background: var(--c-warning-container); color: var(--c-on-warning-container) !important; }
+        #gasapp-root .split-status * { color: inherit !important; }
+        #gasapp-root .split-fill { margin-left: 6px; text-decoration: underline; font-weight: 700; }
         /* Tombol ikon kecil (tema & suara) */
         #gasapp-root :is(.theme-toggle-btn, .sfx-toggle-btn) { border-radius: 999px !important; background-color: var(--c-surface) !important; }
     </style>
@@ -2178,6 +2214,14 @@
                             <input type="radio" name="payMethod" value="Hutang" class="hidden" onchange="window.togglePaymentDetail()"> Hutang
                         </label>
                     </div>
+                    <label id="wrapperPaySplit" class="brutal-btn bg-white text-center py-2 px-1 mt-2 w-full flex justify-center items-center gap-1.5 cursor-pointer has-[:checked]:bg-main text-[11px] sm:text-xs md:text-sm whitespace-nowrap">
+                        <input type="radio" name="payMethod" value="Split" class="hidden" onchange="window.togglePaymentDetail()"> ✂️ Split Bill
+                    </label>
+                </div>
+
+                <div id="payDetailSplit" class="split-panel mb-4 d-none">
+                    <div id="splitSummary" class="space-y-1.5"></div>
+                    <button type="button" id="btnOpenSplit" onclick="window.openSplitBill()" class="brutal-btn bg-accent w-full py-2.5 text-sm mt-3">✂️ Atur Split Bill</button>
                 </div>
 
                 <div id="payDetailCash" class="p-4 bg-gray-100 border-2 border-black mb-4">
@@ -2304,6 +2348,7 @@
                             <option value="Transfer">Transfer</option>
                             <option value="Kartu">Kartu</option>
                             <option value="Hutang">Hutang</option>
+                            <option value="Split">Split Bill</option>
                         </select>
                     </div>
                 </div>
@@ -2632,6 +2677,37 @@
             <div class="p-4 border-t-2 border-black grid grid-cols-2 gap-2 shrink-0">
                 <button type="button" onclick="window.closeModal('modalPromo')" class="brutal-btn bg-white py-3">Batal</button>
                 <button type="submit" form="formPromo" class="brutal-btn bg-main py-3">Simpan Promo</button>
+            </div>
+        </div>
+    </div>
+
+<!-- Modal Split Bill -->
+    <div id="modalSplit" class="fixed inset-0 modal-backdrop d-none z-[60] flex items-center justify-center p-2 md:p-4">
+        <div class="brutal-box bg-white w-full max-w-lg max-h-[95vh] flex flex-col relative overflow-hidden">
+            <div class="p-4 border-b-2 border-black flex items-center justify-between gap-2 shrink-0">
+                <div>
+                    <h2 class="text-lg md:text-xl font-bold leading-tight">✂️ Split Bill</h2>
+                    <div class="text-xs text-gray-600">Total tagihan <b id="splitTotalLabel" class="text-black">₩0</b></div>
+                </div>
+                <button type="button" onclick="window.closeModal('modalSplit')" class="promo-x-btn" aria-label="Tutup"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" class="pointer-events-none"><line x1="5" y1="5" x2="19" y2="19"></line><line x1="19" y1="5" x2="5" y2="19"></line></svg></button>
+            </div>
+            <div class="p-4 overflow-y-auto flex-1 space-y-4">
+                <div id="splitModeBar" class="split-segbar"></div>
+                <div class="flex items-center justify-between">
+                    <span class="font-bold text-sm">Jumlah orang</span>
+                    <div class="split-stepper">
+                        <button type="button" onclick="window.setSplitCount(-1)" aria-label="Kurangi">−</button>
+                        <span id="splitCount">2</span>
+                        <button type="button" onclick="window.setSplitCount(1)" aria-label="Tambah">+</button>
+                    </div>
+                </div>
+                <div id="splitItems" class="split-items d-none"></div>
+                <div id="splitParts" class="space-y-2"></div>
+                <div id="splitStatus" class="split-status"></div>
+            </div>
+            <div class="p-4 border-t-2 border-black grid grid-cols-2 gap-2 shrink-0">
+                <button type="button" onclick="window.closeModal('modalSplit')" class="brutal-btn bg-white py-3">Batal</button>
+                <button type="button" onclick="window.saveSplitBill()" class="brutal-btn bg-main py-3">Simpan Pembagian</button>
             </div>
         </div>
     </div>
@@ -3470,6 +3546,7 @@
         changeAmount: Number(o.change_amount || 0),  // << TAMBAHKAN
         debtPaid: Number(o.debt_paid || 0),          // total cicilan yang sudah dibayar untuk order Hutang
         discount: Number(o.discount || 0),
+        split: Array.isArray(o.split) ? o.split : null,
         promos: Array.isArray(o.promos) ? o.promos : [],
         address: o.address || '',
         table: o.table_name || o.table || '',
@@ -4971,6 +5048,208 @@
 
 
     // ======================================================= //
+    // SPLIT BILL — satu transaksi dibayar beberapa orang.
+    // Mode: bagi rata, per item (tiap porsi dipilih pemiliknya; diskon & ongkir dibagi
+    // proporsional), atau nominal bebas. Tiap bagian punya metode bayar sendiri.
+    // Disimpan sebagai satu transaksi bertipe 'Split' dengan rincian di field `split`.
+    // ======================================================= //
+    STATE.split = null;
+    const SPLIT_MODES = [['equal', 'Bagi Rata'], ['items', 'Per Item'], ['custom', 'Nominal Bebas']];
+    const splitMethods = () => ['Cash', 'Transfer'].concat(STATE.data.settings.cardEnabled ? ['Kartu'] : []);
+    const splitCartTotal = () => { window.calculateTotal(); return Number(STATE.cartTotalNow || 0); };
+    const splitUnits = () => {
+        const units = [];
+        STATE.cart.forEach((it, li) => { for (let u = 0; u < (Number(it.qty) || 0); u++) units.push({ key: li + '_' + u, li, name: it.name, price: Number(it.price) || 0, n: u + 1, of: Number(it.qty) || 0 }); });
+        return units;
+    };
+    const newPart = i => ({ name: 'Orang ' + (i + 1), amount: 0, method: 'Cash', paid: '' });
+
+    window.openSplitBill = () => {
+        if (!STATE.cart.length) return window.customAlert('Keranjang kosong!', 'Peringatan');
+        const total = splitCartTotal();
+        const prev = STATE.split;
+        STATE.splitDraft = prev && prev.total === total
+            ? JSON.parse(JSON.stringify({ mode: prev.mode, n: prev.parts.length, parts: prev.parts, assign: prev.assign || {} }))
+            : { mode: 'equal', n: 2, parts: [newPart(0), newPart(1)], assign: {} };
+        STATE.splitDraft.total = total;
+        window.renderSplitModal();
+        window.openModal('modalSplit');
+    };
+    window.setSplitMode = m => { STATE.splitDraft.mode = m; window.sfx && window.sfx('select'); window.renderSplitModal(); };
+    window.setSplitCount = delta => {
+        const d = STATE.splitDraft;
+        const n = Math.min(20, Math.max(2, d.n + delta));
+        if (n === d.n) return;
+        while (d.parts.length < n) d.parts.push(newPart(d.parts.length));
+        d.parts.length = n;
+        d.n = n;
+        Object.keys(d.assign).forEach(k => { if (d.assign[k] >= n) delete d.assign[k]; });
+        window.sfx && window.sfx('select');
+        window.renderSplitModal();
+    };
+
+    // Hitung nominal tiap orang sesuai mode
+    const splitCompute = d => {
+        const total = d.total, n = d.n;
+        if (d.mode === 'equal') {
+            const base = Math.floor(total / n), rem = total - base * n;
+            return d.parts.map((p, i) => base + (i === 0 ? rem : 0));
+        }
+        if (d.mode === 'items') {
+            const units = splitUnits();
+            const sub = units.reduce((s, u) => s + u.price, 0);
+            const per = d.parts.map(() => 0);
+            units.forEach(u => { const a = d.assign[u.key]; if (a !== undefined && a < n) per[a] += u.price; });
+            if (!sub) return per;
+            const amounts = per.map(v => Math.floor(total * v / sub));
+            const assignedAll = units.every(u => d.assign[u.key] !== undefined && d.assign[u.key] < n);
+            if (assignedAll) { // sisa pembulatan ke orang dengan porsi terbesar
+                const diff = total - amounts.reduce((s, v) => s + v, 0);
+                const iMax = per.indexOf(Math.max(...per));
+                amounts[iMax] += diff;
+            }
+            return amounts;
+        }
+        return d.parts.map(p => Math.max(0, Math.floor(Number(p.amount) || 0)));
+    };
+
+    window.renderSplitModal = () => {
+        const d = STATE.splitDraft;
+        if (!d) return;
+        document.getElementById('splitTotalLabel').textContent = formatWon(d.total);
+        document.getElementById('splitModeBar').innerHTML = SPLIT_MODES.map(([k, l]) => `<button type="button" onclick="window.setSplitMode('${k}')" class="split-seg ${d.mode === k ? 'is-on' : ''}">${l}</button>`).join('');
+        document.getElementById('splitCount').textContent = d.n;
+
+        // Per item: pilih pemilik tiap porsi
+        const itemsBox = document.getElementById('splitItems');
+        if (d.mode === 'items') {
+            const units = splitUnits();
+            itemsBox.innerHTML = `<div class="split-sub-title">Pilih siapa yang memesan tiap porsi</div>` + units.map(u => `
+                <div class="split-unit">
+                    <div class="min-w-0 flex-1"><div class="text-xs font-semibold truncate">${escapeHTML(u.name)}${u.of > 1 ? ` <span class="text-gray-500">(${u.n}/${u.of})</span>` : ''}</div><div class="text-[11px] text-gray-500">${formatWon(u.price)}</div></div>
+                    <div class="split-who">${d.parts.map((p, i) => `<button type="button" onclick="window.assignSplitUnit('${u.key}', ${i})" class="${d.assign[u.key] === i ? 'is-on' : ''}" title="${escapeHTML(p.name)}">${i + 1}</button>`).join('')}</div>
+                </div>`).join('');
+            itemsBox.classList.remove('d-none');
+        } else { itemsBox.innerHTML = ''; itemsBox.classList.add('d-none'); }
+
+        const amounts = splitCompute(d);
+        d.parts.forEach((p, i) => { if (d.mode !== 'custom') p.amount = amounts[i]; });
+        const methods = splitMethods();
+        const units = d.mode === 'items' ? splitUnits() : [];
+        document.getElementById('splitParts').innerHTML = d.parts.map((p, i) => {
+            if (!methods.includes(p.method)) p.method = 'Cash';
+            const myItems = units.filter(u => d.assign[u.key] === i);
+            const itemsTxt = myItems.length ? myItems.map(u => escapeHTML(u.name)).join(', ') : '';
+            return `<div class="split-part">
+                <div class="flex items-center gap-2">
+                    <span class="split-badge">${i + 1}</span>
+                    <input type="text" maxlength="24" value="${escapeHTML(p.name)}" oninput="window.setSplitField(${i}, 'name', this.value)" class="split-name" aria-label="Nama">
+                    ${d.mode === 'custom'
+                        ? `<input type="number" min="0" inputmode="numeric" value="${p.amount || ''}" placeholder="₩0" oninput="window.setSplitField(${i}, 'amount', this.value)" class="brutal-input bg-white split-amt-input">`
+                        : `<span class="split-amt">${formatWon(p.amount)}</span>`}
+                </div>
+                ${d.mode === 'items' ? `<div class="split-items-txt">${itemsTxt || '<i>Belum ada item</i>'}</div>` : ''}
+                <div class="flex items-center gap-1.5 mt-2 flex-wrap">
+                    ${methods.map(m => `<button type="button" onclick="window.setSplitMethod(${i}, '${m}')" class="split-method ${p.method === m ? 'is-on' : ''}">${m}</button>`).join('')}
+                    ${p.method === 'Cash' ? `<div class="split-cash">
+                        <input type="number" min="0" inputmode="numeric" value="${p.paid}" placeholder="Bayar" oninput="window.setSplitField(${i}, 'paid', this.value)" class="brutal-input bg-white">
+                        <span id="splitChange${i}" class="split-change"></span>
+                    </div>` : ''}
+                </div>
+            </div>`;
+        }).join('');
+        d.parts.forEach((p, i) => updateSplitChange(i));
+        updateSplitStatus();
+    };
+    const updateSplitChange = i => {
+        const d = STATE.splitDraft, p = d.parts[i], el = document.getElementById('splitChange' + i);
+        if (!el || p.method !== 'Cash') return;
+        const paid = Math.floor(Number(p.paid) || 0);
+        if (!paid) { el.textContent = 'Uang pas'; el.className = 'split-change'; return; }
+        const diff = paid - p.amount;
+        el.textContent = diff >= 0 ? `Kembali ${formatWon(diff)}` : `Kurang ${formatWon(-diff)}`;
+        el.className = 'split-change ' + (diff >= 0 ? 'is-ok' : 'is-short');
+    };
+    const updateSplitStatus = () => {
+        const d = STATE.splitDraft;
+        const el = document.getElementById('splitStatus');
+        const sum = d.parts.reduce((s, p) => s + (Math.floor(Number(p.amount) || 0)), 0);
+        let msg = '', ok = false;
+        if (d.mode === 'items') {
+            const left = splitUnits().filter(u => d.assign[u.key] === undefined || d.assign[u.key] >= d.n).length;
+            if (left) msg = `${left} porsi belum dipilih pemiliknya`;
+            else if (d.parts.some(p => !p.amount)) msg = 'Ada orang tanpa item — kurangi jumlah orang';
+            else { ok = true; msg = 'Semua porsi sudah dibagi'; }
+        } else {
+            const diff = d.total - sum;
+            if (diff > 0) msg = `Sisa belum dibagi ${formatWon(diff)}`;
+            else if (diff < 0) msg = `Kelebihan ${formatWon(-diff)}`;
+            else if (d.parts.some(p => !(p.amount > 0))) msg = 'Setiap orang harus punya nominal';
+            else { ok = true; msg = 'Total sudah pas'; }
+        }
+        el.innerHTML = `${ok ? '✓' : '⚠️'} ${msg}${d.mode === 'custom' && !ok && d.total - sum > 0 ? ` <button type="button" class="split-fill" onclick="window.fillSplitRemainder()">Isi ke orang terakhir</button>` : ''}`;
+        el.className = 'split-status ' + (ok ? 'is-ok' : 'is-warn');
+        return ok;
+    };
+    window.setSplitField = (i, key, v) => {
+        const p = STATE.splitDraft.parts[i];
+        if (!p) return;
+        if (key === 'name') p.name = String(v).slice(0, 24);
+        else if (key === 'amount') { p.amount = Math.max(0, Math.floor(Number(v) || 0)); updateSplitStatus(); updateSplitChange(i); }
+        else if (key === 'paid') { p.paid = v === '' ? '' : Math.max(0, Math.floor(Number(v) || 0)); updateSplitChange(i); }
+    };
+    window.setSplitMethod = (i, m) => { const p = STATE.splitDraft.parts[i]; if (!p) return; p.method = m; if (m !== 'Cash') p.paid = ''; window.sfx && window.sfx('select'); window.renderSplitModal(); };
+    window.assignSplitUnit = (key, i) => {
+        const d = STATE.splitDraft;
+        if (d.assign[key] === i) delete d.assign[key]; else d.assign[key] = i;
+        window.sfx && window.sfx('select');
+        window.renderSplitModal();
+    };
+    window.fillSplitRemainder = () => {
+        const d = STATE.splitDraft;
+        const others = d.parts.slice(0, -1).reduce((s, p) => s + (Number(p.amount) || 0), 0);
+        d.parts[d.parts.length - 1].amount = Math.max(0, d.total - others);
+        window.renderSplitModal();
+    };
+    window.saveSplitBill = async () => {
+        const d = STATE.splitDraft;
+        if (!d) return;
+        if (d.mode !== 'custom') { const a = splitCompute(d); d.parts.forEach((p, i) => { p.amount = a[i]; }); }
+        if (!updateSplitStatus()) return window.customAlert(document.getElementById('splitStatus').textContent.replace(/^[^a-zA-Z0-9]+/, ''), 'Peringatan');
+        const units = d.mode === 'items' ? splitUnits() : [];
+        STATE.split = {
+            mode: d.mode, total: d.total, assign: d.mode === 'items' ? { ...d.assign } : {},
+            parts: d.parts.map((p, i) => {
+                const paid = p.method === 'Cash' ? (Math.floor(Number(p.paid) || 0) || p.amount) : p.amount;
+                const items = units.filter(u => d.assign[u.key] === i).map(u => u.name);
+                return { name: (p.name || '').trim() || ('Orang ' + (i + 1)), amount: p.amount, method: p.method, paid, change: p.method === 'Cash' ? Math.max(0, paid - p.amount) : 0, items };
+            })
+        };
+        window.closeModal('modalSplit');
+        window.sfx && window.sfx('success');
+        window.calculateTotal();
+    };
+    window.clearSplitBill = () => { STATE.split = null; STATE.splitDraft = null; };
+
+    // Ringkasan di keranjang (metode pembayaran "Split Bill")
+    window.renderSplitSummary = total => {
+        const box = document.getElementById('splitSummary');
+        if (!box) return;
+        const sp = STATE.split;
+        const btn = document.getElementById('btnOpenSplit');
+        if (!sp) {
+            box.innerHTML = `<div class="text-xs text-gray-600">Bagi tagihan ke beberapa orang: rata, per item, atau nominal bebas. Tiap orang bisa bayar dengan metode berbeda.</div>`;
+            if (btn) btn.textContent = '✂️ Atur Split Bill';
+            return;
+        }
+        const stale = sp.total !== total;
+        box.innerHTML = (stale ? `<div class="split-status is-warn mb-2">⚠️ Total berubah (${formatWon(sp.total)} → ${formatWon(total)}). Atur ulang split bill.</div>` : '')
+            + sp.parts.map((p, i) => `<div class="split-sum-row"><span class="split-badge">${i + 1}</span><span class="flex-1 min-w-0 truncate font-semibold">${escapeHTML(p.name)} <small class="text-gray-500">· ${p.method}</small></span><span class="font-bold">${formatWon(p.amount)}</span></div>`).join('');
+        if (btn) btn.textContent = '✏️ Ubah Split Bill';
+    };
+    window.isSplitReady = total => Boolean(STATE.split) && STATE.split.total === total;
+
+    // ======================================================= //
     // CATATAN PER PRODUK DI KERANJANG (mis. "pedas", "tanpa bawang")
     // Disimpan sebagai field `note` pada item, ikut ke Waiting List, transaksi & nota.
     // ======================================================= //
@@ -5148,6 +5427,7 @@
         labelK.textContent = formatWon(kembalian > 0 ? kembalian : 0); 
         labelK.classList.toggle('text-red-600', kembalian < 0 && bayar > 0); 
         window.renderCashSuggestions(total, bayar);
+        if (window.renderSplitSummary) window.renderSplitSummary(total);
     };
 
     // Saran nominal uang tunai mengikuti total pesanan (pecahan Won: 1.000 / 5.000 / 10.000 / 50.000).
@@ -5195,7 +5475,10 @@
 
         document.getElementById('payDetailCash').classList.toggle('d-none', method !== 'Cash'); 
         document.getElementById('payDetailTransfer').classList.toggle('d-none', method !== 'Transfer'); 
-        document.getElementById('payDetailHutang').classList.toggle('d-none', method !== 'Hutang' || !isCustOn); 
+        document.getElementById('payDetailHutang').classList.toggle('d-none', method !== 'Hutang' || !isCustOn);
+        document.getElementById('payDetailSplit').classList.toggle('d-none', method !== 'Split');
+        if (method === 'Split') { window.calculateTotal(); if (!STATE.split && STATE.cart.length && !STATE.splitAutoOpened) { STATE.splitAutoOpened = true; window.openSplitBill(); } }
+        else STATE.splitAutoOpened = false; 
     };
 
     window.processCheckout = async (isPrint) => {
@@ -5233,14 +5516,21 @@
             if (!isCustOn) return await window.customAlert('Metode hutang dinonaktifkan!', 'Gagal');
             custId = document.getElementById('selectHutangCustomer').value; 
             if(!custId) return await window.customAlert('Pilih pelanggan untuk pembayaran hutang.', 'Peringatan'); 
-        } else if (method === 'Cash') { 
-            const bayar = parseInt(document.getElementById('inputBayar').value) || 0; 
-            if(bayar < total && !(await window.customConfirm(`Uang kurang ${formatWon(total - bayar)}. Lanjut?`, 'Konfirmasi'))) return; 
+        } else if (method === 'Cash') {
+            const bayar = parseInt(document.getElementById('inputBayar').value) || 0;
+            if(bayar < total && !(await window.customConfirm(`Uang kurang ${formatWon(total - bayar)}. Lanjut?`, 'Konfirmasi'))) return;
+        } else if (method === 'Split') {
+            if (!window.isSplitReady(total)) { window.openSplitBill(); return await window.customAlert(STATE.split ? 'Total pesanan berubah. Atur ulang split bill dulu.' : 'Atur pembagian split bill dulu.', 'Split Bill'); }
+            const short = STATE.split.parts.filter(p => p.method === 'Cash' && p.paid < p.amount);
+            if (short.length && !(await window.customConfirm(`Uang ${short.map(p => p.name).join(', ')} kurang. Lanjut?`, 'Konfirmasi'))) return;
         }
 
         const orderDate = document.getElementById('customOrderDate').value ? new Date(document.getElementById('customOrderDate').value).toISOString() : new Date().toISOString();
-        const bayarNominal = method === 'Cash' ? (parseInt(document.getElementById('inputBayar').value) || 0) : 0;
-        const kembalianNominal = method === 'Cash' ? Math.max(0, bayarNominal - total) : 0;
+        const splitParts = method === 'Split' ? STATE.split.parts.map(p => ({ name: p.name, amount: p.amount, method: p.method, paid: p.paid, change: p.change, items: p.items || [] })) : null;
+        const bayarNominal = method === 'Cash' ? (parseInt(document.getElementById('inputBayar').value) || 0)
+            : (splitParts ? splitParts.reduce((sum, p) => sum + p.paid, 0) : 0);
+        const kembalianNominal = method === 'Cash' ? Math.max(0, bayarNominal - total)
+            : (splitParts ? splitParts.reduce((sum, p) => sum + p.change, 0) : 0);
         const payload = { 
             id: genId('INV'), 
             date: orderDate, 
@@ -5259,6 +5549,7 @@
             address: directAddress,
             table_name: tableName
         };
+        if (splitParts) payload.split = splitParts;
         if (STATE.user && STATE.user.role === 'cashier') {
             payload.cashier_id = STATE.user.id;
             payload.cashier_name = window.getCashierNameById(STATE.user.id, STATE.user.name);
@@ -5287,7 +5578,8 @@
     discount: payload.discount || 0, promos: payload.promos || [],
     paidAmount: payload.paid_amount || 0,        // << TAMBAHKAN
     changeAmount: payload.change_amount || 0,    // << TAMBAHKAN
-    cashierId: payload.cashier_id || '', cashierName: payload.cashier_name || ''
+    cashierId: payload.cashier_id || '', cashierName: payload.cashier_name || '',
+    split: payload.split || null
 }); 
 
                 if(payload.type === 'Hutang' && custId) { 
@@ -5300,6 +5592,7 @@
             STATE.ongkir = 0;
             STATE.adminCartTable = '';
             window.resetCartPromo('admin');
+            window.clearSplitBill();
             document.getElementById('cartOngkir').value = 0;
             document.getElementById('inputBayar').value = '';
             if(document.getElementById('cartNote')) document.getElementById('cartNote').value = '';
@@ -5423,11 +5716,15 @@
         ? `<div style="display:flex; justify-content:space-between; margin-top:8px;"><span>Sudah dicicil:</span> <span>${formatWon(order.debtPaid)}</span></div><div style="display:flex; justify-content:space-between;"><span>Sisa hutang:</span> <span>${formatWon(Math.max(0, Number(order.total || 0) - Number(order.debtPaid || 0)))}</span></div>`
         : '';
 
+    const splitRows = (order.type === 'Split' && Array.isArray(order.split) && order.split.length)
+        ? `<div style="margin-top:10px; padding-top:8px; border-top:1px dashed black; font-size:12px; font-weight:normal;"><div style="font-weight:bold; margin-bottom:4px;">SPLIT BILL (${order.split.length} orang)</div>${order.split.map((p, i) => `<div style="margin-bottom:6px;"><div style="display:flex; justify-content:space-between; font-weight:bold;"><span>${i + 1}. ${escapeHTML(p.name)} (${escapeHTML(p.method)})</span><span>${formatWon(p.amount)}</span></div>${(p.items || []).length ? `<div style="font-size:10px; color:#444;">${p.items.map(escapeHTML).join(', ')}</div>` : ''}${p.method === 'Cash' && Number(p.paid) > 0 ? `<div style="display:flex; justify-content:space-between; font-size:11px;"><span>Bayar ${formatWon(p.paid)}</span><span>Kembali ${formatWon(p.change)}</span></div>` : ''}</div>`).join('')}</div>`
+        : '';
+
     const html = `<div class="receipt-88mm" id="printReceiptCore">
             <div style="text-align:center; border-bottom:2px dashed black; padding-bottom:12px; margin-bottom:12px;"><h2 style="margin:0; font-size:18px; font-weight:bold; text-transform:uppercase;">${escapeHTML(STATE.data.settings.storeName||'WARUNG INDONESIA')}</h2><p style="margin:4px 0 0; font-size:12px; color:#555;">${safeDate(order.date)}</p></div>
             <div style="font-size:12px; margin-bottom:12px; display:flex; flex-direction:column; gap:4px;"><div style="display:flex; justify-content:space-between;"><span>No:</span> <span style="font-weight:bold">${order.id}</span></div><div style="display:flex; justify-content:space-between;"><span>Plg:</span> <span style="font-weight:bold">${escapeHTML(custName)}</span></div>${tableRow}<div style="display:flex; justify-content:space-between;"><span>Tipe:</span> <span>${order.orderType === 'Delivery'?'Delivery':'Dine In/TA'}</span></div>${addressRow}<div style="display:flex; justify-content:space-between;"><span>Metode:</span> <span style="font-weight:bold">${order.type}</span></div>${statusRow}</div>
             <div style="font-size:12px; border-bottom:2px dashed black; padding-bottom:12px; margin-bottom:12px;">${itemsHtml}</div>
-            <div style="font-size:13px; font-weight:bold;"><div style="display:flex; justify-content:space-between; margin-bottom:4px;"><span>Subtotal:</span> <span>${formatWon(order.subtotal)}</span></div>${order.ongkir > 0 ? `<div style="display:flex; justify-content:space-between; margin-bottom:4px;"><span>Ongkir:</span> <span>${formatWon(order.ongkir)}</span></div>` : ''}${(order.promos || []).length ? order.promos.map(pr => `<div style="display:flex; justify-content:space-between; margin-bottom:4px; font-weight:normal;"><span>Promo: ${escapeHTML(pr.name)}</span> <span>${Number(pr.amount) > 0 ? '-' + formatWon(pr.amount) : 'Bonus'}</span></div>`).join('') : (Number(order.discount) > 0 ? `<div style="display:flex; justify-content:space-between; margin-bottom:4px;"><span>Diskon:</span> <span>-${formatWon(order.discount)}</span></div>` : '')}<div style="display:flex; justify-content:space-between; font-size:16px; margin-top:8px; border-top:2px solid black; padding-top:8px;"><span>TOTAL:</span> <span>${formatWon(order.total)}</span></div>${cashRows}${debtRows}</div>
+            <div style="font-size:13px; font-weight:bold;"><div style="display:flex; justify-content:space-between; margin-bottom:4px;"><span>Subtotal:</span> <span>${formatWon(order.subtotal)}</span></div>${order.ongkir > 0 ? `<div style="display:flex; justify-content:space-between; margin-bottom:4px;"><span>Ongkir:</span> <span>${formatWon(order.ongkir)}</span></div>` : ''}${(order.promos || []).length ? order.promos.map(pr => `<div style="display:flex; justify-content:space-between; margin-bottom:4px; font-weight:normal;"><span>Promo: ${escapeHTML(pr.name)}</span> <span>${Number(pr.amount) > 0 ? '-' + formatWon(pr.amount) : 'Bonus'}</span></div>`).join('') : (Number(order.discount) > 0 ? `<div style="display:flex; justify-content:space-between; margin-bottom:4px;"><span>Diskon:</span> <span>-${formatWon(order.discount)}</span></div>` : '')}<div style="display:flex; justify-content:space-between; font-size:16px; margin-top:8px; border-top:2px solid black; padding-top:8px;"><span>TOTAL:</span> <span>${formatWon(order.total)}</span></div>${cashRows}${debtRows}${splitRows}</div>
             <div style="text-align:center; margin-top:24px; font-size:11px; font-weight:bold;"><p>~ Terima Kasih ~</p></div></div>`;
     document.getElementById(targetId).innerHTML = html;
 };
@@ -6621,7 +6918,7 @@
         if(shown.length === 0) return document.getElementById('adminHistoryTable').innerHTML = `<tr><td colspan="6" class="p-4 text-center font-bold">Kosong.</td></tr>`;
         document.getElementById('adminHistoryTable').innerHTML = shown.map(o => {
             let custName = o.custId ? (STATE.data.customers.find(x => x.id === o.custId)?.name || 'Umum') : 'Umum'; 
-            let badgeColor = o.type === 'Hutang' ? 'bg-danger text-white' : (o.type === 'Transfer' ? 'bg-accent text-black' : (o.type === 'Kartu' ? 'bg-blue-600 text-white' : 'bg-black text-white'));
+            let badgeColor = o.type === 'Hutang' ? 'bg-danger text-white' : (o.type === 'Transfer' ? 'bg-accent text-black' : (o.type === 'Kartu' ? 'bg-blue-600 text-white' : (o.type === 'Split' ? 'bg-main text-black' : 'bg-black text-white')));
             const isCashier = STATE.user && STATE.user.role === 'cashier';
             const editedTag = o.isEdited ? `<div class="mt-0.5"><span class="bg-danger text-white text-[9px] font-bold px-1 rounded">TELAH DIEDIT</span>${o.editedBy ? ` <span class="text-[9px] text-gray-500">oleh ${escapeHTML(o.editedBy)}</span>` : ''}</div>` : '';
             const cashierTag = o.cashierId ? `<div class="text-[9px] text-gray-500">Kasir: ${escapeHTML(window.getCashierNameById(o.cashierId, o.cashierName))}</div>` : '';
@@ -6648,7 +6945,7 @@
             const [d, t] = safeDate(o.date).split(' ');
             const custName = o.custId ? (STATE.data.customers.find(x => x.id === o.custId)?.name || 'Umum') : 'Umum';
             const unpaid = o.type === 'Hutang' && o.paymentStatus === 'Unpaid';
-            const badge = o.type === 'Hutang' ? 'bg-danger text-white' : (o.type === 'Transfer' ? 'bg-accent text-black' : (o.type === 'Kartu' ? 'bg-blue-600 text-white' : 'bg-black text-white'));
+            const badge = o.type === 'Hutang' ? 'bg-danger text-white' : (o.type === 'Transfer' ? 'bg-accent text-black' : (o.type === 'Kartu' ? 'bg-blue-600 text-white' : (o.type === 'Split' ? 'bg-main text-black' : 'bg-black text-white')));
             const debtPaid = Number(o.debtPaid || 0);
             const items = (o.items || []).map(i => `<div class="hist-kv"><span>${i.qty}x ${escapeHTML(i.name)}</span><span>${formatWon(i.price * i.qty)}</span></div>${window.itemNoteText(i, 'ml-4')}`).join('');
             const statusTxt = o.type === 'Hutang'
@@ -6684,6 +6981,7 @@
                     <div class="border-t-2 border-dashed border-black pt-1.5 mt-1.5 space-y-1">${items || '<div class="italic">Tanpa item</div>'}</div>
                     ${Number(o.ongkir) > 0 ? kv('Ongkir', formatWon(o.ongkir)) : ''}
                     ${(o.promos || []).map(pr => kv('Promo: ' + escapeHTML(pr.name), '-' + formatWon(pr.amount))).join('')}
+                    ${o.type === 'Split' && Array.isArray(o.split) ? o.split.map((p, i) => kv(`Split ${i + 1}: ${escapeHTML(p.name)} (${escapeHTML(p.method)})`, formatWon(p.amount))).join('') : ''}
                     ${o.type === 'Cash' && Number(o.paidAmount) > 0 ? kv('Bayar', formatWon(o.paidAmount)) + kv('Kembalian', formatWon(o.changeAmount)) : ''}
                     <div class="hist-kv border-t-2 border-black pt-1.5 text-sm"><span>Total</span><span>${formatWon(o.total)}</span></div>
                 </div>
